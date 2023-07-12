@@ -1,11 +1,15 @@
 {
-  "id": "template-svelte-esm",
-  "title": "Template Svelte (ESM)",
-  "description": "Provides a bare-bones Foundry module template repo to get set up with using the TyphonJS Runtime Library and Svelte with ES Modules.",
+  "id": "icon",
+  "title": "ICON System",
+  "description": "Rudimentary Foundry implementation of ICON system",
   "version": "0.0.0",
   "authors": [
     {
-      "name": "Michael Leahy (TyphonJS) - MLeahy#4299",
+      "name": "[ICON DATA]: Exocist",
+      "url": "https://www.github.com/Exocist"
+    },
+    {
+      "name": "[TJS] Michael Leahy (TyphonJS) - MLeahy#4299",
       "url": "https://www.typhonjs.io",
       "discord": "MLeahy#4299"
     }
@@ -27,13 +31,13 @@
       "path": "lang/en.json"
     }
   ],
-  "socket": false,
-  "url": "https://github.com/typhonjs-fvtt-demo/template-svelte-esm",
-  "readme": "https://github.com/typhonjs-fvtt-demo/template-svelte-esm/blob/master/README.md",
-  "bugs": "https://github.com/typhonjs-fvtt-demo/template-svelte-esm/issues",
-  "changelog": "https://github.com/typhonjs-fvtt-demo/template-svelte-esm/releases/latest/",
-  "manifest": "https://github.com/typhonjs-fvtt-demo/template-svelte-esm/releases/latest/download/module.json",
-  "download": "https://github.com/typhonjs-fvtt-demo/template-svelte-esm/releases/download/0.0.0/module.zip",
+  "socket": true,
+  "url": "https://github.com/whitespine/foundryvtt-icon",
+  "readme": "https://github.com/whitespine/foundryvtt-icon/blob/master/README.md",
+  "bugs": "https://github.com/whitespine/foundryvtt-icon/issues",
+  "changelog": "https://github.com/whitespine/foundryvtt-icon/releases/latest/",
+  "manifest": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/module.json",
+  "download": "https://github.com/whitespine/foundryvtt-icon/releases/download/0.0.0/module.zip",
   "protected": false,
   "coreTranslation": false,
   "library": false
