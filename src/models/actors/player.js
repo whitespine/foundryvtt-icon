@@ -1,11 +1,11 @@
-import { templateUniversalActor } from "../templates";
-import { ClockField, FakeBoundedNumberField, IconDataModel } from "../base";
+import { ClockField, FakeBoundedNumberField } from "../base";
+import { ActorModel } from "./actor";
 
 const fields = foundry.data.fields;
 
 const actionField = () => new fields.NumberField({ integer: true, min: 0, max: 4, initial: 0 });
 
-export class PlayerModel extends IconDataModel {
+export class PlayerModel extends ActorModel {
     static defineSchema() {
         return {
             // Non combat
@@ -44,7 +44,6 @@ export class PlayerModel extends IconDataModel {
             // Combat
             hp: new FakeBoundedNumberField(),
             wounds: new FakeBoundedNumberField(),
-            ...templateUniversalActor(),
         };
     }
 

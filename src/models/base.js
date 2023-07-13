@@ -1,6 +1,4 @@
-
-// Configure our document models
-import { format_dotpath } from "../helpers/commons.js";
+import { formatDotpath } from "../util/paths";
 
 // Establish a shorthand
 export const fields = foundry.data.fields;
@@ -44,7 +42,7 @@ export function fancyMerge(target, source) {
   }
   for (let [k, v] of Object.entries(source)) {
     // Prepare for dotpath traversal
-    k = format_dotpath(k);
+    k = formatDotpath(k);
 
     // Detect deletes
     const del = k.startsWith("-=");
