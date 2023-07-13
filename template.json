@@ -1,0 +1,15 @@
+{
+    "Actor": {
+        "types": ["player", "foe"],
+        "htmlFields": [],
+
+        "player": {},
+        "foe": {}
+    },
+    "Item": {
+        "types": ["job"],
+        "htmlFields": [],
+
+        "job": {}
+    }
+}

@@ -9,3 +9,7 @@ templates/
 src/**/*.svelte
 /index.js
 /index.js.map
+node_modules/
+ICON-1.45-WIP/
+client/
+common/

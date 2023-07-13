@@ -27,6 +27,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "fixlint": "eslint . --fix"
   }
 }

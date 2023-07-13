@@ -35,6 +35,10 @@
         "status",
         "top"
       ]
-    }]
+    }],
+    "brace-style": ["error", "1tbs"],
+    "prefer-const": "off",
+    "no-unused-vars": "off",
+    "eqeqeq": "off"
   }
 }
