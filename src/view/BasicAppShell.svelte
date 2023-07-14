@@ -1,5 +1,6 @@
 <script>
    import { ApplicationShell }   from '#runtime/svelte/component/core';
+   import Clock   from '../components/Clock.svelte';
 
    export let elementRoot;
 </script>
@@ -12,6 +13,7 @@
 <ApplicationShell bind:elementRoot>
    <main>
       <h1>Basic application</h1>
+      <Clock></Clock>
    </main>
 </ApplicationShell>
 
