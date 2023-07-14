@@ -6,13 +6,7 @@
   "version": "0.0.0",
   "authors": [
     {
-      "name": "[ICON DATA]: Exocist",
-      "url": "https://www.github.com/Exocist"
-    },
-    {
-      "name": "[TJS] Michael Leahy (TyphonJS) - MLeahy#4299",
-      "url": "https://www.typhonjs.io",
-      "discord": "MLeahy#4299"
+      "name": "WHITESPINE"
     }
   ],
   "compatibility": {
@@ -23,9 +17,7 @@
     "index.js"
   ],
   "styles": [
-    "style.css",
-    "ICON-1.45-WIP/icon.css",
-    "ICON-1.45-WIP/templates/itemsummary.css"
+    "style.css"
   ],
   "languages": [
     {
@@ -34,120 +26,18 @@
       "path": "lang/en.json"
     }
   ],
+  "relationships": {
+    "systems": [],
+    "requires": [{
+      "id": "icon_data",
+      "type": "module",
+      "manifest": "https://raw.githubusercontent.com/Exocist/ICON-1.45-WIP/main/module.json",
+      "compatibility": {
+        "verified": "1.7.16"
+      }
+    }]
+  },
   "packs": [
-    {
-      "name": "foes",
-      "label": "Foes",
-      "type": "Actor",
-      "system": "icon",
-      "path": "ICON-1.45-WIP/packs/foes",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "jobs",
-      "label": "Jobs",
-      "type": "Actor",
-      "system": "icon",
-      "path": "ICON-1.45-WIP/packs/jobs",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "relics",
-      "label": "Relics",
-      "type": "Item",
-      "system": "icon",
-      "path": "ICON-1.45-WIP/packs/relics",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "abilities",
-      "label": "Abilities",
-      "type": "Item",
-      "system": "icon",
-      "path": "ICON-1.45-WIP/packs/abilities",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "effects",
-      "label": "Effects",
-      "type": "Item",
-      "system": "icon",
-      "path": "ICON-1.45-WIP/packs/effects",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "rules",
-      "label": "Rules",
-      "type": "JournalEntry",
-      "path": "ICON-1.45-WIP/packs/rules",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "icon-macros",
-      "label": "ICON Macros",
-      "type": "Macro",
-      "path": "ICON-1.45-WIP/packs/icon-macros",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "seer-cards",
-      "label": "Seer Cards",
-      "type": "Cards",
-      "path": "ICON-1.45-WIP/packs/seer-cards",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "name": "maps",
-      "label": "Maps",
-      "type": "Scene",
-      "path": "ICON-1.45-WIP/packs/maps",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "label": "Bond Powers",
-      "type": "Item",
-      "name": "bond-powers",
-      "path": "ICON-1.45-WIP/packs/bond-powers",
-      "system": "icon",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "label": "Job Traits",
-      "type": "Item",
-      "name": "job-traits",
-      "path": "ICON-1.45-WIP/packs/job-traits",
-      "system": "icon",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "label": "Camp Fixtures",
-      "type": "Item",
-      "name": "camp-fixtures",
-      "path": "ICON-1.45-WIP/packs/camp-fixtures",
-      "system": "icon",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "label": "Trophies",
-      "type": "Item",
-      "name": "trophies",
-      "path": "ICON-1.45-WIP/packs/trophies",
-      "system": "icon",
-      "private": false,
-      "flags": {}
-    }
   ],
   "socket": true,
   "url": "https://github.com/whitespine/foundryvtt-icon",
