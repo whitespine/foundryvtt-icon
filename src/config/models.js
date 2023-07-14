@@ -7,7 +7,7 @@ import { JobModel } from "../models/items/job";
  */
 export function setupModels() {
     // Setup models
-    CONFIG.Item.systemDataModels["job"] = JobModel;
-    CONFIG.Actor.systemDataModels["player"] = PlayerModel;
-    CONFIG.Actor.systemDataModels["foe"] = FoeModel;
+    CONFIG.Item.dataModels["job"] = JobModel;
+    CONFIG.Actor.dataModels["player"] = PlayerModel;
+    CONFIG.Actor.dataModels["foe"] = FoeModel;
 }
