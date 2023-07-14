@@ -31,8 +31,8 @@ export class IconDataModel extends foundry.abstract.DataModel {
  */
 export function fancyMerge(target, source) {
   if (target === null || target === undefined) {
- throw new Error("Cannot merge with null or undefined - try again"); 
-}
+    throw new Error("Cannot merge with null or undefined - try again");
+  }
   if (
     typeof target === "number" ||
     typeof target === "string" ||
@@ -119,7 +119,7 @@ export class FakeBoundedNumberField extends foundry.data.fields.NumberField {
  * Takes an option "size" that, if provided, will fix the size of the clock to that size. Otherwise size is arbitrary
  */
 export class ClockField extends foundry.data.fields.SchemaField {
-  constructor(options) {
+  constructor(options={}) {
     const initial_size = options.size ?? 4;
     super({
       active: new fields.BooleanField({ initial: false }),
@@ -133,16 +133,16 @@ export class ClockField extends foundry.data.fields.SchemaField {
   _cast(value) {
     value = super._cast(value);
     if (this.options.size) {
- value.size = this.options.size; 
-}
+      value.size = this.options.size;
+    }
   }
 
   /** @override */
   _validateModel(data, options = {}) {
     super._validateType(data, options);
     if (data.size < data.value) {
- throw new Error("Clock value has exceeded its size."); 
-}
+      throw new Error("Clock value has exceeded its size.");
+    }
   }
 }
 
