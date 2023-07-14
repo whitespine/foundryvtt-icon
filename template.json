@@ -1,14 +1,14 @@
 {
     "Actor": {
-        "types": ["player", "foe", "summon"],
-        "htmlFields": ["description", "biography"],
+        "types": ["player", "foe", "summon", "junk"],
+        "htmlFields": ["biography"],
 
         "player": {},
         "foe": {}
     },
     "Item": {
-        "types": ["job", "foe-ability", "trait"],
-        "htmlFields": [],
+        "types": ["job", "ability", "trait", "junk"],
+        "htmlFields": ["description"],
         "job": {}
     }
 }

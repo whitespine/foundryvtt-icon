@@ -5,10 +5,13 @@ export class FoeModel extends ActorModel {
     static defineSchema() {
         return {
             ...super.defineSchema(),
-            biography: new foundry.data.fields.HTMLField(),
             clocks: new foundry.data.fields.ArrayField(new ClockField())
 
             // For legends
-        }
+        };
+    }
+
+    static convertSWB(data) {
+        data.type = "foe";
     }
 }

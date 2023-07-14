@@ -4,7 +4,11 @@ export class SummonModel extends ActorModel {
     static defineSchema() {
         return {
             ...super.defineSchema(),
-            description: new foundry.data.fields.HTMLField(),
-        }
+        };
+    }
+
+
+    static convertSWB(data) {
+        data.type = "summon";
     }
 }

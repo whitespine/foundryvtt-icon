@@ -18,6 +18,20 @@ export class IconDataModel extends foundry.abstract.DataModel {
     const system = foundry.utils.duplicate(this.source);
     return fancyMerge({ system }, update_data);
   }
+
+  /**
+   * Migrates the provided SWB object in-place to conform to this model.
+   * Override 
+   * 
+   * @param {object} data The raw SWB system data we start with
+   *
+   * @param {string} data.type The original type - must be overridden
+   *
+   * @param {object} data.system The original SWB system data
+   * 
+   * @param {object[]} [data.items] The original SWB actor's items, if original doc is an actor
+   */
+  static convertSWB(data) { }
 }
 
 /**
@@ -101,7 +115,7 @@ export class FakeBoundedNumberField extends foundry.data.fields.NumberField {
     return {
       min: this.options.min ?? 0,
       max: this.options.max ?? 0,
-      value,
+      value: value ?? 0,
     };
   }
 
@@ -119,22 +133,26 @@ export class FakeBoundedNumberField extends foundry.data.fields.NumberField {
  * Takes an option "size" that, if provided, will fix the size of the clock to that size. Otherwise size is arbitrary
  */
 export class ClockField extends foundry.data.fields.SchemaField {
-  constructor(options={}) {
+  constructor(options = {}) {
     const initial_size = options.size ?? 4;
     super({
       active: new fields.BooleanField({ initial: false }),
       name: new fields.StringField({ initial: `New ${initial_size} Clock` }),
-      size: new fields.NumberField({ integer: true, min: 0, initial: initial_size }),
-      value: new fields.NumberField({ integer: true, min: 0, initial: 0 }),
+      size: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: initial_size }),
+      value: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
     }, options);
   }
 
   /** @override */
   _cast(value) {
+    if (typeof value == "number") {
+      value = { value };
+    }
     value = super._cast(value);
     if (this.options.size) {
       value.size = this.options.size;
     }
+    return value;
   }
 
   /** @override */

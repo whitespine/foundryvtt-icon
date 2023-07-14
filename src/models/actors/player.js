@@ -3,7 +3,7 @@ import { ActorModel } from "./actor";
 
 const fields = foundry.data.fields;
 
-const actionField = () => new fields.NumberField({ integer: true, min: 0, max: 4, initial: 0 });
+const actionField = () => new fields.NumberField({ nullable: false, integer: true, min: 0, max: 4, initial: 0 });
 
 export class PlayerModel extends ActorModel {
     static defineSchema() {
@@ -11,12 +11,17 @@ export class PlayerModel extends ActorModel {
             // Non combat
             kin: new fields.StringField(),
             culture: new fields.StringField(),
-            effort: new FakeBoundedNumberField({ min: 0, max: 3 }),
-            strain: new FakeBoundedNumberField({ min: 0, max: 5 }),
+            effort: new FakeBoundedNumberField({ min: 0, max: 3, initial: 0 }),
+            strain: new FakeBoundedNumberField({ min: 0, max: 5, initial: 0 }),
             burdens: new fields.SchemaField({
-                4: new ClockField({ size: 4 }),
-                6: new ClockField({ size: 6 }),
-                10: new ClockField({ size: 10 })
+                c4: new ClockField({ size: 4 }),
+                c6: new ClockField({ size: 6 }),
+                c8: new ClockField({ size: 8 })
+            }),
+            ambitions: new fields.SchemaField({
+                c4: new ClockField({ size: 4 }),
+                c6: new ClockField({ size: 6 }),
+                c10: new ClockField({ size: 10 })
             }),
 
             // Kit, gear & ideals come from items (ideals specifically from )
@@ -34,12 +39,12 @@ export class PlayerModel extends ActorModel {
                 endure: actionField(),
             }),
             xp: new ClockField({ size: 15 }),
-            xp_tracker: {
+            xp_tracker: new fields.SchemaField({
                 ideals: new ClockField({ size: 2 }),
                 challenged: new ClockField({ size: 2 }),
                 ambition: new ClockField({ size: 3 }),
                 burdens: new ClockField({ size: 1 })
-            },
+            }),
 
             // Combat
             hp: new FakeBoundedNumberField(),
@@ -53,5 +58,56 @@ export class PlayerModel extends ActorModel {
 
     prepareDerivedData() {
         console.log(this);
+    }
+    
+    static convertSWB(data) {
+        data.type = "player";
+        let old_sys = data.system;
+        let new_sys = {};
+        data.system = new_sys;
+
+        // Convert "state"
+        new_sys.hp = old_sys.health.value;
+        new_sys.strain = old_sys.strain.value;
+        new_sys.effort = old_sys.strain.value;
+        
+        // Convert skills
+        new_sys.actions = {};
+        for (let [skill_name, skill_data] of Object.entries(old_sys.attributes?.skills ?? {})) {
+            new_sys.actions[skill_name.toLowerCase()] = skill_data.value ?? 0;
+        }
+
+        // Convert clocks
+        new_sys.ambitions = {
+            c4: {},
+            c6: {},
+            c10: {}
+        };
+        new_sys.burdens = {
+            c4: {},
+            c6: {},
+            c8: {}
+        };
+        for (let [clock_name, clock_data] of Object.entries(old_sys.attributes?.clocks ?? {})) {
+            let [number] = clock_name.match(/d+/) ?? [0];
+            let is_name = clock_name.includes("Name");
+            if (clock_name.startsWith("Ambition")) {
+                let target_clock = new_sys.ambitions[`c${number}`];
+                if (target_clock && is_name) {
+target_clock.name = clock_data.value;
+}
+                if (target_clock && !is_name) {
+target_clock.value = clock_data.value;
+}
+            } else if (clock_name.startsWith("Burden")) {
+                let target_clock = new_sys.burdens[`c${number}`];
+                if (target_clock && is_name) {
+target_clock.name = clock_data.value;
+}
+                if (target_clock && !is_name) {
+target_clock.value = clock_data.value;
+}
+            }
+        }
     }
 }
