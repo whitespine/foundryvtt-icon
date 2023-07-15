@@ -10,6 +10,12 @@
     /** @type {boolean} Should the name be an input? */
     export let title_editable = true;
 
+    /** @type {string} Size of the clock */
+    export let clock_width;
+
+    /** @type {string} Whether to display horizontally */
+    export let inline;
+
     let actor = getContext("tjs_actor");
 
 
@@ -22,20 +28,18 @@
     }
 </script>
 
-<div>
+<div class:flexrow={inline} class:flexcol={!inline}>
     {#if title_editable}
         <input type="text" use:updateDoc={{doc: actor, path: `${path}.name`}} />
     {:else}
         <span>{clock.name}</span>
     {/if}
-    <Clock value={clock.value} size={clock.size} on:change={handleChange} >
+    <Clock value={clock.value} size={clock.size} width={clock_width} on:change={handleChange} >
     </Clock>
 </div>
 
 <style lang="scss">
     div {
-        display: flex;
-        flex-direction: column;
         align-items: center;
     }
 </style>

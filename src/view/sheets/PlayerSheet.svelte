@@ -5,9 +5,17 @@
     import DocClock from "../components/DocClock.svelte";
     import BoundedNumberDisplay from "../components/BoundedNumberDisplay.svelte";
     import Clock from "../components/Clock.svelte";
+    import Tabs from "../components/Tabs.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
+
+    // Set our tabs
+    const tabs = ["ICON.Narrative", "ICON.Traits-Relics", "ICON.AbilitiesTrophies", "ICON.Attributes"].map(s => ({
+        label: localize(s),
+        key: s
+    }));
+    let selected_tab = "ICON.Narrative";
 </script>
 
 <main class="flexcol" autocomplete="off">
@@ -15,7 +23,7 @@
     <header>
         <img style="grid-area: pic" src={$actor.img} data-edit="img" title={$actor.name} height="100" width="100" alt="Character Portrait" />
         <input style="grid-area: char_name" type="text" use:updateDoc={{ doc, path: "name" }} />
-        <input style="grid-area: player_name" type="text" use:updateDoc={{ doc, path: "system.player_name" }} />
+        <input style="grid-area: player_name" type="text" use:updateDoc={{ doc, path: "system.player_name" }} placeholder="Player Name" />
         <div style="grid-area: narr" class="header-information">
             <span>{localize("ICON.Kintype")}: </span>
             <input type="text" use:updateDoc={{ doc, path: "system.kintype" }} />
@@ -40,21 +48,17 @@
     </header>
 
     <!-- Sheet Tab Navigation -->
-    <nav class="sheet-tabs tabs" actor-group="primary">
-        <a class="item" actor-tab="narrative" actor-group="primary">{localize("ICON.Narrative")}</a>
-        <a class="item" actor-tab="traits" actor-group="primary">{localize("ICON.Traits-Relics")}</a>
-        <a class="item" actor-tab="items" actor-group="primary">{localize("ICON.AbilitiesTrophies")}</a>
-        <a class="item" actor-tab="attributes" actor-group="primary">{localize("ICON.Attributes")}</a>
-    </nav>
-
+    <Tabs tabs={tabs} bind:selected={selected_tab}></Tabs>
+    
     <!-- Sheet Body -->
     <section class="sheet-body">
+        {#if selected_tab=="ICON.Narrative"}
         <!-- Narrative Tab -->
-        <div class="tab narrative" actor-group="primary" actor-tab="narrative">
+        <div class="tab narrative">
             <div class="narrative-grid">
-                <section class="skills">
+                <section>
                     {#each Object.entries($actor.system.actions) as [action_name, action_value]}
-                        {{ action_name }}
+                        { action_name }
                     {/each}
                 </section>
                 <section class="XPDust">
@@ -70,20 +74,21 @@
                 </section>
                 <section class="burdens">
                     {#each Object.entries($actor.system.burdens) as [key, _clock]}
-                        <DocClock path={`system.burdens.${key}`} />
+                        <DocClock clock_width="30px" path={`system.burdens.${key}`} inline />
                     {/each}
                 </section>
                 <section class="ambitions">
                     {#each Object.entries($actor.system.ambitions) as [key, _clock]}
-                        <DocClock path={`system.ambitions.${key}`} />
+                        <DocClock clock_width="30px" path={`system.ambitions.${key}`} />
                     {/each}
                 </section>
 
             </div>
         </div>
+        {:else if selected_tab === "ICON.Traits-Relics"}
 
         <!-- Traits & Relics Tab -->
-        <div class="tab traits" actor-group="primary" actor-tab="traits">
+        <div>
             <div class="traitsrelics">
                 <div class="traitheader">
                     <span>Traits</span>
@@ -101,12 +106,16 @@
                 </div>
             </div>
         </div>
+
+        {:else}
+            <span>Tab does not exist</span>
+        {/if}
     </section>
 </main>
 
 <style lang="scss">
     main {
-        background-color: grey;
+        background-color: rgb(110, 166, 152);
     }
 
     header {
@@ -114,6 +123,8 @@
         grid-template:  "pic    char_name   player_name"    30px 
                         "pic    narr        comb"           80px 
                         "pic    stats       stats"          1fr / 100px 1fr 1fr;
+        gap: 10px;
+        padding: 10px;
         
         .header-information {
             display: grid;
