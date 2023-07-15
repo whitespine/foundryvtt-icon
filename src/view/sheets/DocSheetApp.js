@@ -6,6 +6,7 @@ export default class TJSDocSheet extends SvelteApplication {
   /**
    * 
    * @param {IconActor | IconItem} doc Document to display
+   *
    * @param {object} options Application options
    */
   constructor(doc, options = {}) {

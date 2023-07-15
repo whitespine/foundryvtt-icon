@@ -31,7 +31,7 @@
         };
     }
 
-    // Make an iterable for our clock size
+    // Make an iterable for our clock size. Reactive to allow resizing (is this necessary?)
     let slices;
     $: {
         slices = [];
@@ -45,12 +45,15 @@
             });
         }
     }
+
+    // Dispatches 'change'
+	const dispatch = createEventDispatcher();
 </script>
 
-<svg viewbox="0 0 200 200" style="width: {width}; height: {width}">
+<svg viewbox="0 0 200 200" style="width: {width}; height: {width}" >
     <g class="sectors">
         {#each slices as slice}
-            <path d={slice.path} class="{slice.class}" on:click={() => value = slice.value} />
+            <path d={slice.path} class="{slice.class}" on:click={() => dispatch('change', slice.value)} />
         {/each}
     </g>
 </svg>
