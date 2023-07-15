@@ -46,18 +46,18 @@ export function updateDoc(node, { doc, path } = {}) {
     }
 
     /**
-     * @param {foundry.abstract.Document} doc - Foundry document changing.
+     * @param {foundry.abstract.Document} changeDoc - Foundry document changing.
      */
-    function onDocChange(doc) {
-        if (!doc) {
+    function onDocChange(changeDoc) {
+        if (!changeDoc) {
             console.warn('updateDoc.onDocChange warning: no associated document on change.');
             return;
         }
 
-        const new_val = resolveDotpath(doc, path);
+        const new_val = resolveDotpath(changeDoc, path);
         if (current_doc_val !== new_val) {
             current_doc_val = new_val;
-            if(typeof current_doc_val === "boolean") {
+            if (typeof current_doc_val === "boolean") {
                 node.checkd = new_val;
             } else {
                 node.value = current_doc_val;

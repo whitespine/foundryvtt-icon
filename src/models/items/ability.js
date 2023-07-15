@@ -26,7 +26,7 @@ export class ActionClauseField extends fields.SchemaField {
     }
 
     // Extend initialize to populate our deduced values
-    initialize(value, model, options={}) {
+    initialize(value, model, options = {}) {
         let rv = super.initialize(value, model, options);
         this.foo = "bar";
         return rv;
@@ -108,7 +108,7 @@ export class AbilityChoiceField extends fields.SchemaField {
         }, options);
     }
 
-    initialize(value, model, options={}) {
+    initialize(value, model, options = {}) {
         let rv = super.initialize(value, model, options);
         // Add in a derived helper
         return rv;
