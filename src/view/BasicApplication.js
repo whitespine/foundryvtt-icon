@@ -12,8 +12,8 @@ export default class BasicApplication extends SvelteApplication {
    static get defaultOptions() {
       return foundry.utils.mergeObject(super.defaultOptions, {
          title: 'ICON.title',  // Automatically localized from `lang/en.json`.
-         width: 400,
-         height: 400,
+         width: 420,
+         height: 520,
 
          svelte: {
             class: BasicAppShell,
