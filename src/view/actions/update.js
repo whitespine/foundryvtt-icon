@@ -58,7 +58,7 @@ export function updateDoc(node, { doc, path } = {}) {
         if (current_doc_val !== new_val) {
             current_doc_val = new_val;
             if (typeof current_doc_val === "boolean") {
-                node.checkd = new_val;
+                node.checked = new_val;
             } else {
                 node.value = current_doc_val;
             }
