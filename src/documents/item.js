@@ -1,3 +1,4 @@
+import { ICON } from "../consts";
 import { AbilityModel } from "../models/items/ability";
 import { TraitModel } from "../models/items/trait";
 
@@ -13,18 +14,18 @@ export class IconItem extends Item {
             // Need to fixup a SWB item
             console.warn("Migrating SWB", foundry.utils.duplicate(data));
             let ntlc = data.name.toLowerCase();
-            if(data.flags.icon_data?.isTrait) {
+            if (data.flags.icon_data?.isTrait) {
                 // Flags confirm
                 TraitModel.convertSWB(data);
-            } else if(data.flags.icon_data?.isBondPower) {
+            } else if (data.flags.icon_data?.isBondPower) {
                 // Flags confirm
                 // BondPowerModel.convertSWB(data);
-            } else if (ntlc.includes("action") || ntlc.includes("resolve") || (data.system.groups ?? {})["Talents"]) {
+            } else if (ntlc.includes("action") || ntlc.includes("interrupt")) {
                 // It's probably an ability, pretty sure!
                 AbilityModel.convertSWB(data);
             }
             // Fallback 
-            if(data.type == "item") {
+            if (data.type === "item") {
                 data.type = "junk";
             } else {
                 // Flag as converted and needing a commit

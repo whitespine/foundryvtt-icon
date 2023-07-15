@@ -23,7 +23,7 @@ export class IconActor extends Actor {
                 PlayerModel.convertSWB(data);
             }
             // Fallback 
-            if(data.type == "item") {
+            if (data.type === "item") {
                 data.type = "junk";
             } else {
                 // Flag as converted and needing a commit
