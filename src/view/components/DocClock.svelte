@@ -1,4 +1,3 @@
-
 <script>
     import { getContext } from "svelte";
     import Clock from "./Clock.svelte";
@@ -9,15 +8,16 @@
 
     let actor = getContext("tjs_actor");
 
-    let clock = resolveDotpath($actor, path);
+    let clock;
+    $: clock = resolveDotpath($actor, path);
 
-
-
+    function handleChange(event) {
+        console.log(event);
+        $actor.update({[`${path}.value`]: event.detail});
+    }
 </script>
 
-<Clock {...$$props} {...clock} >
+<Clock value={clock.value} size={clock.size} on:change={handleChange} >
 </Clock>
 
 
-<style lang="scss">
-</style>

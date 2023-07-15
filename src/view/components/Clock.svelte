@@ -1,4 +1,6 @@
 <script>
+    import { createEventDispatcher } from "svelte";
+
     export let size = 3;
     export let value = 0;
     export let width = "128px";
