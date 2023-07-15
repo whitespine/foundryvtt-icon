@@ -10,11 +10,11 @@
 
 <main class="flexcol" autocomplete="off">
     <!-- Sheet Header -->
-    <header class="icon-sheet-header icon-header-grid">
-        <img class="profile-img" src={$actor.img} data-edit="img" title={$actor.name} height="100" width="100" />
+    <header>
+        <img class="profile-img" src={$actor.img} data-edit="img" title={$actor.name} height="100" width="100" alt="Character Portrait" />
         <div class="header-fields flex-group-center">
             <h1 class="charname">
-                <input type="text" use:updateDoc={{ actor, path: "name" }} />
+                <input type="text" use:updateDoc={{ doc, path: "name" }} />
             </h1>
         </div>
         <div class="narrative-information">
@@ -76,8 +76,8 @@
         <div class="tab narrative" actor-group="primary" actor-tab="narrative">
             <div class="narrative-grid">
                 <section class="skills">
-                    {#each Object.entries($actor.system.skills) as [skill_name, skill_value]}
-                        {{ skill_name }}
+                    {#each Object.entries($actor.system.actions) as [action_name, action_value]}
+                        {{ action_name }}
                     {/each}
                 </section>
                 <section class="XPDust">
@@ -142,4 +142,12 @@
 </main>
 
 <style lang="scss">
+    main {
+        background-color: grey;
+    }
+
+    header {
+        grid-template:  "a b" 40px 
+                        "c d" 40px / 1fr 1fr
+    }
 </style>

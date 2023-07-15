@@ -10,15 +10,15 @@
     export let elementRoot = void 0;
 
     /** @type {TJSDocument<IconActor | IconItem>} */
-    export let doc;
+    export let tjs_doc;
 
     // For anything deeper than root doc
-    setContext("tjs_actor", doc); // TODO: conditional on tjs item
-    setContext("tjs_item", doc); // TODO: Only if an item
-    setContext("tjs_doc", doc); // Always the root doc
+    setContext("tjs_actor", tjs_doc); // TODO: conditional on tjs item
+    setContext("tjs_item", tjs_doc); // TODO: Only if an item
+    setContext("tjs_doc", tjs_doc); // Always the root doc
 </script>
 
-<TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 1000 }}>
+<TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 200 }}>
     <PlayerSheet/>
 </TJSApplicationShell>
 
