@@ -1,18 +1,18 @@
 import { SvelteApplication } from "#runtime/svelte/application";
 import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-import ActorSheetAppShell from "./ActorSheetAppShell.svelte";
+import ActorSheetAppShell from "./DocSheetAppShell.svelte";
 
-export default class TJSActorSheet extends SvelteApplication {
+export default class TJSDocSheet extends SvelteApplication {
   /**
    * 
-   * @param {IconActor} actor Actor to display
+   * @param {IconActor | IconItem} doc Document to display
    * @param {object} options Application options
    */
-  constructor(actor, options = {}) {
+  constructor(doc, options = {}) {
     super({
       svelte: {
         props: {
-          tjs_actor: new TJSDocument(actor),
+          tjs_doc: new TJSDocument(doc),
         },
       },
     });

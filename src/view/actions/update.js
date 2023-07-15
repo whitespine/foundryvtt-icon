@@ -1,4 +1,4 @@
-import { TJSDocument } from '#runtime/svelte/store';
+import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
 import { resolveDotpath } from '../../util/paths';
 
 /**

@@ -9,9 +9,9 @@ import { IconActor } from './documents/actor.js';
 import { IconItem } from './documents/item.js';
 import { applyGlobalDragListeners } from './util/dragdrop.js';
 import BasicApplication from './view/BasicApplication.js';
-import TJSActorSheet from './view/sheets/ActorSheetApp.js';
+import TJSDocSheet from './view/sheets/DocSheetApp.js';
 
-Hooks.once('ready', () => new TJSActorSheet(game.actors.getName("p")).render(true, { focus: true }));
+Hooks.once('ready', () => new TJSDocSheet(game.actors.getName("p")).render(true, { focus: true }));
 
 
 // Import sliding HUD (used for accuracy/difficulty windows)
