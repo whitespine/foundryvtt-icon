@@ -1,6 +1,6 @@
 <script>
    import { ApplicationShell }   from '#runtime/svelte/component/core';
-   import Clock   from '../components/Clock.svelte';
+   import Clock   from './components/Clock.svelte';
 
    export let elementRoot;
    let clocks = [];
