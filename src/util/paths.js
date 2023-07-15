@@ -113,7 +113,7 @@ export function drilldownDocument(root_doc, path) {
  *
  * @returns {any} Value at end of path, or default value
  */
-export function resolve_dotpath(obj, path, default_ = undefined, opts = null) {
+export function resolveDotpath(obj, path, default_ = undefined, opts = null) {
   const evaluated = stepwiseResolveDotpath(obj, path);
   let item;
 
