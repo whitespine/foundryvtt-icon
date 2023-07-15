@@ -11,9 +11,9 @@
     let doc = actor; // Alias
 
     // Set our tabs
-    const tabs = ["ICON.Narrative", "ICON.Traits-Relics", "ICON.AbilitiesTrophies", "ICON.Attributes"].map(s => ({
+    const tabs = ["ICON.Narrative", "ICON.Traits-Relics", "ICON.AbilitiesTrophies", "ICON.Attributes"].map((s) => ({
         label: localize(s),
-        key: s
+        key: s,
     }));
     let selected_tab = "ICON.Narrative";
 </script>
@@ -21,9 +21,22 @@
 <main class="flexcol" autocomplete="off">
     <!-- Sheet Header -->
     <header>
-        <img style="grid-area: pic" src={$actor.img} data-edit="img" title={$actor.name} height="100" width="100" alt="Character Portrait" />
+        <img
+            style="grid-area: pic"
+            src={$actor.img}
+            data-edit="img"
+            title={$actor.name}
+            height="100"
+            width="100"
+            alt="Character Portrait"
+        />
         <input style="grid-area: char_name" type="text" use:updateDoc={{ doc, path: "name" }} />
-        <input style="grid-area: player_name" type="text" use:updateDoc={{ doc, path: "system.player_name" }} placeholder="Player Name" />
+        <input
+            style="grid-area: player_name"
+            type="text"
+            use:updateDoc={{ doc, path: "system.player_name" }}
+            placeholder="Player Name"
+        />
         <div style="grid-area: narr" class="header-information">
             <span>{localize("ICON.Kintype")}: </span>
             <input type="text" use:updateDoc={{ doc, path: "system.kintype" }} />
@@ -48,29 +61,28 @@
     </header>
 
     <!-- Sheet Tab Navigation -->
-    <Tabs tabs={tabs} bind:selected={selected_tab}></Tabs>
-    
+    <Tabs {tabs} bind:selected={selected_tab} />
+
     <!-- Sheet Body -->
     <section class="sheet-body">
-        {#if selected_tab=="ICON.Narrative"}
-        <!-- Narrative Tab -->
-        <div class="tab narrative">
+        {#if selected_tab == "ICON.Narrative"}
+            <!-- Narrative Tab -->
             <div class="narrative-grid">
-                <section>
+                <section class="actions">
                     {#each Object.entries($actor.system.actions) as [action_name, action_value]}
-                        { action_name }
+                        <div>{action_name.toUpperCase()}</div>
+                        {#each [1, 2, 3, 4] as action_box}
+                            <span>[]</span>
+                        {/each}
                     {/each}
                 </section>
-                <section class="XPDust">
-                    <div class="XP-and-Dust">
-                        <div class="XP-value">
-                            <span>{localize("ICON.XP")}</span>
-                        </div>
-                        <div class="Dust-value">
-                            <span>{localize("ICON.Dust")}</span>
-                            <label for="attributes-Dust-{this}" />
-                        </div>
-                    </div>
+                <section class="powers">
+                </section>
+                <section class="xp">
+                    <span>{localize("ICON.XP")}</span>
+                </section>
+                <section class="dust">
+                    <span>{localize("ICON.Dust")}</span>
                 </section>
                 <section class="burdens">
                     {#each Object.entries($actor.system.burdens) as [key, _clock]}
@@ -82,31 +94,27 @@
                         <DocClock clock_width="30px" path={`system.ambitions.${key}`} />
                     {/each}
                 </section>
-
             </div>
-        </div>
         {:else if selected_tab === "ICON.Traits-Relics"}
+            <!-- Traits & Relics Tab -->
+            <div>
+                <div class="traitsrelics">
+                    <div class="traitheader">
+                        <span>Traits</span>
+                    </div>
 
-        <!-- Traits & Relics Tab -->
-        <div>
-            <div class="traitsrelics">
-                <div class="traitheader">
-                    <span>Traits</span>
-                </div>
-
-                <!-- Abilities & Trophies Tab -->
-                <div class="tab items" actor-group="primary" actor-tab="items">
-                    <div class="CombatBar">
-                        <div class="Personal Resolve">
-                            <span>Personal Resolve</span>
-                            <span>Wounds</span>
-                            <span>Abilities</span>
+                    <!-- Abilities & Trophies Tab -->
+                    <div class="tab items" actor-group="primary" actor-tab="items">
+                        <div class="CombatBar">
+                            <div class="Personal Resolve">
+                                <span>Personal Resolve</span>
+                                <span>Wounds</span>
+                                <span>Abilities</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
         {:else}
             <span>Tab does not exist</span>
         {/if}
@@ -120,16 +128,46 @@
 
     header {
         display: grid;
-        grid-template:  "pic    char_name   player_name"    30px 
-                        "pic    narr        comb"           80px 
-                        "pic    stats       stats"          1fr / 100px 1fr 1fr;
+        grid-template:
+            "pic    char_name   player_name" 30px
+            "pic    narr        comb" 80px
+            "pic    stats       stats" 1fr / 100px 1fr 1fr;
         gap: 10px;
         padding: 10px;
-        
+
         .header-information {
             display: grid;
             grid-template: 1fr 1fr 1fr / 1fr 1fr;
         }
     }
 
+    .sheet-body {
+        .narrative-grid {
+            display: grid;
+            grid-template: 
+                "actions powers xp" 1fr
+                "actions powers dust" 1fr
+                "gear powers burdens" 1fr
+                "gear powers ambitions" 1fr / 1fr 1fr 1fr 1fr;
+        }
+
+        .actions {
+            grid-area: actions;
+            display: grid;
+            grid-template-columns: 1fr repeat(4, 10px);
+        }
+
+        .xp {
+            grid-area: xp;
+        }
+        .dust {
+            grid-area: dust;
+        }
+        .burdens {
+            grid-area: burdens;
+        }
+        .ambitions {
+            grid-area: ambitions;
+        }
+    }
 </style>

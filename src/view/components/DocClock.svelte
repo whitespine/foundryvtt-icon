@@ -14,7 +14,7 @@
     export let clock_width;
 
     /** @type {string} Whether to display horizontally */
-    export let inline;
+    export let inline = false;
 
     let actor = getContext("tjs_actor");
 
