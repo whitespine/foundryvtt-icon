@@ -9,8 +9,9 @@ export class PlayerModel extends ActorModel {
     static defineSchema() {
         return {
             // Non combat
-            kin: new fields.StringField(),
-            culture: new fields.StringField(),
+            kin: new fields.StringField({initial: "Arken"}),
+            culture: new fields.StringField({initial: "Arken"}),
+            bond: new fields.StringField({initial: "Arkenlord"}), // Eventually will be item
             effort: new FakeBoundedNumberField({ min: 0, max: 3, initial: 0 }),
             strain: new FakeBoundedNumberField({ min: 0, max: 5, initial: 0 }),
             burdens: new fields.SchemaField({
@@ -49,6 +50,9 @@ export class PlayerModel extends ActorModel {
             // Combat
             hp: new FakeBoundedNumberField(),
             wounds: new FakeBoundedNumberField(),
+            level: new fields.StringField({initial: "Arken"}), // Eventually will be item
+            class: new fields.StringField({initial: "Stalward"}), // Eventually will be item
+            job: new fields.StringField({initial: "Knave"}), // Eventually will be item
         };
     }
 
