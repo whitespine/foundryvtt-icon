@@ -9,15 +9,15 @@
 
     export let elementRoot = void 0;
 
-    /** @type {Readable<IconActor>} */
-    export let actor_store;
+    /** @type {TJSDocument<IconActor>} */
+    export let actor;
 
     // For anything deeper than root doc
-    setContext("actor_store", actor_store);
+    setContext("tjs_actor", actor);
 </script>
 
 <TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 1000 }}>
-    <PlayerSheet actor={$actor_store} />
+    <PlayerSheet/>
 </TJSApplicationShell>
 
 <style lang="scss">

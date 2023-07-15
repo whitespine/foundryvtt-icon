@@ -12,7 +12,7 @@ export default class TJSActorSheet extends SvelteApplication {
     super({
       svelte: {
         props: {
-          actor_store: new TJSDocument(actor),
+          tjs_actor: new TJSDocument(actor),
         },
       },
     });

@@ -1,7 +1,8 @@
 <script>
     import { getContext } from "svelte";
 
-    export let actor;
+    let tjs_actor = getContext("tjs_actor");
+    let actor = $tjs_actor;
 </script>
 
 
