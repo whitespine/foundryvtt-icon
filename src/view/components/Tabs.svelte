@@ -1,9 +1,6 @@
-<script lang="ts">
-    // Props
-    export let tabs: Array<{
-        label: string,
-        key: string 
-    }>;
+<script>
+    /** @type {Array<{label: string, key: string}>} */
+    export let tabs;
 
     // Currently selected tab. Can be controlled programatically
     export let selected: string;
