@@ -2,9 +2,9 @@
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
     import { localize } from "../../util/misc";
-    import DocClock from "../components/DocClock.svelte";
-    import BoundedNumberDisplay from "../components/BoundedNumberDisplay.svelte";
-    import Tabs from "../components/Tabs.svelte";
+    import DocClock from "../components/generic/DocClock.svelte";
+    import BoundedNumberDisplay from "../components/generic/BoundedNumberDisplay.svelte";
+    import Tabs from "../components/generic/Tabs.svelte";
     import ActionRating from "../components/ActionRating.svelte";
 
     let actor = getContext("tjs_actor");
@@ -55,7 +55,6 @@
         </div>
         <div style="grid-area: stats" class="flexrow">
             <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
-            <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
             <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
         </div>
     </header>

@@ -1,8 +1,8 @@
 <script>
     import { getContext } from "svelte";
     import Clock from "./Clock.svelte";
-    import { resolveDotpath } from "../../util/paths";
-    import { updateDoc } from "../actions/update";
+    import { resolveDotpath } from "../../../util/paths";
+    import { updateDoc } from "../../actions/update";
 
     /** @type {string} Path to the clock*/
     export let path;
@@ -23,7 +23,6 @@
     $: clock = resolveDotpath($actor, path);
 
     function handleChange(event) {
-        console.log(event);
         $actor.update({[`${path}.value`]: event.detail});
     }
 </script>

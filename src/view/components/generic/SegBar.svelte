@@ -1,7 +1,5 @@
 <script>
-    import { createEventDispatcher, getContext } from "svelte";
-    import { resolveDotpath, stepwiseResolveDotpath } from "../../util/paths";
-    import { updateDoc } from "../actions/update";
+    import { createEventDispatcher } from "svelte";
 
     /** @type {number} Number of segments */
     export let size;
@@ -44,7 +42,6 @@
         .segment {
             clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
             background-color: var(--clock-empty);
-            border-color: black;
             width: 20px;
             height: 20px;
             cursor: pointer;

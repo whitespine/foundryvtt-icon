@@ -1,7 +1,7 @@
 <script>
     import { getContext } from "svelte";
     import { stepwiseResolveDotpath } from "../../util/paths";
-    import SegBar from "./SegBar.svelte";
+    import SegBar from "./generic/SegBar.svelte";
 
     /** @type {string} Path to the action*/
     export let path;
@@ -15,8 +15,6 @@
 
     function onClick(target_value) {
         let new_value = target_value === value ? value - 1 : target_value;
-        console.log(value, target_value, new_value);
-        console.log({[path]: new_value});
         $actor.update({[path]: new_value});
     }
 </script>

@@ -1,7 +1,7 @@
 <script>
     import { getContext } from "svelte";
-    import { resolveDotpath } from "../../util/paths";
-    import { updateDoc } from "../actions/update";
+    import { resolveDotpath } from "../../../util/paths";
+    import { updateDoc } from "../../actions/update";
 
     /** @type {string} Label to show */
     export let name;
