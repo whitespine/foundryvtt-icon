@@ -124,6 +124,8 @@
 </main>
 
 <style lang="scss">
+    $border: solid black 1px;
+
     main {
         background-color: rgb(110, 166, 152);
     }
@@ -146,11 +148,11 @@
     .sheet-body {
         .narrative-grid {
             display: grid;
-            grid-template: 1fr / 1fr 2fr 1fr;
+            grid-template: 1fr / 180px 2fr 180px;
 
-            div {
-                border-right: solid black 1px;
-                border-bottom: solid black 1px;
+            > div {
+                border-right: $border;
+                border-bottom: $border;
             }
         }
 
@@ -158,6 +160,7 @@
             grid-area: actions;
             display: flex;
             flex-direction: column;
+            border-bottom: $border;
         }
 
         .xp {
@@ -168,6 +171,8 @@
         }
         .burdens {
             grid-area: burdens;
+            border-bottom: $border;
+            border-top: $border;
         }
         .ambitions {
             grid-area: ambitions;
