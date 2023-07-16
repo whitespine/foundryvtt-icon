@@ -4,8 +4,8 @@
     import { localize } from "../../util/misc";
     import DocClock from "../components/DocClock.svelte";
     import BoundedNumberDisplay from "../components/BoundedNumberDisplay.svelte";
-    import Clock from "../components/Clock.svelte";
     import Tabs from "../components/Tabs.svelte";
+    import ActionRating from "../components/ActionRating.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -69,13 +69,9 @@
             <!-- Narrative Tab -->
             <div class="narrative-grid">
                 <div class="leftcol">
-
                     <div class="actions">
-                        {#each Object.entries($actor.system.actions) as [action_name, action_value]}
-                            <div>{action_name.toUpperCase()}</div>
-                            {#each [1, 2, 3, 4] as action_box}
-                                <span>[]</span>
-                            {/each}
+                        {#each Object.keys($actor.system.actions) as action_name}
+                            <ActionRating path={`system.actions.${action_name}`} />
                         {/each}
                     </div>
                 </div>
@@ -131,13 +127,13 @@
     main {
         background-color: rgb(110, 166, 152);
     }
-
+    
     header {
         display: grid;
         grid-template:
             "pic    char_name   player_name" 30px
             "pic    narr        comb" 80px
-            "pic    stats       stats" 1fr / 100px 1fr 1fr;
+            "pic    stats       stats" 1fr / 120px 1fr 1fr;
         gap: 10px;
         padding: 10px;
 
@@ -150,13 +146,18 @@
     .sheet-body {
         .narrative-grid {
             display: grid;
-            grid-template: 1fr / 1fr 2fr 1fr
+            grid-template: 1fr / 1fr 2fr 1fr;
+
+            div {
+                border-right: solid black 1px;
+                border-bottom: solid black 1px;
+            }
         }
 
         .actions {
             grid-area: actions;
-            display: grid;
-            grid-template-columns: 1fr repeat(4, 10px);
+            display: flex;
+            flex-direction: column;
         }
 
         .xp {
