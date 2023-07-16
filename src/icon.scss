@@ -1,5 +1,5 @@
 /* Item/document types, useful for shorthand */
-$item-types: job ability trait;
+$item-types: job ability trait bond bond_power;
 $actor-types: player foe summon;
 $document-types: join($item-types, $actor-types);
 
