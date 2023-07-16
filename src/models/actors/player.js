@@ -8,7 +8,7 @@ const actionField = () => new fields.NumberField({ nullable: false, integer: tru
 export class PlayerModel extends ActorModel {
     static defineSchema() {
         return {
-            player_name: new fields.StringField(), 
+            player_name: new fields.StringField(),
             // Non combat
             kin: new fields.StringField({ initial: "Arken" }),
             culture: new fields.StringField({ initial: "Arken" }),
@@ -16,14 +16,14 @@ export class PlayerModel extends ActorModel {
             effort: new FakeBoundedNumberField({ min: 0, max: 3, initial: 0 }),
             strain: new FakeBoundedNumberField({ min: 0, max: 5, initial: 0 }),
             burdens: new fields.SchemaField({
-                c4: new ClockField({ size: 4 }),
-                c6: new ClockField({ size: 6 }),
-                c8: new ClockField({ size: 8 })
+                c4: new ClockField({ size: 4 }, { initial: () => ({ name: "4 Burden" }) }),
+                c6: new ClockField({ size: 6 }, { initial: () => ({ name: "6 Burden" }) }),
+                c8: new ClockField({ size: 8 }, { initial: () => ({ name: "8 Burden" }) })
             }),
             ambitions: new fields.SchemaField({
-                c4: new ClockField({ size: 4 }),
-                c6: new ClockField({ size: 6 }),
-                c10: new ClockField({ size: 10 })
+                c4: new ClockField({ size: 4 }, { initial: () => ({ name: "4 Ambition" }) }),
+                c6: new ClockField({ size: 6 }, { initial: () => ({ name: "6 Ambition" }) }),
+                c10: new ClockField({ size: 10 }, { initial: () => ({ name: "10 Ambition" }) })
             }),
 
             // Kit, gear & ideals come from items (ideals specifically from )
@@ -40,7 +40,8 @@ export class PlayerModel extends ActorModel {
                 smash: actionField(),
                 endure: actionField(),
             }),
-            xp: new ClockField({ size: 15 }),
+            xp: new FakeBoundedNumberField({ max: 15 }),
+            dust: new FakeBoundedNumberField({ max: 8 }),
             xp_tracker: new fields.SchemaField({
                 ideals: new ClockField({ size: 2 }),
                 challenged: new ClockField({ size: 2 }),
@@ -64,7 +65,7 @@ export class PlayerModel extends ActorModel {
     prepareDerivedData() {
         console.log(this);
     }
-    
+
     static convertSWB(data) {
         data.type = "player";
         let old_sys = data.system;
@@ -75,7 +76,7 @@ export class PlayerModel extends ActorModel {
         new_sys.hp = old_sys.health.value;
         new_sys.strain = old_sys.strain.value;
         new_sys.effort = old_sys.strain.value;
-        
+
         // Convert skills
         new_sys.actions = {};
         for (let [skill_name, skill_data] of Object.entries(old_sys.attributes?.skills ?? {})) {
@@ -99,19 +100,19 @@ export class PlayerModel extends ActorModel {
             if (clock_name.startsWith("Ambition")) {
                 let target_clock = new_sys.ambitions[`c${number}`];
                 if (target_clock && is_name) {
-target_clock.name = clock_data.value;
-}
+                    target_clock.name = clock_data.value;
+                }
                 if (target_clock && !is_name) {
-target_clock.value = clock_data.value;
-}
+                    target_clock.value = clock_data.value;
+                }
             } else if (clock_name.startsWith("Burden")) {
                 let target_clock = new_sys.burdens[`c${number}`];
                 if (target_clock && is_name) {
-target_clock.name = clock_data.value;
-}
+                    target_clock.name = clock_data.value;
+                }
                 if (target_clock && !is_name) {
-target_clock.value = clock_data.value;
-}
+                    target_clock.value = clock_data.value;
+                }
             }
         }
     }

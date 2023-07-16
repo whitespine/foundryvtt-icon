@@ -15,20 +15,8 @@
 </div>
 
 <style lang="scss">
-    $gap: 5px; 
-
     .icon-tabs {
-        clip-path: polygon(
-            $gap 0,
-            calc(100% - $gap) 0,
-            100% $gap,
-            100% $gap,
-            100% calc(100% - $gap),
-            calc(100% - $gap) 100%,
-            $gap 100%,
-            0 calc(100% - $gap),
-            0 $gap
-        );
+        clip-path: var(--inset-box-clip);
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -40,17 +28,7 @@
     }
 
     .icon-tab {
-        clip-path: polygon(
-            $gap 0,
-            calc(100% - $gap) 0,
-            100% $gap,
-            100% $gap,
-            100% calc(100% - $gap),
-            calc(100% - $gap) 100%,
-            $gap 100%,
-            0 calc(100% - $gap),
-            0 $gap
-        );
+        clip-path: var(--inset-box-clip);
         margin: 5px;
         padding: 10px;
         cursor: pointer;

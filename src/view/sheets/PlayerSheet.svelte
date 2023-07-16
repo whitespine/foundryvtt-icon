@@ -68,32 +68,38 @@
         {#if selected_tab == "ICON.Narrative"}
             <!-- Narrative Tab -->
             <div class="narrative-grid">
-                <section class="actions">
-                    {#each Object.entries($actor.system.actions) as [action_name, action_value]}
-                        <div>{action_name.toUpperCase()}</div>
-                        {#each [1, 2, 3, 4] as action_box}
-                            <span>[]</span>
+                <div class="leftcol">
+
+                    <div class="actions">
+                        {#each Object.entries($actor.system.actions) as [action_name, action_value]}
+                            <div>{action_name.toUpperCase()}</div>
+                            {#each [1, 2, 3, 4] as action_box}
+                                <span>[]</span>
+                            {/each}
                         {/each}
-                    {/each}
-                </section>
-                <section class="powers">
-                </section>
-                <section class="xp">
-                    <span>{localize("ICON.XP")}</span>
-                </section>
-                <section class="dust">
-                    <span>{localize("ICON.Dust")}</span>
-                </section>
-                <section class="burdens">
-                    {#each Object.entries($actor.system.burdens) as [key, _clock]}
-                        <DocClock clock_width="30px" path={`system.burdens.${key}`} inline />
-                    {/each}
-                </section>
-                <section class="ambitions">
-                    {#each Object.entries($actor.system.ambitions) as [key, _clock]}
-                        <DocClock clock_width="30px" path={`system.ambitions.${key}`} />
-                    {/each}
-                </section>
+                    </div>
+                </div>
+                <div class="midcol">
+
+                </div>
+                <div class="rightcol">
+                    <div class="xp">
+                        <BoundedNumberDisplay name={localize("ICON.XP")} path="system.xp" />
+                    </div>
+                    <div class="dust">
+                        <BoundedNumberDisplay name={localize("ICON.Dust")} path="system.dust" />
+                    </div>
+                    <div class="burdens">
+                        {#each Object.entries($actor.system.burdens) as [key, _clock]}
+                            <DocClock clock_width="60px" path={`system.burdens.${key}`} inline />
+                        {/each}
+                    </div>
+                    <div class="ambitions">
+                        {#each Object.entries($actor.system.ambitions) as [key, _clock]}
+                            <DocClock clock_width="60px" path={`system.ambitions.${key}`} inline />
+                        {/each}
+                    </div>
+                </div>
             </div>
         {:else if selected_tab === "ICON.Traits-Relics"}
             <!-- Traits & Relics Tab -->
@@ -144,11 +150,7 @@
     .sheet-body {
         .narrative-grid {
             display: grid;
-            grid-template: 
-                "actions powers xp" 1fr
-                "actions powers dust" 1fr
-                "gear powers burdens" 1fr
-                "gear powers ambitions" 1fr / 1fr 1fr 1fr 1fr;
+            grid-template: 1fr / 1fr 2fr 1fr
         }
 
         .actions {

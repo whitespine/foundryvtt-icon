@@ -10,6 +10,7 @@ import { IconItem } from './documents/item.js';
 import { applyGlobalDragListeners } from './util/dragdrop.js';
 import BasicApplication from './view/BasicApplication.js';
 
+import "./icon.scss";
 
 // Import sliding HUD (used for accuracy/difficulty windows)
 // import * as slidingHUD from "./module/helpers/slidinghud/index.js";

@@ -21,7 +21,3 @@
 <TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 200 }}>
     <PlayerSheet/>
 </TJSApplicationShell>
-
-<style lang="scss">
- 
-</style>

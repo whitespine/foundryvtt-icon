@@ -1,0 +1,24 @@
+/* Item/document types, useful for shorthand */
+$item-types: job ability trait;
+$actor-types: player foe summon;
+$document-types: join($item-types, $actor-types);
+
+/* Settings Layer*/
+:root {
+    --main-font-family: Helvetica, Arial, sans-serif;
+
+    --main-theme-color: #991e2a;
+    --main-theme-text: #e8bcbe;
+    --secondary-theme-color: #121d21;
+
+    $gap: 5px;
+    --inset-box-clip: polygon($gap 0,
+            calc(100% - $gap) 0,
+            100% $gap,
+            100% $gap,
+            100% calc(100% - $gap),
+            calc(100% - $gap) 100%,
+            $gap 100%,
+            0 calc(100% - $gap),
+            0 $gap );
+}
