@@ -63,13 +63,13 @@
 <style lang="scss">
     path {
         cursor: pointer;
-        stroke: #0c1638;
+        stroke: var(--clock-border);
         stroke-width: 5;
     }
     path.filled {
-        fill: rgb(164, 135, 6);
+        fill: var(--clock-fill);
     }
     path.unfilled {
-        fill: rgb(39, 240, 240);
+        fill: var(--clock-empty);
     }
 </style>
