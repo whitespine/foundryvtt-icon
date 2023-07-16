@@ -36,9 +36,10 @@
 
 <style lang="scss">
     div {
-        display: grid;
-        grid-template: 1fr / 1fr;
-        grid-auto-columns: 1fr;
+        // display: grid;
+        // grid-template: 1fr / 1fr;
+        // grid-auto-columns: 1fr;
+        display: flex;
 
         .segment {
             clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
@@ -47,6 +48,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            margin: 1px;
         }
 
         .segment.filled {
