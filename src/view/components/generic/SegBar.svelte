@@ -7,9 +7,6 @@
     /** @type {number} Number of filled segments */
     export let value;
 
-    /** @type {width} The CSS width */
-    export let width;
-
     // Generate our segments automagically 
     let segments;
     $: {

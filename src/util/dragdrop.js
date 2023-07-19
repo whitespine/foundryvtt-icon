@@ -33,6 +33,7 @@ import { IconItem } from "../documents/item";
 
 /**
  * @typedef {ResolvedItemDrop | ResolvedActorDrop | ResolvedMacroDrop} ResolvedDrop
+ * A union type of all the resolved drops we could have
  */
 
 /**
@@ -40,9 +41,9 @@ import { IconItem } from "../documents/item";
  *
  * @param {ResolvedDrop} doc The dropped document
  *
- * @param {JQuery} dest Where it was dropped
+ * @param {HTMLEvent} dest Where it was dropped
  *
- * @param {JQuery.DropEvent} event Event for where it being dropped
+ * @param {DropEvent} event Event for where it being dropped
  */
 
 /**
@@ -50,92 +51,154 @@ import { IconItem } from "../documents/item";
  *
  * @param {ResolvedDrop} doc The potentially dropped document
  *
- * @param {JQuery} dest Where it will be dropped
+ * @param {HTMLElement} dest Where it would be dropped
  *
- * @param {JQuery.DragOverEvent | JQuery.DragEnterEvent | JQuery.DragLeaveEvent | JQuery.DropEvent} event Event for it hovering ominously / perhaps being dropped
+ * @param {DropEvent | DragOverEvent | DragEnterEvent | DragLeaveEvent} event Event for it hovering ominously / perhaps being dropped
  */
 
 /**
- * Enables dropability on the specified jquery items, using the global drag state as a lookup to allow synchronous doc handling
+ * @callback HoverHandler A callback for doing temporary ui changes when hovering over a valid drop target.
+ *                        Somewhat unreliably triggered in nested situations!
  *
- * @param {JQuery} items Either an existing jquery object, or a string with which to $() make it
+ * @param {ResolvedDrop} doc The potentially dropped document
  *
- * @param {DropHandler} drop_handler Callback provided with the data for the drag, the dest of the drag, as well as the dragover event.
- * It is called once, on a successful drop
- * Note that it is guaranteed to have passed the allow_drop function if one was provided
- * Not all of these arguments are usually necessary: remember you can just _ away unused vars
+ * @param {HTMLElement} dest Where it would be dropped
+ *
+ * @param {DropEvent | DragOverEvent | DragEnterEvent | DragLeaveEvent} event Event for it hovering ominously / perhaps being dropped
+ */
+
+/**
+ * Svelte action to enable dropability on the specified node, 
+ * using the global drag state as a lookup to allow synchronous doc handling.
+ * 
+ * Designed more as a basis for other actions
+ *
+ * @param {HTMLElement} node - Target element
+ *
+ * @param {DropHandler} drop_handler - Callback provided with the data for the drag, the dest of the drag, as well as the dragover event.
+ *      It is called once, and only on a successful drop
+ *      Note that it is guaranteed to have passed the allow_drop function if one was provided
+ *      Not all of these arguments are usually necessary: remember you can just _ away unused vars
  *
  * @param {DropPredicate} [allow_drop=null] Optional callback provided with the dest of the drag, as well as the dragover event.
- * It determines if the dest is a valid drop target
+ *      It determines if the dest is a valid drop target
+ * 
+ * @param {DropPredicate} [hover_handler=null] Optional callback provided with the dest of the drag, as well as the dragover event.
+ *      It determines if the dest is a valid drop target
  */
-export function handleDocDropping(items, drop_handler, allow_drop = null) {
+export function baseDropDocumentAction(node, { drop_handler, allow_drop = null, hover_handler = null }) {
     // Bind these individually, so we don't have to rely so much on the drop target being preserved
-    items.each((_, _item) => {
-        let item = $(_item);
+    // To permit dropping, we must override the base dragover behavior.
+    function onDragOver(event) {
+        // Get/check data
+        if (!GlobalDragPreview) {
+            return true;
+        } // Blanket allow drops if we don't know whats dragging
 
-        // To permit dropping, we must override the base dragover behavior.
-        item.on("dragover", (event) => {
-            // Get/check data
-            if (!GlobalDragPreview) {
-                return true;
-            } // Blanket allow drops if we don't know whats dragging
+        // Check if we can drop. If no handler, this is always true (so long as GlobalDragPreview exists)
+        let drop_permitted = !allow_drop || allow_drop(GlobalDragPreview, this, event);
 
-            // Check if we can drop
-            let drop_permitted = !allow_drop || allow_drop(GlobalDragPreview, item, event);
+        // If permitted, override behavior to allow drops
+        if (drop_permitted) {
+            event.preventDefault();
+            return false;
+        }
+    }
 
-            // If permitted, override behavior to allow drops
-            if (drop_permitted) {
-                event.preventDefault();
-                return false;
-            }
-        });
+    // We also must signal this via the dragenter event, which serves double duity
+    let entered = true;
+    function onDragEnter(event) {
+        // Check if we can drop
+        if (!GlobalDragPreview) {
+            return true;
+        } // Blanket allow drops if we don't know whats dragging
+        let drop_permitted = !allow_drop || allow_drop(GlobalDragPreview, node, event);
 
-        // We also must signal this via the dragenter event
-        item.on("dragenter", (event) => {
-            // Check if we can drop
-            if (!GlobalDragPreview) {
-                return true;
-            } // Blanket allow drops if we don't know whats dragging
-            let drop_permitted = !allow_drop || allow_drop(GlobalDragPreview, item, event);
+        if (drop_permitted) {
+            if (hover_handler) hover_handler(GlobalDragPreview, node, true);
+            // Override behavior to allow dropping here
+            event.preventDefault();
+            entered = true;
+            return false;
+        }
 
-            if (drop_permitted) {
-                // Override behavior to allow dropping here
-                event.preventDefault();
-                return false;
-            }
+        return true; // Prevents dropping
+    }
 
-            return true; // I guess?
-        });
+    // We also must signal this via the dragenter event, which serves double duity
+    function onDragLeave(event) {
+        if (entered) {
+            if (hover_handler) hover_handler(GlobalDragPreview, node, false);
+            entered = false;
+        }
+    }
 
-        // Finally and most importantly, dropping
-        item.on("drop", (event) => {
-            // Check dropability just to be safe - some event may have trickled down here somehow
-            if (!event.originalEvent?.dataTransfer?.getData("text/plain")) {
-                return;
-            }
+    // Finally and most importantly, dropping
+    function onDrop(event) {
+        if (entered) {
+            if (hover_handler) hover_handler(GlobalDragPreview, node, false);
+        }
 
-            if (GlobalDragPreview) {
-                // We can proceed synchronously
-                let rdd = GlobalDragPreview;
-                if (!allow_drop || allow_drop(rdd, item, event)) {
-                    // It's a good drop - prevent propagation and handle
-                    event.stopImmediatePropagation();
-                    event.preventDefault();
-                    drop_handler(rdd, item, event);
-                }
-            } else {
-                // Unfortunately, if global drag preview isn't set then it is necessary for us to aggressively cancel events to prevent possible duplicate drop handling
+        // Check dropability just to be safe - some event may have trickled down here somehow
+        if (!event.originalEvent?.dataTransfer?.getData("text/plain")) {
+            return;
+        }
+
+        if (GlobalDragPreview) {
+            // We can proceed synchronously
+            let rdd = GlobalDragPreview;
+            if (!allow_drop || allow_drop(rdd, item, event)) {
+                // It's a good drop - prevent propagation and handle
                 event.stopImmediatePropagation();
                 event.preventDefault();
-                resolveNativeDrop(event.originalEvent.dataTransfer.getData("text/plain")).then((rdd) => {
-                    if (rdd && (!allow_drop || allow_drop(rdd, item, event))) {
-                        drop_handler(rdd, item, event);
-                    }
-                });
+                drop_handler(rdd, item, event);
             }
-        });
-    });
+        } else {
+            // Unfortunately, if global drag preview isn't set then it is necessary for us to aggressively cancel events to prevent possible duplicate drop handling
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            resolveNativeDrop(event.originalEvent.dataTransfer.getData("text/plain")).then((rdd) => {
+                if (rdd && (!allow_drop || allow_drop(rdd, item, event))) {
+                    drop_handler(rdd, item, event);
+                }
+            });
+        }
+    }
+
+    /**
+     * Activate listeners.
+     */
+    function activateListeners() {
+        node.addEventListener('onDragOver', onDragOver);
+        node.addEventListener('onDragEnter', onDragEnter);
+        node.addEventListener('onDragLeave', onDragLeave);
+        node.addEventListener('onDrop', onDrop);
+    }
+
+    /**
+     * Remove listeners.
+     */
+    function removeListeners() {
+        node.removeEventListener('onDragOver', onDragOver);
+        node.removeEventListener('onDragEnter', onDragEnter);
+        node.removeEventListener('onDragLeave', onDragLeave);
+        node.removeEventListener('onDrop', onDrop);
+    }
+
+    activateListeners();
+
+    return {
+        // Currently not implemented, but this is where you'd update the options for this action.
+        // IE changing the TJSDocument or path field.
+        update: console.warn,
+
+        destroy: () => {
+            removeListeners();
+            unsubscribe();
+        }
+    };
 }
+
 
 /**
  * @typedef {object} FoundryDropData Dragged data as generated by foundry

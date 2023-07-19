@@ -6,7 +6,7 @@ import { resolveDotpath } from '../../util/paths';
  *
  * @param {HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement} node - Target input element.
  *
- * @param {{ doc: TJSDocument, accessor: string }}  options - Options
+ * @param {{ doc: TJSDocument, path: string }}  options - Options
  *
  * @returns {import('svelte/action').ActionReturn} Action lifecycle methods.
  */
