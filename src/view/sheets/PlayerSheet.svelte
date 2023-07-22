@@ -1,14 +1,31 @@
 <script>
     import { getContext } from "svelte";
+    import { DynReducerHelper } from "#runtime/svelte/store/reducer";
     import { updateDoc } from "../actions/update";
     import { localize } from "../../util/misc";
     import DocClock from "../components/generic/DocClock.svelte";
     import BoundedNumberDisplay from "../components/generic/BoundedNumberDisplay.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
     import ActionRating from "../components/ActionRating.svelte";
+    import PreviewBondPower from "../components/preview/PreviewBondPower.svelte";
+    import { dropDocs } from "../actions/drop";
+    import { IconItem } from "../../documents/item";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
+
+    // Initialize our embedded categories
+    const name_alphabetical =(a, b) => a.name.localeCompare(b.name);
+    const bond_powers = actor.embedded.create(Item, {
+        name: "bond_powers",
+        filters: [(i) => i.type === "bond_power"],
+        sort: name_alphabetical
+    });
+    const traits = actor.embedded.create(Item, {
+        name: "traits",
+        filters: [(i) => i.type === "trait"],
+        sort: name_alphabetical
+    });
 
     // Set our tabs
     const tabs = ["ICON.Narrative", "ICON.Traits-Relics", "ICON.AbilitiesTrophies", "ICON.Attributes"].map((s) => ({
@@ -16,9 +33,18 @@
         key: s,
     }));
     let selected_tab = "ICON.Narrative";
+
+    // Handle dropped documents
+    function handleDrop(drop) {
+        $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(drop.document.toObject(true))]);
+    }
+
+    function allowDrop(drop) {
+        return drop.type == "Item" && ["bond_power", "trait"].includes(drop.document.type);
+    }
 </script>
 
-<main class="flexcol" autocomplete="off">
+<main class="flexcol" autocomplete="off" use:dropDocs={{handle: handleDrop, allow: allowDrop}}>
     <!-- Sheet Header -->
     <header>
         <img
@@ -75,7 +101,9 @@
                     </div>
                 </div>
                 <div class="midcol">
-
+                    {#each [...$bond_powers] as bp (bp.id)}
+                        <PreviewBondPower power={bp} />
+                    {/each}
                 </div>
                 <div class="rightcol">
                     <div class="xp">

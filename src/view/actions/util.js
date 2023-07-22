@@ -1,66 +1,33 @@
-export function augmentAction(handler, update_logic) {
-
-    /**
-     * Utility function for "extending" an action
-     * 
-     * @param {HTMLElement} node - Target element.
-     *
-     * @param {object} options - Options object
-     * 
-     * @param {TJSDocument<IconActor>} options.actor - Actor we are dropping items to
-     * 
-     * @param {Array<string>} options.types - Which item types are accepted
-     *
-     * @returns {import('svelte/action').ActionReturn} Action lifecycle methods.
-     */
-
+/**
+ * Utility function for "extending" an action
+ * 
+ * @param {object} action - Base Action
+ *
+ * @param {object} options - Options object
+ * 
+ * @param {TJSDocument<IconActor>} options.actor - Actor we are dropping items to
+ * 
+ * @param {Array<string>} options.types - Which item types are accepted
+ *
+ * @returns {import('svelte/action').ActionReturn} Action lifecycle methods.
+ */
+export function augmentAction(action, update_logic) {
 } 
 
-export function dropItems(node, options) {
-    let curr_options;
-    let set_curr_options = (new_options) => {
-        if(!new_options.actor instanceof TJSDocument) {
-            throw new TypeError(`dropItems error: 'actor' must be an instance of IconActor.`);
-        }
-
-        if(!new_options.items instanceof Array) {
-            throw new TypeError(`dropItems error: 'items' must be an array`);
-        }
-        curr_options = new_options
-    }
-
-    // Initialize the underlying handler with our actual handling logic
-    set_curr_options(options);
-    let wrapped = baseDropDocument(node, {
-        drop_handler: (doc) => {
-            // Already checked
-            actor.get().createDescendantDocument("Item", doc.system._source.toObject());
-            return null;
-        },
-        allow_drop: (doc) => {
-            return (doc instanceof IconItem) && items.includes(doc.type);
-        }
-    });
-
-    // 
-    return {
-        update: (new_options) => wrapped.update(new_options) && set_curr_options(new_options),
-        destroy: wrapped.destroy
-    }
-}
 
 /**
  * Fancy wrapper that handles initialization / cleanup of listeners, etc.
+ * Can wrap another action
  * 
- * @param {HTMLElement} node Our target node
  * @param {Record<string, ((object, Event) => any)>} listeners - Maps a callback name (e.g. "click") to an augmented event listener. 
  *                                                               Listeners will be provided (options, event), where options is the current options value,
  *                                                               and event is the event they would normally receive.
  *                                                               These are not updated in future calls
  * @param {((object) => void)} [options_validator=null] - A special logic block for validating options
  */
-export function easyAction(listeners, options_validator=null) {
+export function easyActionBuilder(listeners, options_validator=null) {
     // Create our actual function body
+    /** @type {import('svelte/action').Action<HTMLElement, object>} */
     const action = (node, initial_options) => {
         // Make our re-assignable options alias, and validate it if necessary
         options_validator?.(initial_options);
@@ -86,4 +53,5 @@ export function easyAction(listeners, options_validator=null) {
             }
         }
     }
+    return action;
 }

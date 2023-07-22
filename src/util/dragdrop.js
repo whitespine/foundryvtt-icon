@@ -36,168 +36,6 @@ import { IconItem } from "../documents/item";
  * A union type of all the resolved drops we could have
  */
 
-/**
- * @callback DropHandler A callback for handling document drops
- *
- * @param {ResolvedDrop} doc The dropped document
- *
- * @param {HTMLEvent} dest Where it was dropped
- *
- * @param {DropEvent} event Event for where it being dropped
- */
-
-/**
- * @callback DropPredicate A callback for determining whether document drop is allowed
- *
- * @param {ResolvedDrop} doc The potentially dropped document
- *
- * @param {HTMLElement} dest Where it would be dropped
- *
- * @param {DropEvent | DragOverEvent | DragEnterEvent | DragLeaveEvent} event Event for it hovering ominously / perhaps being dropped
- */
-
-/**
- * @callback HoverHandler A callback for doing temporary ui changes when hovering over a valid drop target.
- *                        Somewhat unreliably triggered in nested situations!
- *
- * @param {ResolvedDrop} doc The potentially dropped document
- *
- * @param {HTMLElement} dest Where it would be dropped
- *
- * @param {DropEvent | DragOverEvent | DragEnterEvent | DragLeaveEvent} event Event for it hovering ominously / perhaps being dropped
- */
-
-/**
- * Svelte action to enable dropability on the specified node, 
- * using the global drag state as a lookup to allow synchronous doc handling.
- * 
- * Designed more as a basis for other actions
- *
- * @param {HTMLElement} node - Target element
- *
- * @param {DropHandler} options.drop_handler - Callback provided with the data for the drag, the dest of the drag, as well as the dragover event.
- *      It is called once, and only on a successful drop
- *      Note that it is guaranteed to have passed the allow_drop function if one was provided
- *      Not all of these arguments are usually necessary: remember you can just _ away unused vars
- *
- * @param {DropPredicate} [options.allow_drop=null] Optional callback provided with the dest of the drag, as well as the dragover event.
- *      It determines if the dest is a valid drop target
- * 
- * @param {DropPredicate} [options.hover_handler=null] Optional callback provided with the dest of the drag, as well as the dragover event.
- *      It determines if the dest is a valid drop target
- */
-export function baseDropDocumentAction(node, options) {
-    let curr_options;
-    let set_curr_options = (new_options) => {
-        curr_options = new_options;
-    };
-
-    // Bind these individually, so we don't have to rely so much on the drop target being preserved
-    // To permit dropping, we must override the base dragover behavior.
-    function onDragOver(event) {
-        // Get/check data
-        if (!GlobalDragPreview) {
-            return true;
-        } // Blanket allow drops if we don't know whats dragging
-
-        // If permitted, override behavior to allow drops
-        if (curr_options.allow_drop?.(GlobalDragPreview, this, event) ?? true) {
-            event.preventDefault();
-            return false;
-        }
-    }
-
-    // We also must signal this via the dragenter event, which serves double duity
-    // let entered = true;
-    function onDragEnter(event) {
-        if (!GlobalDragPreview) {
-            // Blanket allow drops if we don't know whats dragging
-            return true;
-        } 
-        
-        // Check if we can drop. If no handler, this is always true (so long as GlobalDragPreview exists)
-        if(curr_options.allow_drop?.(GlobalDragPreview, node, event) ?? true) {
-            // curr_options.hover_handler?.(GlobalDragPreview, node, true);
-            // Override behavior to allow dropping here
-            event.preventDefault();
-            entered = true;
-            return false;
-        }
-
-        return true; // Prevents dropping
-    }
-
-    // We also must signal this via the dragenter event, which serves double duity
-    function onDragLeave(event) {
-        if (entered) {
-            // curr_options.hover_handler?.(GlobalDragPreview, node, false);
-            entered = false;
-        }
-    }
-
-    // Finally and most importantly, dropping
-    function onDrop(event) {
-        // if (entered) curr_options.hover_handler?.(GlobalDragPreview, node, false);
-
-        // Check dropability just to be safe - some event may have trickled down here somehow
-        if (!event.originalEvent?.dataTransfer?.getData("text/plain")) {
-            return;
-        }
-
-        if (GlobalDragPreview) {
-            // We can proceed synchronously
-            if (curr_options.allow_drop?.(GlobalDragPreview, item, event) ?? true) {
-                // It's a good drop - prevent propagation and handle
-                event.stopImmediatePropagation();
-                event.preventDefault();
-                curr_options.drop_handler?.(GlobalDragPreview, item, event);
-            }
-        } else {
-            // Unfortunately, if global drag preview isn't set then it is necessary for us to aggressively cancel events to prevent possible duplicate drop handling
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            resolveNativeDrop(event.originalEvent.dataTransfer.getData("text/plain")).then((rdd) => {
-                if (rdd && (curr_options.allow_drop?.(rdd, item, event) ?? true)) {
-                    curr_options.drop_handler?.(rdd, item, event);
-                }
-            });
-        }
-    }
-
-    /**
-     * Activate listeners.
-     */
-    function activateListeners() {
-        node.addEventListener('onDragOver', onDragOver);
-        node.addEventListener('onDragEnter', onDragEnter);
-        node.addEventListener('onDragLeave', onDragLeave);
-        node.addEventListener('onDrop', onDrop);
-    }
-
-    /**
-     * Remove listeners.
-     */
-    function removeListeners() {
-        node.removeEventListener('onDragOver', onDragOver);
-        node.removeEventListener('onDragEnter', onDragEnter);
-        node.removeEventListener('onDragLeave', onDragLeave);
-        node.removeEventListener('onDrop', onDrop);
-    }
-
-    // Init and return
-    activateListeners();
-
-    return {
-        // Currently not implemented, but this is where you'd update the options for this action.
-        // IE changing the TJSDocument or path field.
-        update: set_curr_options,
-        destroy: () => {
-            removeListeners();
-            unsubscribe();
-        }
-    };
-}
-
 
 /**
  * @typedef {object} FoundryDropData Dragged data as generated by foundry
@@ -341,6 +179,7 @@ function draggingClass(for_type) {
  * @param {IconActor | IconItem | null} to What we are currently dragging, if anything
  */
 function setGlobalDrag(to) {
+    console.log("Draggin: ", to);
     // Clear if necessary
     if (GlobalDragPreview?.type == "Actor" || GlobalDragPreview?.type == "Item") {
         $("body").removeClass(draggingClass(GlobalDragPreview.document.type));
@@ -442,7 +281,7 @@ export function applyGlobalDragListeners() {
         capture: true, // Same as above
         passive: true,
     });
-    body.addEventListener("drop", endListener, {
+    body.addEventListener("drop", () => setTimeout(endListener, 100), {
         capture: true, // Same as above
         passive: true,
     });

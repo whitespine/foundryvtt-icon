@@ -1,5 +1,6 @@
 import { ICON } from "../consts";
 import { AbilityModel } from "../models/items/ability";
+import { BondPowerModel } from "../models/items/bond_power";
 import { TraitModel } from "../models/items/trait";
 
 /**
@@ -19,7 +20,7 @@ export class IconItem extends Item {
                 TraitModel.convertSWB(data);
             } else if (data.flags.icon_data?.isBondPower) {
                 // Flags confirm
-                // BondPowerModel.convertSWB(data);
+                BondPowerModel.convertSWB(data);
             } else if (ntlc.includes("action") || ntlc.includes("interrupt")) {
                 // It's probably an ability, pretty sure!
                 AbilityModel.convertSWB(data);
