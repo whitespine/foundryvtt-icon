@@ -75,18 +75,23 @@ import { IconItem } from "../documents/item";
  *
  * @param {HTMLElement} node - Target element
  *
- * @param {DropHandler} drop_handler - Callback provided with the data for the drag, the dest of the drag, as well as the dragover event.
+ * @param {DropHandler} options.drop_handler - Callback provided with the data for the drag, the dest of the drag, as well as the dragover event.
  *      It is called once, and only on a successful drop
  *      Note that it is guaranteed to have passed the allow_drop function if one was provided
  *      Not all of these arguments are usually necessary: remember you can just _ away unused vars
  *
- * @param {DropPredicate} [allow_drop=null] Optional callback provided with the dest of the drag, as well as the dragover event.
+ * @param {DropPredicate} [options.allow_drop=null] Optional callback provided with the dest of the drag, as well as the dragover event.
  *      It determines if the dest is a valid drop target
  * 
- * @param {DropPredicate} [hover_handler=null] Optional callback provided with the dest of the drag, as well as the dragover event.
+ * @param {DropPredicate} [options.hover_handler=null] Optional callback provided with the dest of the drag, as well as the dragover event.
  *      It determines if the dest is a valid drop target
  */
-export function baseDropDocumentAction(node, { drop_handler, allow_drop = null, hover_handler = null }) {
+export function baseDropDocumentAction(node, options) {
+    let curr_options;
+    let set_curr_options = (new_options) => {
+        curr_options = new_options;
+    };
+
     // Bind these individually, so we don't have to rely so much on the drop target being preserved
     // To permit dropping, we must override the base dragover behavior.
     function onDragOver(event) {
@@ -95,27 +100,24 @@ export function baseDropDocumentAction(node, { drop_handler, allow_drop = null, 
             return true;
         } // Blanket allow drops if we don't know whats dragging
 
-        // Check if we can drop. If no handler, this is always true (so long as GlobalDragPreview exists)
-        let drop_permitted = !allow_drop || allow_drop(GlobalDragPreview, this, event);
-
         // If permitted, override behavior to allow drops
-        if (drop_permitted) {
+        if (curr_options.allow_drop?.(GlobalDragPreview, this, event) ?? true) {
             event.preventDefault();
             return false;
         }
     }
 
     // We also must signal this via the dragenter event, which serves double duity
-    let entered = true;
+    // let entered = true;
     function onDragEnter(event) {
-        // Check if we can drop
         if (!GlobalDragPreview) {
+            // Blanket allow drops if we don't know whats dragging
             return true;
-        } // Blanket allow drops if we don't know whats dragging
-        let drop_permitted = !allow_drop || allow_drop(GlobalDragPreview, node, event);
-
-        if (drop_permitted) {
-            if (hover_handler) hover_handler(GlobalDragPreview, node, true);
+        } 
+        
+        // Check if we can drop. If no handler, this is always true (so long as GlobalDragPreview exists)
+        if(curr_options.allow_drop?.(GlobalDragPreview, node, event) ?? true) {
+            // curr_options.hover_handler?.(GlobalDragPreview, node, true);
             // Override behavior to allow dropping here
             event.preventDefault();
             entered = true;
@@ -128,16 +130,14 @@ export function baseDropDocumentAction(node, { drop_handler, allow_drop = null, 
     // We also must signal this via the dragenter event, which serves double duity
     function onDragLeave(event) {
         if (entered) {
-            if (hover_handler) hover_handler(GlobalDragPreview, node, false);
+            // curr_options.hover_handler?.(GlobalDragPreview, node, false);
             entered = false;
         }
     }
 
     // Finally and most importantly, dropping
     function onDrop(event) {
-        if (entered) {
-            if (hover_handler) hover_handler(GlobalDragPreview, node, false);
-        }
+        // if (entered) curr_options.hover_handler?.(GlobalDragPreview, node, false);
 
         // Check dropability just to be safe - some event may have trickled down here somehow
         if (!event.originalEvent?.dataTransfer?.getData("text/plain")) {
@@ -146,20 +146,19 @@ export function baseDropDocumentAction(node, { drop_handler, allow_drop = null, 
 
         if (GlobalDragPreview) {
             // We can proceed synchronously
-            let rdd = GlobalDragPreview;
-            if (!allow_drop || allow_drop(rdd, item, event)) {
+            if (curr_options.allow_drop?.(GlobalDragPreview, item, event) ?? true) {
                 // It's a good drop - prevent propagation and handle
                 event.stopImmediatePropagation();
                 event.preventDefault();
-                drop_handler(rdd, item, event);
+                curr_options.drop_handler?.(GlobalDragPreview, item, event);
             }
         } else {
             // Unfortunately, if global drag preview isn't set then it is necessary for us to aggressively cancel events to prevent possible duplicate drop handling
             event.stopImmediatePropagation();
             event.preventDefault();
             resolveNativeDrop(event.originalEvent.dataTransfer.getData("text/plain")).then((rdd) => {
-                if (rdd && (!allow_drop || allow_drop(rdd, item, event))) {
-                    drop_handler(rdd, item, event);
+                if (rdd && (curr_options.allow_drop?.(rdd, item, event) ?? true)) {
+                    curr_options.drop_handler?.(rdd, item, event);
                 }
             });
         }
@@ -185,13 +184,13 @@ export function baseDropDocumentAction(node, { drop_handler, allow_drop = null, 
         node.removeEventListener('onDrop', onDrop);
     }
 
+    // Init and return
     activateListeners();
 
     return {
         // Currently not implemented, but this is where you'd update the options for this action.
         // IE changing the TJSDocument or path field.
-        update: console.warn,
-
+        update: set_curr_options,
         destroy: () => {
             removeListeners();
             unsubscribe();
