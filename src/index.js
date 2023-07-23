@@ -8,7 +8,7 @@ import { ICON } from './consts.js';
 import { IconActor } from './documents/actor.js';
 import { IconItem } from './documents/item.js';
 import { applyGlobalDragListeners } from './util/dragdrop.js';
-import BasicApplication from './view/BasicApplication.js';
+import BasicApplication from './view/apps/BasicApplication.js';
 
 import "./icon.scss";
 
