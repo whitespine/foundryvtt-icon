@@ -11,6 +11,7 @@ import { applyGlobalDragListeners } from './util/dragdrop.js';
 import BasicApplication from './view/apps/BasicApplication.js';
 
 import "./icon.scss";
+import { setupMessages } from './config/messages.js';
 
 // Import sliding HUD (used for accuracy/difficulty windows)
 // import * as slidingHUD from "./module/helpers/slidinghud/index.js";
@@ -55,6 +56,7 @@ Hooks.once("ready", async () => {
     applyGlobalDragListeners();
     setupStatuses();
     setupDSN();
+    setupMessages();
 });
 
 

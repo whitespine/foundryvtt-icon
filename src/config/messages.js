@@ -1,6 +1,7 @@
 // Sets up our svelte messages
 
 import AttackRollMessage from "../view/chat/AttackRollMessage.svelte";
+import NarrativeRollMessage from "../view/chat/NarrativeRollMessage.svelte";
 
 /**
  *
@@ -15,10 +16,12 @@ export function setupMessages() {
         if (typeof flagData === 'object') {
             // Add the svelte component to the message instance loaded in client side memory.
             const type = flagData["type"];
-            const props = foundry.utils.mergeObject({ msg }, flagData);
+            const props = { msg, ...flagData };
             const target = html[0];
             if (type === "attack") {
                 msg._svelteComponent = new AttackRollMessage({ target, props });
+            } else if (type == "narrative") {
+                msg._svelteComponent = new NarrativeRollMessage({ target, props })
             }
         }
     };

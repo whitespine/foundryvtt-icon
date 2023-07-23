@@ -19,6 +19,31 @@
     // Helper consts
     const EFFECTS = ["None", "Limited", "Standard", "Great", "Super"];
     const POSITIONS = ["Controlled", "Risky", "Desperate"];
+
+    // Helper functions
+    function formula() {
+        if (dice <= 0) {
+            return "2d6kl1";
+        } else {
+            return `${dice}d6kh1`;
+        }
+    }
+
+    // Handlers
+    async function doRoll(position, effect, subtype) {
+        let roll = new Roll(formula());
+        await roll.roll();
+        await ChatMessage.create({
+            [`flags.${game.system.id}.data`]: {
+                type: "narrative",
+                subtype,
+                position,
+                effect,
+                actor_uuid: "",
+                roll_data: roll.toJSON(),
+            },
+        });
+    }
 </script>
 
 <!-- ApplicationShell provides the popOut / application shell frame, header bar, content areas -->
@@ -41,18 +66,20 @@
                     {count}
                 </button>
             {/each}
-            <button class="fortune">{localize("ICON.Rolls.Narrative.Fortune")}</button>
+            <button class="fortune" on:click={() => doRoll(null, null, "Fortune")}
+                >{localize("ICON.Rolls.Narrative.Fortune")}</button
+            >
         </div>
         <h3>{localize("ICON.Rolls.Narrative.PosEffect")}:</h3>
         <div class="rollbox">
             <div class="dark" />
             {#each EFFECTS as effect}
-               <span class="dark">{localize(`ICON.Effect.${effect}`)}</span>
+                <span class="dark">{localize(`ICON.Effect.${effect}`)}</span>
             {/each}
             {#each POSITIONS as position}
                 <span class="dark">{localize(`ICON.Position.${position}`)}</span>
                 {#each EFFECTS as effect}
-                    <button type="button">🎲</button>
+                    <button type="button" on:click={() => doRoll(position, effect, "Action")}>🎲</button>
                 {/each}
             {/each}
         </div>
@@ -99,31 +126,31 @@
     }
 
     .rollbox {
-      display: grid;
-      grid-template: repeat(3, 1fr) / repeat(6, 1fr);
-      align-items: center;
-      justify-items: center;
+        display: grid;
+        grid-template: repeat(3, 1fr) / repeat(6, 1fr);
+        align-items: center;
+        justify-items: center;
 
-      .dark {
-         color: black;
-      }
+        .dark {
+            color: black;
+        }
 
-      button {
-         background-color: grey;
-         border-radius: 100%;
-         opacity: 20%;
-         width: 25px;
-         height: 25px;
-         line-height: 25px;
-         cursor: pointer;
-         outline: none;
-         box-shadow: none;
-         border: none;
-         padding: 0px;
+        button {
+            background-color: grey;
+            border-radius: 100%;
+            opacity: 20%;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: none;
+            border: none;
+            padding: 0px;
 
-         &:hover {
-            opacity: 100%;
-         }
-      }
+            &:hover {
+                opacity: 100%;
+            }
+        }
     }
 </style>

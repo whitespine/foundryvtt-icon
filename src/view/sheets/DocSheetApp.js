@@ -25,8 +25,7 @@ export default class TJSDocSheet extends SvelteApplication {
   static ticker = 0;
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      // TODO: why don't we get the normal Foundry buttons in the window header?
-      // TODO: need a unique id per actor, otherwise Svelte won't let us open more than one at once
+      // TODO: How to get normal Foundry buttons in the window header?
       id: `actor-sheet-${this.ticker++}`,
       classes: ["icon", "sheet", "actor"],
       resizable: false,
@@ -36,7 +35,7 @@ export default class TJSDocSheet extends SvelteApplication {
       height: "auto",
       positionOrtho: false,
       transformOrigin: null,
-      title: "NEW ACTOR SHEET",
+      title: "Document Sheet",
       zIndex: null,
       svelte: {
         class: ActorSheetAppShell,

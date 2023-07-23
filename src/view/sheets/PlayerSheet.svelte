@@ -178,6 +178,7 @@
             grid-area: actions;
             display: flex;
             flex-direction: column;
+            align-items: center;
             border-bottom: $border;
         }
 
