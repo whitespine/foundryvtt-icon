@@ -274,7 +274,41 @@
         "Purpose": "Roll Purpose",
         "NumDice": "Number of Dice",
         "PosEffect": "Position and Effect Table",
-        "Fortune": "Fortune Roll"
+        "Fortune": "Fortune Roll",
+        "Result": {
+          "Fortune": {
+            "123": "Bad result / Poor, little effect.",
+            "45": "Mixed result / Limited, partial effect.",
+            "6": "Good result / Standard, full effect.",
+            "66": "Exceptional result / Great, extreme effect."
+          },
+          "Action": {
+            "Desperate": {
+              "123": "It’s the worst outcome. You suffer severe harm, a serious complication occurs, you lose this opportunity for action.",
+              "45": " You do it, but there’s a consequence: you suffer severe harm, a serious complication occurs, you have reduced effect.",
+              "6": "You do it.",
+              "66": "You do it with increased effect."
+            },
+            "Risky": {
+              "123": "Things go badly. You suffer harm, a complication occurs, you end up in a desperate position, you lose this opportunity.",
+              "45": "You do it, but there’s a consequence: you suffer harm, a complication occurs, you have reduced effect, you end up in a desperate position.",
+              "6": "You do it.",
+              "66": "You do it with increased effect."
+            },
+            "Controlled": {
+              "123": " You falter. Press on by seizing a risky opportunity, or withdraw and try a different approach.",
+              "45": "You hesitate. Withdraw and try a different approach, or else do it with a minor consequence: a minor complication occurs, you have reduced effect, you suffer lesser harm, you end up in a risky position.",
+              "6": "You do it.",
+              "66": "You do it with increased effect."
+            }
+          },
+          "Project": {
+            "123": "One tick.",
+            "45": "Two ticks.",
+            "6": "Three ticks.",
+            "66": "Five ticks."
+          }
+        }
       }
     }
   }
