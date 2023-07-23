@@ -1,6 +1,5 @@
 <script>
     import { getContext } from "svelte";
-    import { DynReducerHelper } from "#runtime/svelte/store/reducer";
     import { updateDoc } from "../actions/update";
     import { localize } from "../../util/misc";
     import DocClock from "../components/generic/DocClock.svelte";
@@ -9,7 +8,6 @@
     import ActionRating from "../components/ActionRating.svelte";
     import PreviewBondPower from "../components/preview/PreviewBondPower.svelte";
     import { dropDocs } from "../actions/drop";
-    import { IconItem } from "../../documents/item";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
