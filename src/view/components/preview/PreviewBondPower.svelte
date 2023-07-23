@@ -4,10 +4,22 @@
     export let power;
 
     let expanded = false;
+    function toggleExpanded() {
+        expanded = !expanded;
+    }
+
+    function sendToChat(evt) {
+        evt.stopPropagation();
+        ChatMessage.create({
+            content: `${power.name}<br>${power.system.description}`
+        })
+    }
 </script>
 
 <div class="root">
     <div class="header" on:click={() => (expanded = !expanded)}>
+        <img class="icon hover" src="icons/skills/social/diplomacy-writing-letter.webp">
+        <img class="icon cover" src={power.img} on:click={sendToChat}>
         <span>{power.name}</span>
     </div>
     {#if expanded}
@@ -28,5 +40,22 @@
     .header {
         cursor: pointer;
         font-weight: bold;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        .icon {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s;  
+            &.cover:hover {
+                opacity: 0%;
+            }
+            &.cover {
+                margin-left: -24px;
+            }
+        }
+        span {
+            margin-left: 5px;
+        }
     }
 </style>
