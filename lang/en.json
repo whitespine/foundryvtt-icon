@@ -231,27 +231,47 @@
   "BITD.DarkServants": "Dark Servants",
   "BITD.StrangeFriends": "Strange Friends",
 
-  "ICON.Kintype": "Kintype",
-  "ICON.Culture": "Culture",
-  "ICON.Bond": "Bond",
-  "ICON.Class": "Class",
-  "ICON.Job": "Job",
-  "ICON.Level": "Level",
-  "ICON.Health": "HP",
-  "ICON.JobResource": "Job Resource",
-  "ICON.Strain": "Strain",
-  "ICON.Effort": "Effort",
-  "ICON.Narrative": "Narrative",
-  "ICON.Traits-Relics": "Traits & Relics",
-  "ICON.Traits": "Traits",
-  "ICON.Abilities": "Abilities",
-  "ICON.AbilitiesTrophies": "Abilities & Trophies",
-  "ICON.Attributes": "Attributes",
-  "ICON.XP": "XP",
-  "ICON.Dust": "Dust",
-  "ICON.SpecialAbility": "Special Ability",
-  "ICON.SecondWind": "Second Wind",
-  "ICON.Ideals": "Ideals",
-  "ICON.NarrativeInfo": "Narrative Info",
-  "ICON.BondPowers": "Bond Powers"
+  "ICON": {
+    "Kintype": "Kintype",
+    "Culture": "Culture",
+    "Bond": "Bond",
+    "Class": "Class",
+    "Job": "Job",
+    "Level": "Level",
+    "Health": "HP",
+    "JobResource": "Job Resource",
+    "Strain": "Strain",
+    "Effort": "Effort",
+    "Narrative": "Narrative",
+    "Traits-Relics": "Traits & Relics",
+    "Traits": "Traits",
+    "Abilities": "Abilities",
+    "AbilitiesTrophies": "Abilities & Trophies",
+    "Attributes": "Attributes",
+    "XP": "XP",
+    "Dust": "Dust",
+    "SpecialAbility": "Special Ability",
+    "SecondWind": "Second Wind",
+    "Ideals": "Ideals",
+    "NarrativeInfo": "Narrative Info",
+    "BondPowers": "Bond Powers",
+    "Position": {
+      "Controlled": "Controlled",
+      "Risky": "Risky",
+      "Desperate": "Desperate"
+    },
+    "Effect": {
+      "Effect": "Effect",
+      "None": "None",
+      "Limited": "Limited",
+      "Standard": "Standard",
+      "Great": "Great",
+      "Super": "Superpowered"
+    },
+    "Rolls": {
+      "Narrative": {
+        "Title": "Narrative Roll"
+      }
+    }
+  }
 }

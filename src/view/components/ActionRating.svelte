@@ -2,6 +2,7 @@
     import { getContext } from "svelte";
     import { stepwiseResolveDotpath } from "../../util/paths";
     import SegBar from "./generic/SegBar.svelte";
+    import ForgedRollApplication from "../apps/FitdRollDialog";
 
     /** @type {string} Path to the action*/
     export let path;
@@ -13,18 +14,26 @@
     $: name = srp[srp.length - 1].pathlet;
     $: value = srp[srp.length - 1].val;
 
-    function onClick(target_value) {
+    function setValue(target_value) {
         let new_value = target_value === value ? value - 1 : target_value;
         $actor.update({[path]: new_value});
+    }
+
+    function promptRoll() {
+        let rect = this.parentElement.getBoundingClientRect();
+        ForgedRollApplication.show({x: rect.right, y: rect.top});
     }
 </script>
 
 <div>
-    <span>{name.toUpperCase()}</span>
-    <SegBar value={value} size={4} on:change={(e) => onClick(e.detail)} />
+    <span on:click={promptRoll}>{name.toUpperCase()}</span>
+    <SegBar value={value} size={4} on:change={(e) => setValue(e.detail)} />
 </div>
 
 <style lang="scss">
+    span {
+        cursor: pointer;
+    }
     div {
         display: grid;
         grid-template: 1fr / 70px 80px;
