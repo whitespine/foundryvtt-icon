@@ -56,7 +56,7 @@
         />
         <div style="grid-area: narr" class="header-information">
             <span>{localize("ICON.Kintype")}: </span>
-            <input type="text" use:updateDoc={{ doc, path: "system.kintype" }} />
+            <input type="text" use:updateDoc={{ doc, path: "system.kin" }} />
             <span>{localize("ICON.Culture")}: </span>
             <input type="text" use:updateDoc={{ doc, path: "system.culture" }} />
             <span>{localize("ICON.Bond")}: </span>
