@@ -6,6 +6,7 @@
     import BoundedNumberDisplay from "../components/generic/BoundedNumberDisplay.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
     import ActionRating from "../components/ActionRating.svelte";
+    import Portrait from "../components/Portrait.svelte";
     import PreviewBondPower from "../components/preview/PreviewBondPower.svelte";
     import { dropDocs } from "../actions/drop";
 
@@ -13,16 +14,16 @@
     let doc = actor; // Alias
 
     // Initialize our embedded categories
-    const name_alphabetical =(a, b) => a.name.localeCompare(b.name);
+    const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
     const bond_powers = actor.embedded.create(Item, {
         name: "bond_powers",
         filters: [(i) => i.type === "bond_power"],
-        sort: name_alphabetical
+        sort: name_alphabetical,
     });
     const traits = actor.embedded.create(Item, {
         name: "traits",
         filters: [(i) => i.type === "trait"],
-        sort: name_alphabetical
+        sort: name_alphabetical,
     });
 
     // Set our tabs
@@ -42,18 +43,10 @@
     }
 </script>
 
-<main class="flexcol" autocomplete="off" use:dropDocs={{handle: handleDrop, allow: allowDrop}}>
+<main class="flexcol" autocomplete="off" use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
     <!-- Sheet Header -->
     <header>
-        <img
-            style="grid-area: pic"
-            src={$actor.img}
-            data-edit="img"
-            title={$actor.name}
-            height="100"
-            width="100"
-            alt="Character Portrait"
-        />
+        <Portrait style="grid-area: pic" />
         <input style="grid-area: char_name" type="text" use:updateDoc={{ doc, path: "name" }} />
         <input
             style="grid-area: player_name"
@@ -154,7 +147,7 @@
     main {
         background-color: rgb(110, 166, 152);
     }
-    
+
     header {
         display: grid;
         grid-template:
@@ -173,7 +166,7 @@
     .sheet-body {
         .narrative-grid {
             display: grid;
-            grid-template: 1fr / 180px 2fr 180px;
+            grid-template: 1fr / 180px 1fr 180px;
 
             > div {
                 border-right: $border;
