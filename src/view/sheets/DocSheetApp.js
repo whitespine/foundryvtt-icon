@@ -37,7 +37,7 @@ export default class TJSDocSheet extends SvelteApplication {
       positionOrtho: false,
       transformOrigin: null,
       title: "NEW ACTOR SHEET",
-      zIndex: 95,
+      zIndex: null,
       svelte: {
         class: ActorSheetAppShell,
         target: document.body,

@@ -1,21 +1,129 @@
-<script>
-   import { ApplicationShell }   from '#runtime/svelte/component/core';
-
-   export let elementRoot;
-</script>
-
 <!-- This is necessary for Svelte to generate accessors TRL can access for `elementRoot` -->
-<svelte:options accessors={true}/>
+<svelte:options accessors={true} />
+
+<script>
+    import { ApplicationShell } from "#runtime/svelte/component/core";
+    import { scale } from "svelte/transition";
+    import { localize } from "../../util/misc";
+
+    export let elementRoot;
+
+    // Props
+    export let initial_dice = 1;
+    export let initial_purpose = "";
+
+    // State
+    let purpose = initial_purpose;
+    let dice = initial_dice;
+
+    // Helper consts
+    const EFFECTS = ["None", "Limited", "Standard", "Great", "Super"];
+    const POSITIONS = ["Controlled", "Risky", "Desperate"];
+</script>
 
 <!-- ApplicationShell provides the popOut / application shell frame, header bar, content areas -->
 <!-- ApplicationShell exports `elementRoot` which is the outer application shell element -->
-<ApplicationShell bind:elementRoot>
-   <main>
-      <h1>Road rolla</h1>
-   </main>
+<ApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 200 }}>
+    <main>
+        <h3>{localize("ICON.Rolls.Narrative.Purpose")}:</h3>
+        <div class="purposebox">
+            <input type="text" bind:value={purpose} />
+        </div>
+        <h3>{localize("ICON.Rolls.Narrative.NumDice")}:</h3>
+        <div class="dicebox">
+            {#each [0, 1, 2, 3, 4, 5, 6] as count}
+                <button
+                    class="dice"
+                    class:selected={count == dice}
+                    class:zero={count == 0}
+                    on:click={() => (dice = count)}
+                >
+                    {count}
+                </button>
+            {/each}
+            <button class="fortune">{localize("ICON.Rolls.Narrative.Fortune")}</button>
+        </div>
+        <h3>{localize("ICON.Rolls.Narrative.PosEffect")}:</h3>
+        <div class="rollbox">
+            <div class="dark" />
+            {#each EFFECTS as effect}
+               <span class="dark">{localize(`ICON.Effect.${effect}`)}</span>
+            {/each}
+            {#each POSITIONS as position}
+                <span class="dark">{localize(`ICON.Position.${position}`)}</span>
+                {#each EFFECTS as effect}
+                    <button type="button">🎲</button>
+                {/each}
+            {/each}
+        </div>
+    </main>
 </ApplicationShell>
 
 <style lang="scss">
-   main {
-   }
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dicebox {
+        display: flex;
+        flex-direction: row;
+
+        .fortune {
+            width: 100px;
+            background-color: lightblue;
+        }
+
+        .dice {
+            transition: filter 0.1s;
+            border-radius: 4px;
+            width: 30px;
+            height: 30px;
+            border: none;
+            text-align: center;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: large;
+            margin: 5px;
+
+            // Unselected style
+            font-weight: normal;
+            opacity: 40%;
+            background-color: black;
+            color: white;
+
+            &.selected {
+                opacity: 100%;
+                font-weight: bolder;
+            }
+        }
+    }
+
+    .rollbox {
+      display: grid;
+      grid-template: repeat(3, 1fr) / repeat(6, 1fr);
+      align-items: center;
+      justify-items: center;
+
+      .dark {
+         color: black;
+      }
+
+      button {
+         background-color: grey;
+         border-radius: 100%;
+         opacity: 20%;
+         width: 25px;
+         height: 25px;
+         line-height: 25px;
+         cursor: pointer;
+         outline: none;
+         box-shadow: none;
+         border: none;
+         padding: 0px;
+
+         &:hover {
+            opacity: 100%;
+         }
+      }
+    }
 </style>

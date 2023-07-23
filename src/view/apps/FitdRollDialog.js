@@ -12,14 +12,23 @@ export default class ForgedRollApplication extends SvelteApplication {
     */
    static get defaultOptions() {
       return foundry.utils.mergeObject(super.defaultOptions, {
+         id: "narrative_roll",
          title: 'ICON.Rolls.Narrative.Title',  // Automatically localized from `lang/en.json`.
          width: 400,
-         height: 300,
+         height: "auto",
 
          svelte: {
             class: FitdRollShell,
-            target: document.body
-         }
+            target: document.body,
+            intro: true,
+         },
+
+         classes: ["icon", "app", "fitd-roll"],
+         resizable: false,
+         minimizable: false,
+         popOut: false,
+         positionOrtho: false,
+         zIndex: null,
       });
    }
 

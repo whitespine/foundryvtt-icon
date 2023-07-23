@@ -266,11 +266,15 @@
       "Limited": "Limited",
       "Standard": "Standard",
       "Great": "Great",
-      "Super": "Superpowered"
+      "Super": "S.Powered"
     },
     "Rolls": {
       "Narrative": {
-        "Title": "Narrative Roll"
+        "Title": "Narrative Roll",
+        "Purpose": "Roll Purpose",
+        "NumDice": "Number of Dice",
+        "PosEffect": "Position and Effect Table",
+        "Fortune": "Fortune Roll"
       }
     }
   }
