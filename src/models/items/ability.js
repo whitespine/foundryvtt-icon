@@ -190,7 +190,7 @@ export class AbilityModel extends ItemModel {
         // Extract talents
         data.system.talents = [];
         data.system.mastery = null;
-        for (let talent_val of Object.values(data.system.attributes?.Talents)) {
+        for (let talent_val of Object.values(data.system.attributes?.Talents ?? {})) {
             // talent_key tends to be something akin to Talent1
             if (talent_val.value?.includes("Mastery")) {
                 data.system.mastery = {
