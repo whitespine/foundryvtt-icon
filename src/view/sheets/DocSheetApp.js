@@ -1,6 +1,6 @@
 import { SvelteApplication } from "#runtime/svelte/application";
 import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-import ActorSheetAppShell from "./DocSheetAppShell.svelte";
+import DocSheetAppShell from "./DocSheetAppShell.svelte";
 
 export default class TJSDocSheet extends SvelteApplication {
   /**
@@ -28,17 +28,15 @@ export default class TJSDocSheet extends SvelteApplication {
       // TODO: How to get normal Foundry buttons in the window header?
       id: `actor-sheet-${this.ticker++}`,
       classes: ["icon", "sheet", "actor"],
-      resizable: true,
+      // resizable: true,
       minimizable: true,
-      popOut: false,
+      // popOut: false,
       width: 800,
       height: "auto",
       positionOrtho: false,
-      transformOrigin: null,
       title: "Document Sheet",
-      zIndex: null,
       svelte: {
-        class: ActorSheetAppShell,
+        class: DocSheetAppShell,
         target: document.body,
         intro: true,
         props: {},
