@@ -1,4 +1,4 @@
-import { SvelteApplication }  from '#runtime/svelte/application';
+import { SvelteApplication } from '#runtime/svelte/application';
 
 import FitdRollShell from './FitdRollShell.svelte';
 
@@ -32,14 +32,25 @@ export default class ForgedRollApplication extends SvelteApplication {
       });
    }
 
-   static show({x, y} = {}) {
-      if(!singleton) {
-         singleton = new ForgedRollApplication();
-      }  
+   static async show({ x, y, initial_dice, initial_purpose } = {}) {
+      if (!singleton?.svelte.applicationShell) {
+         singleton = new ForgedRollApplication({
+            svelte: {
+               props: {
+                  dice: initial_dice ?? 1,
+                  purpose: initial_purpose ?? ""
+               }
+            }
+         });
+      } else {
+         singleton.svelte.applicationShell.dice = initial_dice ?? 1;
+         singleton.svelte.applicationShell.purpose = initial_purpose ?? "";
+      }
+
       singleton.position.set({
          top: y,
          left: x
       });
-      singleton.render(true, {focus: true});
+      return singleton.render(true, { focus: true });
    }
 }

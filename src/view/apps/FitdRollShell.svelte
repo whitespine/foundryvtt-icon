@@ -8,17 +8,14 @@
 
     export let elementRoot;
 
-    // Props
-    export let initial_dice = 1;
-    export let initial_purpose = "";
 
     // Helper consts
     const EFFECTS = ["None", "Limited", "Standard", "Great", "Super"];
     const POSITIONS = ["Desperate", "Risky", "Controlled"];
 
-    // State
-    let purpose = initial_purpose;
-    let dice = initial_dice;
+    // State/props
+    export let purpose = "";
+    export let dice = 1;
     let effect = EFFECTS[2];
     let position = POSITIONS[1];
 

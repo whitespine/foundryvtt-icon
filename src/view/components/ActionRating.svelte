@@ -21,7 +21,12 @@
 
     function promptRoll() {
         let rect = this.parentElement.getBoundingClientRect();
-        ForgedRollApplication.show({x: rect.right, y: rect.top});
+        ForgedRollApplication.show({
+            x: rect.right, 
+            y: rect.top, 
+            initial_purpose: `${name} roll`,
+            initial_dice: value,
+        });
     }
 </script>
 
