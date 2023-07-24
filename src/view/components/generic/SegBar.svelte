@@ -11,7 +11,7 @@
     let segments;
     $: {
         segments = [];
-        for(let i=0; i<size; i++) {
+        for(let i=1; i <= size; i++) {
             segments.push({
                 value: i == value ? value - 1 : i,
                 filled: i <= value
