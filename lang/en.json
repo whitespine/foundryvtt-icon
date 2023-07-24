@@ -275,7 +275,14 @@
         "NumDice": "Number of Dice",
         "PosEffect": "Position and Effect Table",
         "Fortune": "Fortune Roll",
+        "Action": "Action Roll",
         "Result": {
+          "Brief": {
+            "123": "Failure",
+            "45": "Partial Success",
+            "6": "Success",
+            "66": "Critical Success!"
+          },
           "Fortune": {
             "123": "Bad result / Poor, little effect.",
             "45": "Mixed result / Limited, partial effect.",

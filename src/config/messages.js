@@ -11,13 +11,19 @@ export function setupMessages() {
     const sveltifyMessage = async (msg, html) => {
         // Find associated flag data scoped to your module ID. This is the easiest way to determine that this message is
         // associated with your module and has a Svelte component attached to the message content.
-        const flagData = msg.getFlag(game.system.id, 'data');
+        let flagData = msg.getFlag(game.system.id, 'data');
 
         if (typeof flagData === 'object') {
-            // Add the svelte component to the message instance loaded in client side memory.
-            const type = flagData["type"];
+            // Fixup flag data
+            flagData = foundry.utils.duplicate(flagData);
+            const type = flagData.type;
+            delete flagData["type"];
+
+            // Form props and target
             const props = { msg, ...flagData };
             const target = html[0];
+
+            // Add the svelte component to the message instance loaded in client side memory.
             if (type === "attack") {
                 msg._svelteComponent = new AttackRollMessage({ target, props });
             } else if (type == "narrative") {

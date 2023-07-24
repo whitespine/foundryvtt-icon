@@ -1,6 +1,6 @@
-import { SvelteApplication }  from '#runtime/svelte/application';
+import { SvelteApplication } from '#runtime/svelte/application';
 
-import BasicAppShell          from './BasicAppShell.svelte';
+import BasicAppShell from './BasicAppShell.svelte';
 
 export default class BasicApplication extends SvelteApplication {
    /**

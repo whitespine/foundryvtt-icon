@@ -12,13 +12,15 @@
     export let initial_dice = 1;
     export let initial_purpose = "";
 
+    // Helper consts
+    const EFFECTS = ["None", "Limited", "Standard", "Great", "Super"];
+    const POSITIONS = ["Desperate", "Risky", "Controlled"];
+
     // State
     let purpose = initial_purpose;
     let dice = initial_dice;
-
-    // Helper consts
-    const EFFECTS = ["None", "Limited", "Standard", "Great", "Super"];
-    const POSITIONS = ["Controlled", "Risky", "Desperate"];
+    let effect = EFFECTS[2];
+    let position = POSITIONS[1];
 
     // Helper functions
     function formula() {
@@ -39,6 +41,7 @@
                 subtype,
                 position,
                 effect,
+                purpose,
                 actor_uuid: "",
                 roll_data: roll.toJSON(),
             },
@@ -66,22 +69,29 @@
                     {count}
                 </button>
             {/each}
-            <button class="fortune" on:click={() => doRoll(null, null, "Fortune")}
-                >{localize("ICON.Rolls.Narrative.Fortune")}</button
-            >
+            <button class="roll" on:click={() => doRoll(null, null, "Fortune")}>
+                {localize("ICON.Rolls.Narrative.Fortune")}
+            </button>
         </div>
         <h3>{localize("ICON.Rolls.Narrative.PosEffect")}:</h3>
         <div class="rollbox">
-            <div class="dark" />
-            {#each EFFECTS as effect}
-                <span class="dark">{localize(`ICON.Effect.${effect}`)}</span>
-            {/each}
-            {#each POSITIONS as position}
-                <span class="dark">{localize(`ICON.Position.${position}`)}</span>
-                {#each EFFECTS as effect}
-                    <button type="button" on:click={() => doRoll(position, effect, "Action")}>🎲</button>
+            <div class="flexcol choices">
+                {#each POSITIONS as p}
+                    <button on:click={() => (position = p)} class:selected={position == p}>
+                        {localize(`ICON.Position.${p}`)}
+                    </button>
                 {/each}
-            {/each}
+            </div>
+            <div class="flexcol choices">
+                {#each EFFECTS as e}
+                    <button on:click={() => (effect = e)} class:selected={effect == e}>
+                        {localize(`ICON.Effect.${e}`)}
+                    </button>
+                {/each}
+            </div>
+            <button class="roll" on:click={() => doRoll(position, effect, "Action")}>
+                {localize("ICON.Rolls.Narrative.Action")}
+            </button>
         </div>
     </main>
 </ApplicationShell>
@@ -92,14 +102,14 @@
         flex-direction: column;
     }
 
+    .roll {
+        width: 120px;
+        background-color: lightblue;
+    }
+
     .dicebox {
         display: flex;
         flex-direction: row;
-
-        .fortune {
-            width: 100px;
-            background-color: lightblue;
-        }
 
         .dice {
             transition: filter 0.1s;
@@ -127,28 +137,20 @@
 
     .rollbox {
         display: grid;
-        grid-template: repeat(3, 1fr) / repeat(6, 1fr);
+        grid-template: repeat(1, 1fr) / repeat(3, 1fr);
         align-items: center;
         justify-items: center;
 
-        .dark {
-            color: black;
-        }
-
-        button {
-            background-color: grey;
-            border-radius: 100%;
-            opacity: 20%;
-            width: 25px;
-            height: 25px;
-            line-height: 25px;
+        .choices button {
+            opacity: 40%;
+            background-color: black;
+            color: white;
+            margin: 2px;
+            width: 100%;
             cursor: pointer;
-            outline: none;
-            box-shadow: none;
-            border: none;
             padding: 0px;
 
-            &:hover {
+            &.selected {
                 opacity: 100%;
             }
         }
