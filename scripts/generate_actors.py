@@ -85,6 +85,7 @@ def main():
 
         # Combine traits, actions, conditional abilities
         _sub_inherit_list("traits")
+        _sub_inherit_list("setup_traits")
         _sub_inherit_list("actions")
         _sub_inherit_list("conditional_abilities")
 
@@ -111,6 +112,7 @@ def main():
         traits = []  # Later turned to items
         actions = []  # Later turned to items
         actor = {
+            "name": name,
             "type": "foe",
             "_id": id,
             "system": system,
@@ -143,7 +145,6 @@ def main():
             inherit_into(data, super_source)
 
         # Do initial copying
-        simply_inherit("name")
         simply_inherit("chapter")
         simply_inherit("class")
         simply_inherit("vitality")
@@ -153,8 +154,10 @@ def main():
         simply_inherit("damage_die")
         actions = mandate_list(data.get("actions"))
 
+        item_sort = 0
         def add_item(name, type, item_system):
             item_id = random_id()
+            item_sort += 1
             items.append(item_id)
             item = {
                 "name": name,
@@ -162,6 +165,7 @@ def main():
                 "_id": item_id,
                 "system": item_system,
                 "img": "",
+                "sort": item_sort,
                 "ownership": {},
                 "effects": [],
                 "flags": {},
@@ -187,11 +191,9 @@ def main():
         for t in mandate_list(data.get("setup_traits")):
             long_desc = ""
             if t.get("listed_items"):
-                long_desc = f"""<br><ul>{
-                    "".join(f'''
-                        <li>{i['name']} - {i['description']}</li>
-                            ''' for i in mandate_list(data.get('setup_traits')))
-                }</ul>"""
+                li = mandate_list(t["listed_items"])
+                li = [f"<li>{i['name']} - {i['description']}</li>" for i in li]
+                long_desc = f"<br><ul>{''.join(li)}</ul>"
             system["setup"].append(
                 {
                     "name": t["name"],
