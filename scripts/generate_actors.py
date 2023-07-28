@@ -156,6 +156,7 @@ def main():
 
         item_sort = 0
         def add_item(name, type, item_system):
+            nonlocal item_sort
             item_id = random_id()
             item_sort += 1
             items.append(item_id)
@@ -253,7 +254,6 @@ def main():
 
         # Convert actions into appropriate items
         for i in actions:
-            continue
             add_item(
                 i["name"],
                 "ability",
