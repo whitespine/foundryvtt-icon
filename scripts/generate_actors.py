@@ -161,10 +161,11 @@ def main():
                 "type": type,
                 "_id": item_id,
                 "system": item_system,
-                # "img": "",
+                "img": "",
+                "ownership": {},
                 "effects": [],
                 "flags": {},
-                "key": f"!actors.items!{id}.{item_id}",
+                "_key": f"!actors.items!{id}.{item_id}",
             }
             item_filename = f"{name}_{id}.json".replace(" ", "_")
             with open(pack_root / "better-foes" / "_source" / item_filename, "w") as f:
@@ -250,6 +251,7 @@ def main():
 
         # Convert actions into appropriate items
         for i in actions:
+            continue
             add_item(
                 i["name"],
                 "ability",
