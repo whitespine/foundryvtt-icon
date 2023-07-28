@@ -77,7 +77,7 @@ def main():
             inherit_into(target, super_source)
 
         def _sub_inherit_list(key):
-            target[key] = mandate_list(target.get(key)) + mandate_list(source.get(key))
+            target[key] = mandate_list(source.get(key)) + mandate_list(target.get(key))
 
         def _sub_inherit_attr(key):
             if key in source and key not in target:
@@ -99,14 +99,14 @@ def main():
     # Begin building
     for index, [name, data] in enumerate(raw_units.items()):
         # Skip templates
-        if data["type"] == "Template": continue
-
-        if index == 5:
-            break
+        if data.get("type") == "Template":
+            continue
 
         # Decide an id
         id = random_id()
-        system = {}
+        system = {
+            "hp_multiplier": 4
+        }
         items = []
         traits = []  # Later turned to items
         actions = []  # Later turned to items
@@ -151,7 +151,7 @@ def main():
         simply_inherit("defense")
         simply_inherit("fray_damage")
         simply_inherit("damage_die")
-        actions = data["actions"]
+        actions = mandate_list(data.get("actions"))
 
         def add_item(name, type, item_system):
             item_id = random_id()
@@ -164,7 +164,7 @@ def main():
                 # "img": "",
                 "effects": [],
                 "flags": {},
-                "key": f"!actors.items!{id}.{item_id}"
+                "key": f"!actors.items!{id}.{item_id}",
             }
             item_filename = f"{name}_{id}.json".replace(" ", "_")
             with open(pack_root / "better-foes" / "_source" / item_filename, "w") as f:
@@ -189,49 +189,90 @@ def main():
                 long_desc = f"""<br><ul>{
                     "".join(f'''
                         <li>{i['name']} - {i['description']}</li>
-                            ''' for i in data.get('setup_traits'))
+                            ''' for i in mandate_list(data.get('setup_traits')))
                 }</ul>"""
-            system["setup"].append({
-                "name": t["name"],
-                "description": t["description"] + long_desc,
-            })
+            system["setup"].append(
+                {
+                    "name": t["name"],
+                    "description": t["description"] + long_desc,
+                }
+            )
 
         # simply_inherit("setup_traits")
 
         # Post process to combine conditional abilities
-        for cond_ability in data["conditional_abilities"]:
+        special_class = "Normal"
+        for cond_ability in mandate_list(data.get("conditional_abilities")):
+            # Check special classes, ignore those that don't apply
+            if cond_ability.get("is_special_classes", special_class) != special_class:
+                continue
+
+            # Update special classes
+            if cond_ability.get("special_class"):
+                special_class = cond_ability.get("special_class")
+
+            # Update hp multipliers
+            if cond_ability.get("h_p_multiplier"):
+                system["hp_multiplier"] = cond_ability["h_p_multiplier"]
+
             # If remov traits specified, don't actually remove, but instead mark as explicitly chaptered
             for removal_target in mandate_list(cond_ability.get("remove_traits")):
                 # Find the trait with the same name
-                corr_trait = [x for x in traits if x["name"] == removal_target][0]
+                print()
+                print(json.dumps(data, indent=2))
+                corr_trait = ([x for x in traits if x["name"] == removal_target])[0]
                 # Mark it
-                corr_trait["remove_at_chapter"] = cond_ability["chapter"]
+                if "chapter" in cond_ability:
+                    corr_trait["remove_at_chapter"] = cond_ability["chapter"]
 
             # Same for actions
             for removal_target in mandate_list(cond_ability.get("remove_actions")):
                 # Find the trait with the same name
                 corr_action = [x for x in actions if x["name"] == removal_target][0]
                 # Mark it
-                corr_action["remove_at_chapter"] = cond_ability["chapter"]
+                if "chapter" in cond_ability:
+                    corr_action["remove_at_chapter"] = cond_ability["chapter"]
 
             # Add traits, mark similarly
             for add_target in mandate_list(cond_ability.get("traits")):
                 corr_trait = lookup_trait(add_target)
-                corr_trait["add_at_chapter"] = cond_ability["chapter"]
+                if "chapter" in cond_ability:
+                    corr_trait["add_at_chapter"] = cond_ability["chapter"]
+                if "is_not_special_class" in cond_ability:
+                    corr_trait["is_not_special_class"] = cond_ability["is_not_special_classes"]
                 traits.append(corr_trait)
 
             # Add actions, mark similarly
             for add_target in mandate_list(cond_ability.get("actions")):
-                add_target["add_at_chapter"] = cond_ability["chapter"]
+                if "chapter" in cond_ability:
+                    add_target["add_at_chapter"] = cond_ability["chapter"]
                 actions.append(add_target)
-            
+
         # Convert actions into appropriate items
         for i in actions:
-            add_item(i["name"], "action", {
-
-            })
+            add_item(
+                i["name"],
+                "ability",
+                {
+                    "choices": [
+                        {
+                            "actions": i.get("action_cost", 0),
+                            "round_action": i.get("round_action", False),
+                            "attack": False,
+                            "true_strike": False,
+                            "unerring": False,
+                            "ranges": [],
+                            "interrupt": 0,
+                            "combo": 0,
+                            "resolve": 0,
+                        }
+                    ]
+                },
+            )
 
         # Convert traits into appropriate items
+        for t in traits:
+            add_item(t["name"], "trait", {"description": t.get("description")})
 
         # Dump to appropriate file
         actor_filename = f"{name}_{id}.json".replace(" ", "_")

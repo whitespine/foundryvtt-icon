@@ -78,8 +78,15 @@ export class AbilityChoiceField extends fields.SchemaField {
             name: new fields.StringField({ nullable: true, initial: null }),
             // How many actions does it take?
             actions: new fields.NumberField({ nullable: false, integer: true, min: 0, max: 2, initial: 1 }),
-            // What is its listed range?
-            range: new fields.StringField({}),
+            // Is it a round action?
+            round_action: new fields.BooleanField({ initial: false }),
+            // What is/are its listed range(s)?
+            ranges: new fields.ArrayField(new fields.StringField({
+                validate: (val) => {
+                    return !!val.match(/(Range \d+|Line \d+|Small Blast|Medium Blast|Large Blast)/)
+                }
+            })),
+
 
             // ------- FLAGS ---------------
             // Is it an attack?
@@ -96,15 +103,6 @@ export class AbilityChoiceField extends fields.SchemaField {
             combo: new fields.NumberField({ initial: 0, choices: [-1, 0, 1] }),
             // Costs X resolve
             resolve: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
-            // Costs X hp
-            sacrifice: new fields.NumberField({ nullable: false, integer: true, min: true, initial: 0 }),
-            // Costs heroics
-            heroics: new fields.BooleanField({ initial: false }),
-            // Costs aether
-            infuse: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
-            // Costs blessings on target
-            blessings: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
-
         }, options);
     }
 
