@@ -1,5 +1,2 @@
-**/*.log
-**/LOCK
-**/LOG
 **/LOG.old
 **/_source

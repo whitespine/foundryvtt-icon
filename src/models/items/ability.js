@@ -2,74 +2,6 @@ import { ItemModel } from "./item";
 
 const fields = foundry.data.fields;
 
-/**
- * Represents a single "option" within an ability, e.g. for combo or 
- */
-export class ActionCostField extends fields.SchemaField {
-    constructor(options = {}) {
-        super({
-
-        }, options);
-    }
-}
-
-/**
- * Represents a single effect clause within an abilities seequence of effects
- * E.g. "Slay", "Attack", "Mark"
- */
-export class ActionClauseField extends fields.SchemaField {
-    constructor(options = {}) {
-        super({
-            // The "raw" provided text
-            text: new fields.StringField(),
-        }, options);
-    }
-
-    // Extend initialize to populate our deduced values
-    initialize(value, model, options = {}) {
-        let rv = super.initialize(value, model, options);
-        this.foo = "bar";
-        return rv;
-
-        // Our (possibly deduced, possibly explicit) clause and effect
-        /*
-        clause: new fields.StringField({choices: [
-            "Attack", 
-            "Effect", 
-            "Area Effect", 
-            "Terrain Effect",
-            "Mark",
-            "Special",
-            "Slay",
-            "Comeback",
-            "Stance",
-        ]}),
-        */
-    }
-}
-
-/**
- * Represents a target of some aspect of an ability
- */
-export class TargetField extends fields.SchemaField {
-    constructor(options) {
-        super({
-            type: new fields.StringField({
-                choices: ["unit", "object", "space"]
-            }),
-            allegiance: new fields.StringField({
-                choices: ["n/a", "self", "foe", "ally", "other", "object"],
-            }),
-        }, {
-            initial: {
-                who: "self",
-                allegiance: "n/a"
-            },
-            ...options
-        });
-    }
-}
-
 /** For combo and other similar multiple-choice abilities */
 export class AbilityChoiceField extends fields.SchemaField {
     constructor(options = {}) {
@@ -97,12 +29,18 @@ export class AbilityChoiceField extends fields.SchemaField {
             unerring: new fields.BooleanField({ initial: false }),
             // Is it an interrupt, and if so how often can it be used?
             interrupt: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
+            trigger: new fields.StringField({initial: ""}),
 
             // ------- COSTS ---------------
             // Costs / generates a combo token
             combo: new fields.NumberField({ initial: 0, choices: [-1, 0, 1] }),
+            // Combos off of a specific other ability (common on npcs)
+            combo_chain: new fields.StringField({initial: ""}),
             // Costs X resolve
             resolve: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
+
+            // ------- What's it actually do? Hit, miss, charge, etc --------
+            effects: new fields.ArrayField(new fields.StringField())
         }, options);
     }
 
