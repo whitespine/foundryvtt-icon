@@ -75,6 +75,15 @@
     }]
   },
   "packs": [
+    {
+      "label": "Better Foes",
+      "type": "Actor",
+      "name": "better-foes",
+      "path": "packs/better-foes",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    }
   ],
   "socket": true,
   "url": "https://github.com/whitespine/foundryvtt-icon",

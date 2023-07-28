@@ -1,0 +1,6 @@
+**/*.log
+**/LOCK
+**/LOG
+**/LOG.old
+**/LOG.old
+better_foes_example
