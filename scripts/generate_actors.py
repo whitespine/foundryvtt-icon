@@ -201,9 +201,8 @@ def main():
                 }
             )
 
-        # simply_inherit("setup_traits")
-
         # Post process to combine conditional abilities
+        """
         special_class = "Normal"
         for cond_ability in mandate_list(data.get("conditional_abilities")):
             # Check special classes, ignore those that don't apply
@@ -213,6 +212,8 @@ def main():
             # Update special classes
             if cond_ability.get("special_class"):
                 special_class = cond_ability.get("special_class")
+                print()
+                print(json.dumps(data["conditional_abilities"], indent=2))
 
             # Update hp multipliers
             if cond_ability.get("h_p_multiplier"):
@@ -221,8 +222,6 @@ def main():
             # If remov traits specified, don't actually remove, but instead mark as explicitly chaptered
             for removal_target in mandate_list(cond_ability.get("remove_traits")):
                 # Find the trait with the same name
-                print()
-                print(json.dumps(data, indent=2))
                 corr_trait = ([x for x in traits if x["name"] == removal_target])[0]
                 # Mark it
                 if "chapter" in cond_ability:
@@ -250,6 +249,7 @@ def main():
                 if "chapter" in cond_ability:
                     add_target["add_at_chapter"] = cond_ability["chapter"]
                 actions.append(add_target)
+        """
 
         # Convert actions into appropriate items
         for i in actions:

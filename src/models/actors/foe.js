@@ -1,6 +1,22 @@
 import { ClockField } from "../base";
 import { ActorModel } from "./actor";
 
+export class ConditionsField extends foundry.data.fields.SchemaField {
+    constructor(options={}) {
+        super({
+            // Disable unless is this special class type (legend, etc)
+            is_type: new foundry.data.fields.StringField({nullable: true, initial: null}),
+            // Disable unless isnt this special class type (legend, etc)
+            isnt_type: new foundry.data.fields.StringField({nullable: true, initial: null}),
+            // Disable unless above this chapter
+            above_chapter: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField()),
+            // Disable unless below this chapter
+            below_chapter: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField()),
+        }, options);
+    }
+}
+
+
 export class FoeModel extends ActorModel {
     static defineSchema() {
         return {
