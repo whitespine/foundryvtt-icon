@@ -29,13 +29,16 @@ export class AbilityChoiceField extends fields.SchemaField {
             unerring: new fields.BooleanField({ initial: false }),
             // Is it an interrupt, and if so how often can it be used?
             interrupt: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
-            trigger: new fields.StringField({initial: ""}),
+            trigger: new fields.StringField({ initial: "" }),
+            // Does it end your turn
+            end_turn: new fields.BooleanField({ initial: false }),
+
+            // Does it have any sub abilities? Mostly this is for interrupts, though sometimes marks can grant them
+            sub_abilities: new fields.ArrayField(fields.StringField()),
 
             // ------- COSTS ---------------
             // Costs / generates a combo token
             combo: new fields.NumberField({ initial: 0, choices: [-1, 0, 1] }),
-            // Combos off of a specific other ability (common on npcs)
-            combo_chain: new fields.StringField({initial: ""}),
             // Costs X resolve
             resolve: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
 

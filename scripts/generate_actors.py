@@ -374,11 +374,14 @@ class ItemProcessor:
 
         # Subprocess interrupts
         for interrupt in mandate_list(self.data.get("interrupts")):
+            interrupt["name"] += " (int)"
+            self.data.setdefault("sub_ability", []).append(interrupt["name"])
             self.parent.process_action(interrupt)
 
         # Subprocess combos
         if self.data.get("combo"):
-            self.data["combo"]["combo_chain"] = self.name
+            self.data["combo"]["name"] += " (combo)"
+            self.data.setdefault("sub_ability", []).append(self.data["combo"]["name"])
             self.parent.process_action(self.data["combo"])
 
         choice = {
@@ -391,7 +394,7 @@ class ItemProcessor:
             "interrupt": self.data.get("count", 0),
             "trigger": self.data.get("trigger", 0),
             "combo": 0,
-            "combo_chain": self.data.get("combo_chain", ""),
+            "sub_ability": self.data.get("combo_chain"),
             "resolve": 0,
             "effects": effects,
         }
