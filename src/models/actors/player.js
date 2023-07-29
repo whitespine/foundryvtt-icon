@@ -51,6 +51,7 @@ export class PlayerModel extends ActorModel {
 
             // Combat
             hp: new FakeBoundedNumberField(),
+            vigor: new FakeBoundedNumberField(),
             wounds: new FakeBoundedNumberField(),
             level: new fields.NumberField({ nullable: false, min: 0, max: 9, initial: 0 }), // Eventually will be item
             class: new fields.StringField({ initial: "Stalwart" }), // Eventually will be item

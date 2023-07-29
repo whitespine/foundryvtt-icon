@@ -239,6 +239,7 @@
     "Job": "Job",
     "Level": "Level",
     "Health": "HP",
+    "Vigor": "Vigor",
     "JobResource": "Job Resource",
     "Strain": "Strain",
     "Effort": "Effort",
@@ -255,6 +256,7 @@
     "Ideals": "Ideals",
     "NarrativeInfo": "Narrative Info",
     "BondPowers": "Bond Powers",
+    "Description": "Description",
     "Position": {
       "Controlled": "Controlled",
       "Risky": "Risky",
@@ -267,6 +269,14 @@
       "Standard": "Standard",
       "Great": "Great",
       "Super": "S.Powered"
+    },
+    "Foe": {
+      "Abilities": "Abilities",
+      "Description": "Description",
+      "Stats": "Stats",
+      "Class": "Class",
+      "Faction": "Faction",
+      "Setup": "Combat Setup Information",
     },
     "Rolls": {
       "Narrative": {

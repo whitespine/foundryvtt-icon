@@ -2,11 +2,14 @@
     /** @type {Array<{label: string, key: string}>} */
     export let tabs;
 
+    /** @type {boolean} */
+    export let horizontal = true;
+
     // Currently selected tab. Can be controlled programatically
     export let selected;
 </script>
 
-<div class="icon-tabs">
+<div class="icon-tabs" class:horizontal>
     {#each tabs as tab}
         <div class="icon-tab" class:active={selected == tab.key} on:click={() => (selected = tab.key)}>
             {tab.label}
@@ -18,13 +21,16 @@
     .icon-tabs {
         clip-path: var(--inset-box-clip);
         display: flex;
-        flex-direction: row;
         flex-wrap: nowrap;
         justify-content: flex-start;
         background-color: rgb(56, 52, 56);
         margin: 5px;
         min-height: max-content;
         align-items: center;
+    }
+
+    .horizontal {
+        flex-direction: row;
     }
 
     .icon-tab {

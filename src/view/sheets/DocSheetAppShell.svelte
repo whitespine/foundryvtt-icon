@@ -6,6 +6,7 @@
     // import DocStringField from "../../components/DocStringField.svelte";
     import { scale } from "svelte/transition";
     import PlayerSheet from "./PlayerSheet.svelte";
+    import FoeSheet from "./FoeSheet.svelte";
 
     export let elementRoot = void 0;
 
@@ -19,5 +20,11 @@
 </script>
 
 <TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 200 }}>
-    <PlayerSheet/>
+    {#if $tjs_doc.type == "player"}
+        <PlayerSheet />
+    {:else if $tjs_doc.type == "foe"}
+        <FoeSheet />
+    {:else}
+        <span>Unsupported doc</span>
+    {/if}
 </TJSApplicationShell>

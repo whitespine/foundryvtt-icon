@@ -34,7 +34,7 @@ export class AbilityChoiceField extends fields.SchemaField {
             end_turn: new fields.BooleanField({ initial: false }),
 
             // Does it have any sub abilities? Mostly this is for interrupts, though sometimes marks can grant them
-            sub_abilities: new fields.ArrayField(fields.StringField()),
+            sub_abilities: new fields.ArrayField(new fields.StringField()),
 
             // ------- COSTS ---------------
             // Costs / generates a combo token
