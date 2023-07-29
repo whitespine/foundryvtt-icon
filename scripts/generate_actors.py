@@ -131,13 +131,26 @@ class Processor:
         Creates files for all intaken raw units
         """
         # Begin building
-        for name, data in self.raw_units.items():
+        for _name, data in self.raw_units.items():
             # Skip templates
             if data.get("type") == "Template":
                 continue
 
-            ap = ActorProcessor(self, name, data)
-            ap.process()
+            self.process_foe(data)
+
+    def process_foe(self, data):
+        """
+        Processes an individual actor
+        """
+        ap = ActorProcessor(self, data)
+        ap.process_as_actor()
+
+    def process_summon(self, data):
+        """
+        Processes an individual actor
+        """
+        ap = ActorProcessor(self, data)
+        ap.process_as_summon()
 
 
 class ActorProcessor:
@@ -145,10 +158,10 @@ class ActorProcessor:
     Stateful processor for ingesting actors
     """
 
-    def __init__(self, processor: Processor, name: str, data: Dict) -> None:
+    def __init__(self, processor: Processor, data: Dict) -> None:
         self.parent = processor
         self.data = data
-        self.name = name
+        self.name = data.get("name", "Unknown")
         self.id = random_id()
         self.system = {}
         self.item_ids = []
@@ -226,7 +239,7 @@ class ActorProcessor:
 
             # Add traits, mark similarly
             for add_target in mandate_list(cond_ability.get("traits")):
-                corr_trait = self.process.get_trait(add_target)
+                corr_trait = self.process_as_actor.get_trait(add_target)
                 if "chapter" in cond_ability:
                     corr_trait["add_at_chapter"] = cond_ability["chapter"]
                 if "is_not_special_class" in cond_ability:
@@ -239,7 +252,7 @@ class ActorProcessor:
                     add_target["add_at_chapter"] = cond_ability["chapter"]
                 self.actions.append(add_target)
 
-    def process(self):
+    def process_as_actor(self):
         """
         Fully processes the provided name/data pairing
         """
@@ -254,6 +267,7 @@ class ActorProcessor:
         self.system["defense"] = self.data.get("defense", 4)
         self.system["fray_damage"] = self.data.get("fray_damage", 1)
         self.system["damage_die"] = self.data.get("damage_die", 6)
+        self.actions.extend(mandate_list(self.data.get("actions")))
 
         self.process_setup_info()
 
@@ -264,6 +278,9 @@ class ActorProcessor:
         for trait in self.traits:
             self.process_trait(trait)
 
+        self.finalize()
+
+    def process_as_foe(self):
         self.finalize()
 
     def process_action(self, data):
@@ -333,7 +350,7 @@ class ItemProcessor:
         ranges = []
         other_tags = []
         for tag in all_tags:
-            if any(sym in tag for sym in ["range", "blast", "line", "arc"]):
+            if any(sym in tag for sym in ["range", "blast", "line", "arc", "burst"]):
                 ranges.append(tag)
             else:
                 other_tags.append(tag)
@@ -383,7 +400,7 @@ class ItemProcessor:
 
     def process_as_trait(self):
         self.type = "trait"
-        self.system["description"] = self.data.get("description")
+        self.system["description"] = self.data.get("description", "Unknown")
         self.finalize()
 
     def finalize(self):
@@ -404,7 +421,7 @@ class ItemProcessor:
             "flags": {},
             "_key": f"!actors.items!{self.parent.id}.{self.id}",
         }
-        item_filename = f"{self.name}_{id}.json".replace(" ", "_")
+        item_filename = f"{self.name}_{self.id}.json".replace(" ", "_")
         with open(pack_root / "better-foes" / "_source" / item_filename, "w") as f:
             f.write(json.dumps(item, indent=4))
 
