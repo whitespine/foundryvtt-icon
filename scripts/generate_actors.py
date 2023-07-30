@@ -1,7 +1,7 @@
 import json
 import re
 from dataclasses import dataclass
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Union
 import os
 import pathlib
 import random
@@ -54,7 +54,7 @@ def recursive_downcase(input):
 
 
 # Formats long-form descriptions into a single thing
-def combine_list_desc(base_description, listed_descriptions):
+def combine_list_desc(base_description: str, listed_descriptions: Union[None, str, List[str]]):
     long_desc = ""
     if mandate_list(listed_descriptions):
         li = []
@@ -193,18 +193,9 @@ class ActorProcessor:
         # Add setup traits, post process to combine listed descriptions into descriptions
         setup = []
         for t in mandate_list(self.data.get("setup_traits")):
-            long_desc = ""
-            if t.get("listed_items"):
-                li = mandate_list(t["listed_items"])
-                li = [f"<li>{i['name']} - {i['description']}</li>" for i in li]
-                long_desc = f"<br><ul>{''.join(li)}</ul>"
-            setup.append(
-                {
-                    "name": t["name"],
-                    "description": t["description"] + long_desc,
-                }
-            )
-        self.system["setup"] = setup
+            t = combine_list_desc(f"<h2>{t['name']}</h2>", t.get("listed_items"))
+            setup.append(t)
+        self.system["setup"] = "\n\n".join(setup)
 
     def process_conditional_abilities(self):
         special_class = "Normal"
@@ -345,7 +336,7 @@ class ItemProcessor:
 
     def process_as_action(self):
         # Get tag data
-        self.type = "action"
+        self.type = "ability"
         all_tags = self.data.get("tags", [])
         ranges = []
         other_tags = []
@@ -417,7 +408,7 @@ class ItemProcessor:
             "type": self.type,
             "_id": self.id,
             "system": self.system,
-            "img": "",
+            "img": "icons/svg/combat.svg",
             "sort": item_sort,
             "ownership": {},
             "effects": [],
