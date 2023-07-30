@@ -1,3 +1,4 @@
+import { ControlledLengthArrayField } from "../base";
 import { ItemModel } from "./item";
 
 const fields = foundry.data.fields;
@@ -49,9 +50,55 @@ export class AbilityChoiceField extends fields.SchemaField {
 
     initialize(value, model, options = {}) {
         let rv = super.initialize(value, model, options);
-        // Add in a derived helper
+
+        // Super in the name/ability
+        rv.ability ||= model.parent;
+
+        // Add in any derived helpers
+        rv.actionPips = this.actionPips(rv);
+        console.log(model);
+
         return rv;
     }
+
+    /**
+     * Yields a string that represents the action cost of this ability
+     * // TODO: End turn, limit break
+     * @param {object} data The raw choice data
+     * @returns {string} A simple unicode string
+     */
+    actionPips(data) {
+        // Interrupts look special
+        if(data.interrupt) {
+            return "⧰".repeat(data.interrupt);
+        } else if (data.actions == 0) {
+            return "⟡"; // It's free
+        } 
+        let first_action_pip;
+        if (data.combo == -1) {
+            // Costs a combo
+            first_action_pip = "⬗";
+        } else if(data.combo == 1) {
+            // Generates a combo
+            first_action_pip = "⬖";
+        } else {
+            first_action_pip = "◆";
+        }
+        return first_action_pip + (data.actions == 2 ?  "◆" : "");
+    }
+
+    /**
+     * Yields the tags this has as a plaintext array
+     * @
+     * @returns {Array<string>}
+     */
+    tagsArray(data) {
+        let result = [];
+        if(this.attack) result.push("Attack");
+
+        return result;
+    }
+
 }
 
 /** For talents and masteries. WIP */
@@ -68,13 +115,14 @@ export class AbilityModel extends ItemModel {
         return {
             ...super.defineSchema(),
             // Choices inherent to an abilities
-            choices: new fields.ArrayField(new AbilityChoiceField()),
+            choices: new ControlledLengthArrayField(new AbilityChoiceField(), {length: 1, overflow: true}),
 
             // Upgrades for player abilities
             talents: new fields.ArrayField(new AbilityAugmentationField()),
             mastery: new AbilityAugmentationField({ nullable: true })
         };
     }
+
 
     static convertSWB(data) {
         data.type = "ability";

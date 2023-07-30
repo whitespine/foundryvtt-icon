@@ -193,3 +193,28 @@ export class ChecklistField extends fields.SchemaField {
     super(scaffold, options);
   }
 }
+
+/**  
+ * Handles an additional "length" option, and mandates that it remain at that length
+ * If "overflow" option = truthy, then just forces there to be AT LEAST length
+ */
+export class ControlledLengthArrayField extends fields.ArrayField {
+  // Constructor demands options
+  constructor(element, options) {
+    super(element, options);
+    if (!Number.isInteger(options.length))
+      throw new TypeError("ControlledLengthArrayField requires an integer 'length' option!");
+  }
+
+  _cast(value) {
+    value = super._cast(value);
+    if (!Array.isArray(value)) return value; // Give up early
+    // Extend or contract as appropriate
+    while (value.length < this.options.length) {
+      let new_elt = typeof this.element.initial == "function" ? this.element.initial() : this.element.initial;
+      value.push(foundry.utils.duplicate(new_elt));
+    }
+    if (!this.options.overflow && value.length > this.options.length) value = value.slice(0, this.options.length);
+    return value;
+  }
+}
