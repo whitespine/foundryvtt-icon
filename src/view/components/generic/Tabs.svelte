@@ -21,6 +21,7 @@
     .icon-tabs {
         clip-path: var(--inset-box-clip);
         display: flex;
+        flex-direction: column;
         flex-wrap: nowrap;
         justify-content: flex-start;
         background-color: rgb(56, 52, 56);
