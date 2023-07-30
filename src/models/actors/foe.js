@@ -24,7 +24,7 @@ export class FoeModel extends ActorModel {
 
             // Tactics and description
             description: new foundry.data.fields.HTMLField(),
-            setup: new foundry.data.fields.ArrayField(new foundry.data.fields.HTMLField()),
+            setup: new foundry.data.fields.HTMLField(),
 
             // Metadata
             chapter: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 1, min: 1, max: 3}),
@@ -37,9 +37,13 @@ export class FoeModel extends ActorModel {
             class: new foundry.data.fields.StringField({initial: "Special", choices: [
                 "Special",
                 "Red",
+                "Heavy",
                 "Yellow",
+                "Skirmisher",
                 "Blue",
-                "Green"
+                "Artillery",
+                "Green",
+                "Leader"
             ]}),
             faction: new foundry.data.fields.StringField({initial: "Folk"}),
 
