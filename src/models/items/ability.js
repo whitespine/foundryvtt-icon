@@ -16,26 +16,19 @@ export class AbilityChoiceField extends fields.SchemaField {
             // What is/are its listed range(s)?
             ranges: new fields.ArrayField(new fields.StringField({
                 validate: (val) => {
-                    return !!val.match(/(Range \d+|Line \d+|Small Blast|Medium Blast|Large Blast)/)
+                    return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/)
                 }
             })),
 
 
-            // ------- FLAGS ---------------
-            // Is it an attack?
-            attack: new fields.BooleanField({ initial: false }),
-            // Does it have true strike?
-            true_strike: new fields.BooleanField({ initial: false }),
-            // Does it have unerring?
-            unerring: new fields.BooleanField({ initial: false }),
-            // Is it an interrupt, and if so how often can it be used?
-            interrupt: new fields.NumberField({ nullable: false, integer: true, min: 0, initial: 0 }),
-            trigger: new fields.StringField({ initial: "" }),
-            // Does it end your turn
-            end_turn: new fields.BooleanField({ initial: false }),
+            // ------- TAGS ---------------
+            tags: new fields.ArrayField(new fields.StringField()),
 
             // Does it have any sub abilities? Mostly this is for interrupts, though sometimes marks can grant them
             sub_abilities: new fields.ArrayField(new fields.StringField()),
+
+            // As an interrupt, what's its trigger?
+            trigger: new fields.StringField(),
 
             // ------- COSTS ---------------
             // Costs / generates a combo token
@@ -53,10 +46,13 @@ export class AbilityChoiceField extends fields.SchemaField {
 
         // Super in the name/ability
         rv.ability ||= model.parent;
+        rv.name ||= model.parent.name;
 
-        // Add in any derived helpers
+        // Add in any derived data
         rv.actionPips = this.actionPips(rv);
-        console.log(model);
+        rv.tagsArray = this.tagsArray(rv);
+        rv.derived = {};
+        this.populateTags(rv.derived);
 
         return rv;
     }
@@ -69,36 +65,56 @@ export class AbilityChoiceField extends fields.SchemaField {
      */
     actionPips(data) {
         // Interrupts look special
-        if(data.interrupt) {
+        if (data.interrupt) {
             return "⧰".repeat(data.interrupt);
         } else if (data.actions == 0) {
             return "⟡"; // It's free
-        } 
+        }
         let first_action_pip;
         if (data.combo == -1) {
             // Costs a combo
             first_action_pip = "⬗";
-        } else if(data.combo == 1) {
+        } else if (data.combo == 1) {
             // Generates a combo
             first_action_pip = "⬖";
         } else {
             first_action_pip = "◆";
         }
-        return first_action_pip + (data.actions == 2 ?  "◆" : "");
+        return first_action_pip + (data.actions == 2 ? "◆" : "");
     }
 
-    /**
-     * Yields the tags this has as a plaintext array
-     * @
-     * @returns {Array<string>}
-     */
-    tagsArray(data) {
-        let result = [];
-        if(this.attack) result.push("Attack");
-
-        return result;
+    populateTags(data) {
+        // Is it an attack?
+        data.attack = false;
+        // Does it have true strike?
+        data.true_strike = false;
+        // Does it have unerring? (Ignore cover and stealth)
+        data.unerring = false;
+        // Is it an interrupt, and if so how often can it be used?
+        data.interrupt = 0;
+        // Does it end your turn
+        data.end_turn = false;
+        // Does it apply a mark
+        data.mark = false;
+        // Does it grant a stance
+        data.stance = false;
+        // Does it apply a terrain effect
+        data.terrain_effect = false;
+        // Does it have a delay effect
+        data.delay = false;
+        for(let tag of data.tags) {
+            let m;
+            if(m = tag.match(/attack/i)) data.attack = true;
+            if(m = tag.match(/true strike/i)) data.true_strike = true;
+            if(m = tag.match(/unerring/i)) data.unerring = true;
+            if(m = tag.match(/interrupt (\d)/i)) data.interrupt = parseInt(m[1]);
+            if(m = tag.match(/end turn/i)) data.end_turn = true;
+            if(m = tag.match(/mark/i)) data.mark = true;
+            if(m = tag.match(/stance/i)) data.stance = true;
+            if(m = tag.match(/terrain effect/i)) data.terrain_effect = true;
+            if(m = tag.match(/delay/i)) data.delay = true;
+        }
     }
-
 }
 
 /** For talents and masteries. WIP */
@@ -115,7 +131,7 @@ export class AbilityModel extends ItemModel {
         return {
             ...super.defineSchema(),
             // Choices inherent to an abilities
-            choices: new ControlledLengthArrayField(new AbilityChoiceField(), {length: 1, overflow: true}),
+            choices: new ControlledLengthArrayField(new AbilityChoiceField(), { length: 1, overflow: true }),
 
             // Upgrades for player abilities
             talents: new fields.ArrayField(new AbilityAugmentationField()),

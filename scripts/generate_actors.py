@@ -350,6 +350,8 @@ class ItemProcessor:
         effects = []
         if "hit" in self.data:
             effects.append(f'Hit: {self.data["hit"]}')
+        if "auto_hit" in self.data:
+            effects.append(f'Auto Hit: {self.data["auto_hit"]}')
         if "miss" in self.data:
             effects.append(f'Miss: {self.data["miss"]}')
         if "area_effect" in self.data:
@@ -378,14 +380,11 @@ class ItemProcessor:
         choice = {
             "actions": self.data.get("action_cost", 0),
             "round_action": self.data.get("round_action", False),
-            "attack": "attack" in other_tags,
-            "true_strike": "true strike" in other_tags,
-            "unerring": "unerring" in other_tags,
+            "tags": other_tags,
             "ranges": ranges,
-            "interrupt": self.data.get("count", 0),
-            "trigger": self.data.get("trigger", 0),
+            "trigger": self.data.get("trigger"),
             "combo": 0,
-            "sub_ability": self.data.get("combo_chain"),
+            "sub_abilities": self.data.get("sub_abilities"),
             "resolve": 0,
             "effects": effects,
         }
