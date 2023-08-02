@@ -12,8 +12,8 @@
 
     // State
 
-    /** 
-     * @type {IconItem | object | null} 
+    /**
+     * @type {IconItem | object | null}
      * Either the selected trait, or the selected choice of an ability
      */
     let selected = null;
@@ -45,17 +45,17 @@
     }
 
     function editSelected() {
-        selectedItem.render(true, {focus: true});
+        selectedItem.render(true, { focus: true });
     }
-    
+
     function deleteSelected() {
-        if(selectItem.type === "trait" || selectedItem.system.choices.length === 1) {
+        if (selectItem.type === "trait" || selectedItem.system.choices.length === 1) {
             // Delete the item entirely
             selectedItem.delete();
         } else {
             // Just remove the given choice
             selectedItem.update({
-                "system.choices": selectedItem.filter(x => x != selected)
+                "system.choices": selectedItem.filter((x) => x != selected),
             });
         }
     }
@@ -89,14 +89,9 @@
             <h3>Select an ability</h3>
         {:else if selected.ability}
             <h3>{selected.name}</h3>
-            <div class="flexrow">
-                <span>
-                    {selected.ranges.join(", ")}
-                </span>
-                <span style="margin-left: auto;">
-                    {selected.tags.join(", ")}
-                </span>
-            </div>
+            <span>
+                <HydratedEffectBlock body={[...selected.ranges, ...selected.tags].join(", ")} />
+            </span>
             {#each selected.effects as effect}
                 <HydratedEffectBlock body={effect} />
             {/each}

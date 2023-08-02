@@ -44,26 +44,29 @@ class Transformer {
                 result.push(...applied);
             }
         }
-        if(result.length != 1)
-        console.log("Transformed", text, result);
         return result;
     }
 }
 
-export class Tooltip {
+export class Token {
     /**
      * @param {string} text The base text
      * @param {string} tooltip What shows on hover
+     * @param {object} dragdata What should be dragged, if anything
      */
-    constructor(text, tooltip) {
+    constructor(text, {
+        tooltip,
+        dragdata
+    } = {}) {
         this.text = text;
         this.tooltip = tooltip;
+        this.dragdata = dragdata
     }
 
-    static simpleTransformer(keyword, tooltip_text) {
+    static simpleTransformer(keyword, data) {
         return new Transformer(
             new RegExp(`(${keyword})`, "i"),
-            (_c, [base]) => [new Tooltip(base, tooltip_text)]
+            (_c, [base]) => [new Token(base, data)]
         );
     }
 }
@@ -81,10 +84,12 @@ export function setupTransformers() {
     for (let [k, v] of generic) {
         // Separate camel case for the keys
         let pattern = k.replaceAll(/([a-z])([A-Z])/g, "$1 $2")
-        AllTransformers.push(Tooltip.simpleTransformer(pattern, v));
+        const exclusions = [];
+        if(exclusions.includes(k)) continue;
+        AllTransformers.push(Token.simpleTransformer(pattern, {tooltip: v}));
     }
 
-    // And some specific ones
+    // And some more specific ones
     AllTransformers.push(new Transformer(
         /(\[D\])/g,
         (ctx) => [ctx.actor?.system?.damage_die ? `${ctx.actor.system.damage_die}D` : "[D]"]
@@ -101,11 +106,10 @@ export const AllTransformers = [];
  * 
  * @param {string} text Full text
  * @param {TransformContext} context Meta info some transformers care about
- * @returns {Array<string | Tooltip>}
+ * @returns {Array<string | Token>}
  */
 export function fullProcess(text, context) {
     let arr = [text];
-    console.log(text);
     for (let transformer of AllTransformers) {
         let newArr = [];
         for (let item of arr) {

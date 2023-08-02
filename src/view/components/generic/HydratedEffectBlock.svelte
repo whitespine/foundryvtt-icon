@@ -1,5 +1,5 @@
 <script>
-    import { Tooltip, fullProcess } from "../../../util/nlp";
+    import { Token, fullProcess } from "../../../util/nlp";
     import { tooltip } from "@svelte-plugins/tooltips";
 
     /** @type {string} Raw html-ish text to show */
@@ -18,7 +18,7 @@
     {#each chunks as chunk}
         {#if typeof chunk === "string"}
             <span>{chunk}</span>
-        {:else if chunk instanceof Tooltip}
+        {:else if chunk instanceof Token}
             <span use:tooltip={{content: chunk.tooltip}}><b>{chunk.text}</b></span>
         {/if}
     {/each}
