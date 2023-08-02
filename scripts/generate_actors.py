@@ -6,6 +6,7 @@ import os
 import pathlib
 import random
 import string
+import copy
 
 # Useful path
 proj_root = pathlib.Path(__file__).parent.parent
@@ -89,14 +90,13 @@ class Processor:
                     loaded = recursive_downcase(loaded)
                     self.raw_units[loaded["name"]] = loaded
 
-    def inherit_into(self, target: Dict, source: Dict) -> None:
+    def inherit_into(self, target: Dict, source: Dict) -> Dict:
         """
-        Merges source into target. Source is read-only, target is edited in place
+        Merges source into target. Neither input is edited. 
+        Values from target are prioritized, but in the case of arrays will appear last
         """
-        # Handle recursion first
-        for super_source in mandate_list(source.get("inherits")):
-            super_source = self.raw_units[super_source]
-            self.inherit_into(target, super_source)
+        target = copy.deepcopy(target)
+        source = copy.deepcopy(source)
 
         def _sub_inherit_list(key):
             target[key] = mandate_list(source.get(key)) + mandate_list(target.get(key))
@@ -118,6 +118,13 @@ class Processor:
         _sub_inherit_attr("defense")
         _sub_inherit_attr("fray_damage")
         _sub_inherit_attr("damage_die")
+
+        # Finally handle recursion
+        for super_source in mandate_list(source.get("inherits")):
+            super_source = self.raw_units[super_source]
+            target = self.inherit_into(target, super_source)
+
+        return target
 
     # Lookup a trait or substitute a default
     def get_trait(self, trait):
@@ -176,7 +183,7 @@ class ActorProcessor:
         """
         for super_source in mandate_list(self.data.get("inherits")):
             super_source = self.parent.raw_units[super_source]
-            self.parent.inherit_into(self.data, super_source)
+            self.data = self.parent.inherit_into(self.data, super_source)
 
     def hydrate_traits(self):
         """
@@ -194,8 +201,9 @@ class ActorProcessor:
         # Add setup traits, post process to combine listed descriptions into descriptions
         setup = []
         for t in mandate_list(self.data.get("setup_traits")):
-            t = combine_list_desc(f"<h2>{t['name']}</h2>", t.get("listed_items"))
-            setup.append(t)
+            base = f"<h2>{t['name']}</h2><br>" + t.get("description", "")
+            full = combine_list_desc(base, t.get("listed_items"))
+            setup.append(f"<p>{full}</p>")
         self.system["setup"] = "\n\n".join(setup)
 
     def process_conditional_abilities(self):
