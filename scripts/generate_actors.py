@@ -183,7 +183,8 @@ class ActorProcessor:
         Fills out the trait data on all traits on this
         """
         # Populate traits
-        for t in mandate_list(self.data.get("traits")):
+        traits = [*set(mandate_list(self.data.get("traits")))]
+        for t in traits:
             self.traits.append(self.parent.get_trait(t))
 
     def process_setup_info(self):
@@ -346,24 +347,26 @@ class ItemProcessor:
             else:
                 other_tags.append(tag)
 
-        # Siphon effects
+        # Siphon effects. Do it via entries rather than via keys so we preserve order
         effects = []
-        if "hit" in self.data:
-            effects.append(f'Hit: {self.data["hit"]}')
-        if "auto_hit" in self.data:
-            effects.append(f'Auto Hit: {self.data["auto_hit"]}')
-        if "miss" in self.data:
-            effects.append(f'Miss: {self.data["miss"]}')
-        if "area_effect" in self.data:
-            effects.append(f'Area: {self.data["area_effect"]}')
-        if "effects" in self.data:
-            effects.append(self.data["effects"])
-        if "description" in self.data:
-            effects.append(self.data["description"])
-        if "exceed" in self.data:
-            effects.append(f'Exceed: {self.data["exceed"]}')
-        if "charge" in self.data:
-            effects.append(f'Charge: {self.data["charge"]}')
+        for k, v in self.data.items():
+            if k == "hit":
+                effects.append(f'Hit: {v}')
+            if k == "auto_hit":
+                effects.append(f'Auto Hit: {v}')
+            if k == "miss":
+                effects.append(f'Miss: {v}')
+            if k == "area_effect":
+                effects.append(f'Area: {v}')
+            if k == "effects":
+                sub = mandate_list(v)
+                effects.extend([f'Effect: {e}' for e in sub])
+            if k == "description":
+                effects.append(f'Effect: {v}')
+            if k == "exceed":
+                effects.append(f'Exceed: {v}')
+            if k == "charge":
+                effects.append(f'Charge: {v}')
 
         # Subprocess interrupts
         for interrupt in mandate_list(self.data.get("interrupts")):
