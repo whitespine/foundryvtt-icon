@@ -16,7 +16,7 @@ export class AbilityChoiceField extends fields.SchemaField {
             // What is/are its listed range(s)?
             ranges: new fields.ArrayField(new fields.StringField({
                 validate: (val) => {
-                    return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/)
+                    return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
                 }
             })),
 
@@ -50,9 +50,8 @@ export class AbilityChoiceField extends fields.SchemaField {
 
         // Add in any derived data
         rv.actionPips = this.actionPips(rv);
-        rv.tagsArray = this.tagsArray(rv);
         rv.derived = {};
-        this.populateTags(rv.derived);
+        this.populateTags(rv);
 
         return rv;
     }

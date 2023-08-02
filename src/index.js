@@ -12,6 +12,7 @@ import BasicApplication from './view/apps/BasicApplication.js';
 
 import "./icon.scss";
 import { setupMessages } from './config/messages.js';
+import { setupTransformers } from './util/nlp.js';
 
 // Import sliding HUD (used for accuracy/difficulty windows)
 // import * as slidingHUD from "./module/helpers/slidinghud/index.js";
@@ -52,6 +53,7 @@ Hooks.once("ready", async () => {
     console.log(`Foundry ready, doing final checks.`);
 
     // Register sheet application classes
+    setupTransformers();
     setupSheets();
     applyGlobalDragListeners();
     setupStatuses();

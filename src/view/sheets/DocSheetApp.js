@@ -11,6 +11,7 @@ export default class TJSDocSheet extends SvelteApplication {
    */
   constructor(doc, options = {}) {
     super({
+      title: doc.name,
       svelte: {
         props: {
           tjs_doc: new TJSDocument(doc),
