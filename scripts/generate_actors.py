@@ -254,6 +254,7 @@ class ActorProcessor:
         # Do initial copying
         self.system["chapter"] = self.data.get("chapter", 1)
         self.system["class"] = self.data.get("class", "Unknown")
+        self.system["faction"] = self.data.get("faction", "Unknown")
         self.system["vitality"] = self.data.get("vitality", 4)
         self.system["speed"] = self.data.get("speed", 4)
         self.system["defense"] = self.data.get("defense", 4)
