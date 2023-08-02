@@ -68,6 +68,13 @@ export class FoeModel extends ActorModel {
         };
     }
 
+    prepareDerivedData() {
+        // Initialize our fields
+        console.log(this);
+        this.hp.max = this.vitality * this.hp_multiplier;
+        this.vigor.max = this.vitality;
+    }
+
     static convertSWB(data) {
         data.type = "foe";
     }
