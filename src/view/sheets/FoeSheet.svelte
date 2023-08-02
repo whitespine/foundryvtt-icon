@@ -41,7 +41,7 @@
     }
 </script>
 
-<main class="flexcol" autocomplete="off" use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
+<main use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
@@ -57,7 +57,7 @@
                 <option value={c}>{c}</option>
             {/each}
         </select>
-        <div style="grid-area: stats" class="flexrow">
+        <div style="grid-area: stats" class="stats">
             <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
             <BoundedNumberDisplay name={localize("ICON.Vigor")} path="system.vigor" />
             <span>Def: {$actor.system.defense}</span>
@@ -66,23 +66,25 @@
             <span>Speed: {$actor.system.speed}</span>
             <span>Dash: {$actor.system.dash}</span>
         </div>
+        <div style="grid-area: tabs">
+            <Tabs horizontal={false} {tabs} bind:selected={selected_tab} />
+        </div>
     </header>
 
     <!-- Sheet Tab Navigation -->
-    <Tabs {tabs} bind:selected={selected_tab} />
 
     <!-- Sheet Body -->
     <section class="sheet-body">
         {#if selected_tab == "ICON.Foe.Abilities"}
-            <CombatHud {abilities} {traits} />
+            <CombatHud abilities={[...$abilities]} traits={[...$traits]} />
         {:else if selected_tab === "ICON.Foe.Description"}
             <div class="flexcol">
                 <h2>{localize("ICON.Description")}</h2>
                 <!-- TODO: Prosemirror -->
-                <textarea use:updateDoc={{ doc, path: "description" }} rows="10" />
+                <textarea use:updateDoc={{ doc, path: "system.description" }} rows="10" />
                 <h2>{localize("ICON.Foe.Setup")}</h2>
                 <!-- TODO: Prosemirror -->
-                <textarea use:updateDoc={{ doc, path: "setup" }} rows="10" />
+                <textarea use:updateDoc={{ doc, path: "system.setup" }} rows="10" />
             </div>
         {:else if selected_tab === "ICON.Foe.Stats"}
             <div class="flexcol">
@@ -107,20 +109,42 @@
 
     main {
         background-color: rgb(110, 166, 152);
+        height: 100%;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
     }
 
     header {
+        flex: 0 1 auto;
         display: grid;
         grid-template:
-            "pic    foe_name    foe_template" 30px
-            "pic    foe_faction foe_class" 30px
-            "pic    stats      stats" 30px / 120px 1fr 1fr;
+            "pic    foe_name    foe_template    tabs" 30px
+            "pic    foe_faction foe_class       tabs" 30px
+            "pic    stats       stats           tabs" 30px / 120px 1fr 1fr 120px;
         gap: 10px;
         padding: 10px;
         align-items: center;
         text-align: center;
+
+        .stats {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            span {
+                padding-right: 3px;
+                padding-left: 3px;
+                &:not(:last-child) {
+                    border-right: $border;
+                }
+            }
+        }
     }
 
     .sheet-body {
+        padding: 5px;
+        flex: 1 0 auto;
+        max-height: calc(100% - 140px);
     }
 </style>

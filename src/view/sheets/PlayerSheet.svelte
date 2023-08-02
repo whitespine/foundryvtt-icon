@@ -39,11 +39,11 @@
     }
 
     function allowDrop(drop) {
-        return drop.type == "Item" && ["bond_power", "trait"].includes(drop.document.type);
+        return drop.type == "Item" && ["bond_power", "trait", "job"].includes(drop.document.type);
     }
 </script>
 
-<main class="flexcol" autocomplete="off" use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
+<main use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
@@ -146,9 +146,13 @@
 
     main {
         background-color: rgb(110, 166, 152);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
     header {
+        flex: 0 1 auto;
         display: grid;
         grid-template:
             "pic    char_name   player_name" 30px
