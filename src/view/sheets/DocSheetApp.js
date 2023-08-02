@@ -28,11 +28,11 @@ export default class TJSDocSheet extends SvelteApplication {
       // TODO: How to get normal Foundry buttons in the window header?
       id: `actor-sheet-${this.ticker++}`,
       classes: ["icon", "sheet", "actor"],
-      // resizable: true,
+      resizable: true,
       minimizable: true,
       // popOut: false,
       width: 800,
-      height: "auto",
+      height: 800,
       positionOrtho: false,
       title: "Document Sheet",
       svelte: {
