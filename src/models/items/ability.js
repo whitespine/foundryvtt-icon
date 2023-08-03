@@ -19,12 +19,6 @@ export class AbilityChoiceField extends fields.SchemaField {
                     // return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
                 // }
 
-            // Minimum chapter it is allowed in
-            chapter: new fields.NumberField({ nullable: false, initial: 1, integer: true, min: 1, max: 3}),
-
-            // Special rules for it
-            special_requirements: new fields.ArrayField(new fields.StringField()),
-
 
             // ------- TAGS ---------------
             tags: new fields.ArrayField(new fields.StringField()),
@@ -136,6 +130,13 @@ export class AbilityModel extends ItemModel {
             ...super.defineSchema(),
             // Choices inherent to an abilities
             choices: new ControlledLengthArrayField(new AbilityChoiceField(), { length: 1, overflow: true }),
+
+            // Minimum chapter it is allowed in
+            chapter: new fields.NumberField({ nullable: false, initial: 1, integer: true, min: 1, max: 3}),
+
+            // Special rules for it
+            special_requirements: new fields.ArrayField(new fields.StringField()),
+
 
             // Upgrades for player abilities
             talents: new fields.ArrayField(new AbilityAugmentationField()),

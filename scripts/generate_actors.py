@@ -251,7 +251,7 @@ class ActorProcessor:
                 if "chapter" in cond_ability:
                     chpt = cond_ability["chapter"]
                     add_target["chapter"] = chpt
-                    add_target["special_requirements"] = add_reqs
+                add_target["special_requirements"] = add_reqs
                 self.traits.append(add_target)
 
             # Add actions, mark similarly
@@ -259,7 +259,7 @@ class ActorProcessor:
                 if "chapter" in cond_ability:
                     chpt = cond_ability["chapter"]
                     add_target["chapter"] = chpt
-                    add_target["special_requirements"] = add_reqs
+                add_target["special_requirements"] = add_reqs
                 self.actions.append(add_target)
 
     def process_as_actor(self):
@@ -412,6 +412,8 @@ class ItemProcessor:
             "effects": effects,
         }
         self.system["choices"] = [choice]
+        self.system["chapter"] = self.data.get("chapter", 1),
+        self.system["special_requirements"] = self.data.get("special_requirements", []),
         self.finalize()
 
     def process_as_trait(self):
