@@ -8,10 +8,4 @@ export class ActorModel extends IconDataModel {
             biography: new foundry.data.fields.HTMLField(),
         };
     }
-
-
-    prepareDerivedData() {
-        // Initialize our fields
-        console.log(this);
-    }
 }

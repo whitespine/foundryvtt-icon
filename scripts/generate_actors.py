@@ -78,6 +78,7 @@ class Processor:
         # Tracks our top level data
         self.raw_traits = {}
         self.raw_units = {}
+        self.created_summons = {}
 
     def ingest_all_raw(self) -> None:
         """
@@ -162,8 +163,12 @@ class Processor:
         """
         Processes an individual actor
         """
+        key = data.get("name")
+        if key in self.created_summons:
+            return self.created_summons[key]
         ap = ActorProcessor(self, data)
         ap.process_as_summon()
+        self.created_summons[key] = ap
         return ap
 
 
@@ -409,6 +414,7 @@ class ItemProcessor:
         # Subprocess summons
         self.system["summons"] = []
         for summon in mandate_list(self.data.get("summons")):
+            summon["name"] += " " + CHPT[self.data.get("chapter", 1)]
             summon = self.parent.parent.process_summon(summon)
             uuid = f"Compendium.icon.better-foes.Actor.{summon.id}"
             self.system["summons"].append(uuid)
