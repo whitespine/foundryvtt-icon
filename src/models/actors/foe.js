@@ -72,6 +72,9 @@ export class FoeModel extends ActorModel {
         // Initialize our fields
         console.log(this);
         this.hp.max = this.vitality * this.hp_multiplier;
+        if(this._source.hp === null) {
+            this.hp.value = this.hp.max;
+        }
         this.vigor.max = this.vitality;
     }
 
