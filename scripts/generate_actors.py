@@ -394,9 +394,9 @@ class ItemProcessor:
             "round_action": self.data.get("round_action", False),
             "tags": other_tags,
             "ranges": ranges,
-            "trigger": self.data.get("trigger"),
+            "trigger": self.data.get("trigger", ""),
             "combo": 0,
-            "sub_abilities": self.data.get("sub_abilities"),
+            "sub_abilities": self.data.get("sub_abilities", []),
             "resolve": 0,
             "effects": effects,
         }
