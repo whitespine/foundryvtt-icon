@@ -16,11 +16,7 @@ pack_root = proj_root / "packs"
 random.seed(1)
 
 # Roman numerals
-CHPT = {
-    1: "I",
-    2: "Ⅱ",
-    3: "Ⅲ"
-}
+CHPT = {1: "I", 2: "Ⅱ", 3: "Ⅲ"}
 
 
 # Generator which walks all of our actor json file
@@ -62,7 +58,9 @@ def recursive_downcase(input):
 
 
 # Formats long-form descriptions into a single thing
-def combine_list_desc(base_description: str, listed_descriptions: Union[None, str, List[str]]):
+def combine_list_desc(
+    base_description: str, listed_descriptions: Union[None, str, List[str]]
+):
     long_desc = ""
     if mandate_list(listed_descriptions):
         li = []
@@ -99,7 +97,7 @@ class Processor:
 
     def inherit_into(self, target: Dict, source: Dict) -> Dict:
         """
-        Merges source into target. Neither input is edited. 
+        Merges source into target. Neither input is edited.
         Values from target are prioritized, but in the case of arrays will appear last
         """
         target = copy.deepcopy(target)
@@ -157,7 +155,8 @@ class Processor:
         Processes an individual actor
         """
         ap = ActorProcessor(self, data)
-        ap.process_as_actor()
+        ap.process_as_foe()
+        return ap
 
     def process_summon(self, data):
         """
@@ -165,6 +164,7 @@ class Processor:
         """
         ap = ActorProcessor(self, data)
         ap.process_as_summon()
+        return ap
 
 
 class ActorProcessor:
@@ -179,6 +179,7 @@ class ActorProcessor:
         self.id = random_id()
         self.system = {}
         self.item_ids = []
+        self.type = None
 
         # These accumulate and can be edited before actually being turned to items
         self.actions = []
@@ -220,14 +221,16 @@ class ActorProcessor:
             # Check special classes, ignore those that don't apply
             add_reqs = []
             if cond_ability.get("is_special_classes"):
-                add_reqs.append(f"Must be a {cond_ability['is_special_classes']}") 
+                add_reqs.append(f"Must be a {cond_ability['is_special_classes']}")
             if cond_ability.get("is_not_special_classes"):
-                add_reqs.append(f"Must not be a {cond_ability['is_not_special_classes']}") 
+                add_reqs.append(
+                    f"Must not be a {cond_ability['is_not_special_classes']}"
+                )
             if cond_ability.get("uses_special_template"):
-                add_reqs.append(f"Must be a {cond_ability['uses_special_template']}") 
+                add_reqs.append(f"Must be a {cond_ability['uses_special_template']}")
 
             # If remov traits specified, don't actually remove, but instead mark as explicitly chaptered
-            '''
+            """
             for removal_target in mandate_list(cond_ability.get("remove_traits")):
                 # Find the trait with the same name
                 corr_trait = ([x for x in self.traits if x["name"] == removal_target])[0]
@@ -242,7 +245,7 @@ class ActorProcessor:
                 # Mark it
                 if "chapter" in cond_ability:
                     corr_action["remove_at_chapter"] = cond_ability["chapter"]
-            '''
+            """
 
             # Add traits, mark similarly
             for add_target in mandate_list(cond_ability.get("traits")):
@@ -262,10 +265,16 @@ class ActorProcessor:
                 add_target["special_requirements"] = add_reqs
                 self.actions.append(add_target)
 
-    def process_as_actor(self):
-        """
-        Fully processes the provided name/data pairing
-        """
+    def process_as_summon(self):
+        self.type = "summon"
+        self.system["is_object"] = self.data.get("is_object", False)
+        self.system["tags"] = self.data.get("tags", [])
+        self.system["summon_effects"] = self.data.get("summon_effects", "")
+        self.system["summon_actions"] = self.data.get("summon_actions", "")
+        self.finalize()
+
+    def process_as_foe(self):
+        self.type = "foe"
         self.raw_inherit()
         self.hydrate_traits()
 
@@ -292,9 +301,6 @@ class ActorProcessor:
 
         self.finalize()
 
-    def process_as_foe(self):
-        self.finalize()
-
     def process_action(self, data):
         """
         Uses an ItemProcessor to process the given item as an action
@@ -315,7 +321,7 @@ class ActorProcessor:
         """
         actor = {
             "name": self.name,
-            "type": "foe",
+            "type": self.type,
             "_id": self.id,
             "system": self.system,
             "img": "icons/svg/mystery-man.svg",
@@ -371,22 +377,22 @@ class ItemProcessor:
         effects = []
         for k, v in self.data.items():
             if k == "hit":
-                effects.append(f'Hit: {v}')
+                effects.append(f"Hit: {v}")
             if k == "auto_hit":
-                effects.append(f'Auto Hit: {v}')
+                effects.append(f"Auto Hit: {v}")
             if k == "miss":
-                effects.append(f'Miss: {v}')
+                effects.append(f"Miss: {v}")
             if k == "area_effect":
-                effects.append(f'Area: {v}')
+                effects.append(f"Area: {v}")
             if k == "effects":
                 sub = mandate_list(v)
-                effects.extend([f'Effect: {e}' for e in sub])
+                effects.extend([f"Effect: {e}" for e in sub])
             if k == "description":
-                effects.append(f'Effect: {v}')
+                effects.append(f"Effect: {v}")
             if k == "exceed":
-                effects.append(f'Exceed: {v}')
+                effects.append(f"Exceed: {v}")
             if k == "charge":
-                effects.append(f'Charge: {v}')
+                effects.append(f"Charge: {v}")
 
         # Subprocess interrupts
         for interrupt in mandate_list(self.data.get("interrupts")):
@@ -400,6 +406,14 @@ class ItemProcessor:
             self.data.setdefault("sub_ability", []).append(self.data["combo"]["name"])
             self.parent.process_action(self.data["combo"])
 
+        # Subprocess summons
+        self.system["summons"] = []
+        for summon in mandate_list(self.data.get("summons")):
+            summon = self.parent.parent.process_summon(summon)
+            uuid = f"Compendium.icon.better-foes.Actor.{summon.id}"
+            self.system["summons"].append(uuid)
+
+
         choice = {
             "actions": self.data.get("action_cost", 0),
             "round_action": self.data.get("round_action", False),
@@ -412,8 +426,10 @@ class ItemProcessor:
             "effects": effects,
         }
         self.system["choices"] = [choice]
-        self.system["chapter"] = self.data.get("chapter", 1),
-        self.system["special_requirements"] = self.data.get("special_requirements", []),
+        self.system["chapter"] = (self.data.get("chapter", 1),)
+        self.system["special_requirements"] = (
+            self.data.get("special_requirements", []),
+        )
         self.finalize()
 
     def process_as_trait(self):

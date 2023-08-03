@@ -137,6 +137,8 @@ export class AbilityModel extends ItemModel {
             // Special rules for it
             special_requirements: new fields.ArrayField(new fields.StringField()),
 
+            // UUIDs of any summons it might have
+            summons: new fields.ArrayField(new fields.StringField()),
 
             // Upgrades for player abilities
             talents: new fields.ArrayField(new AbilityAugmentationField()),
