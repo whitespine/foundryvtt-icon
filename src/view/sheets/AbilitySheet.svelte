@@ -21,7 +21,7 @@
 
     function addChoice() {
         $doc.update({
-            [`system.choices`]: [...$doc.system.choices, {}]
+            [`system.choices`]: [...$doc.system.choices, {}],
         });
     }
 </script>
@@ -34,7 +34,7 @@
         <input style="grid-area: chapter" type="text" use:updateDoc={{ doc, path: "system.chapter" }} />
         <div class="flexrow" style="grid-area: tabs">
             <Tabs horizontal={true} tabs={tab_choices} bind:selected={selected_tab} />
-            <i class="add-choice fas fa-plus" on:click={() => addChoice()}></i>
+            <i class="add-choice fas fa-plus" on:click={() => addChoice()} />
         </div>
     </header>
 
@@ -52,15 +52,15 @@
                 use:updateDoc={{ doc, path: `system.choices.${selected_tab}.actions` }}
             />
 
-            <label for="round_action">Round action?:</label>
+            <label for="trigger">Interrupt Trigger:</label>
+            <input name="trigger" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.trigger` }} />
+
+            <label for="round_action">Round Action:</label>
             <input
                 name="round_action"
                 type="checkbox"
                 use:updateDoc={{ doc, path: `system.choices.${selected_tab}.round_action` }}
             />
-
-            <label for="trigger">Trigger:</label>
-            <input name="trigger" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.trigger` }} />
 
             <EditableDocArray title="Ranges" path={`system.choices.${selected_tab}.ranges`} numeric={true} />
 

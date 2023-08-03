@@ -45,7 +45,10 @@
     <div class="abilities">
         <h3>Abilities</h3>
         {#each abilities as ability (ability.id)}
-            {#each ability.system.choices as choice (choice.name)}
+            {#each ability.system.choices as choice, i}
+                {#if i >= 1}
+                    <i class="fas fa-grip-lines-vertical interlink" />
+                {/if}
                 <div class="ability" on:click={() => selectItem(choice)} class:selected={choice === selected}>
                     <img class="icon" src={ability.img} alt={choice.name || choice.ability.name} />
                     <span>{choice.name || choice.ability.name} {chapter_symbol(ability.system.chapter)}</span>
@@ -94,6 +97,11 @@
             align-items: center;
             border-right: $border;
             overflow: auto;
+
+            .interlink {
+                margin-top: -4px;
+                margin-bottom: -4px;
+            }
 
             .ability,
             .trait {
