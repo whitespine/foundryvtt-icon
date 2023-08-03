@@ -2,6 +2,7 @@
     import { getContext } from "svelte";
     import HydratedEffectBlock from "../generic/HydratedEffectBlock.svelte";
     import { IconItem } from "../../../documents/item";
+    import AbilityDetail from "./AbilityDetail.svelte";
 
     let actor = getContext("tjs_actor");
 
@@ -19,7 +20,7 @@
     }
 
     function editSelected() {
-        selectedItem.render(true, { focus: true });
+        selectedItem.sheet.render(true, { focus: true });
     }
 
     function deleteSelected() {
@@ -39,13 +40,7 @@
     {#if !selection}
         <h3>Select an ability</h3>
     {:else if selection.ability}
-        <h3>{selection.name}</h3>
-        <span>
-            <HydratedEffectBlock body={[...selection.ranges, ...selection.tags].join(", ")} />
-        </span>
-        {#each selection.effects as effect}
-            <HydratedEffectBlock body={effect} />
-        {/each}
+        <AbilityDetail choice={selection} />
     {:else if selection.type === "trait"}
         <h3>{selection.name}</h3>
         <HydratedEffectBlock body={selection.system.description} />
@@ -56,6 +51,9 @@
         <div class="bottom-controls">
             <i class="fas fa-edit" on:click={editSelected} />
             <i class="fas fa-trash" on:click={deleteSelected} />
+            {#if selection.ability}
+                <i class="fas fa-dice-d20" on:click={rollAbility} />
+            {/if}
         </div>
     {/if}
 </div>

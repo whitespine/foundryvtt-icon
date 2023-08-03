@@ -1,4 +1,4 @@
-import { ControlledLengthArrayField } from "../base";
+import { CastingStringField, ControlledLengthArrayField, titleCaseString } from "../base";
 import { ItemModel } from "./item";
 
 const fields = foundry.data.fields;
@@ -14,14 +14,14 @@ export class AbilityChoiceField extends fields.SchemaField {
             // Is it a round action?
             round_action: new fields.BooleanField({ initial: false }),
             // What is/are its listed range(s)?
-            ranges: new fields.ArrayField(new fields.StringField()),
+            ranges: new fields.ArrayField(new CastingStringField({cast: titleCaseString})),
                 // validate: (val) => {
                     // return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
                 // }
 
 
             // ------- TAGS ---------------
-            tags: new fields.ArrayField(new fields.StringField()),
+            tags: new fields.ArrayField(new CastingStringField({cast: titleCaseString})),
 
             // Does it have any sub abilities? Mostly this is for interrupts, though sometimes marks can grant them
             sub_abilities: new fields.ArrayField(new fields.StringField()),

@@ -217,3 +217,30 @@ export class ControlledLengthArrayField extends fields.ArrayField {
     return value;
   }
 }
+
+/**
+ * Calls options.cast on every value provided to this. 
+ * Options.cast should be idempotent.
+ */
+export class CastingStringField extends fields.StringField {
+  _cast(value) {
+    value = super._cast(value);
+    if (typeof this.options.cast === "function") {
+      value = this.options.cast(value);
+    }
+    return value;
+  }
+}
+
+/**
+ * Capitalizes the first letter of each word in the provided string
+ * 
+ * @param {string} text Base text
+ * @returns text as title case
+ */
+export function titleCaseString(text) {
+  return text
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
+}
