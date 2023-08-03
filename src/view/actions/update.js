@@ -10,25 +10,39 @@ import { resolveDotpath } from '../../util/paths';
  *
  * @returns {import('svelte/action').ActionReturn} Action lifecycle methods.
  */
-export function updateDoc(node, { doc, path } = {}) {
+export function updateDoc(node, initial_options = {}) {
+    // Validate our node
     if (!(node instanceof HTMLInputElement) && !(node instanceof HTMLSelectElement) &&
         !(node instanceof HTMLTextAreaElement)) {
         throw new TypeError(
             `updateDoc error: 'node' must be an instance of HTMLInputElement, HTMLSelectElement, or HTMLTextAreaElement.`);
     }
 
-    if (!(doc instanceof TJSDocument)) {
-        throw new TypeError(`updateDoc error: 'doc' must be an instance of TJSDocument.`);
-    }
-
-    if (typeof path !== 'string') {
-        throw new TypeError(`updateDoc error: 'path' must be a string.`);
-    }
-
-    // Listens to the TJS doc to track out current doc[...path] valuee
+    // Setup updateable options
+    let doc;
+    let path; 
     let current_doc_val;
+    let unsubscribe;
+    function setOptions(new_options) {
+        // Clear old if needed
+        if(unsubscribe) unsubscribe();
 
-    const unsubscribe = doc.subscribe(onDocChange);
+        doc = new_options.doc;
+        path = new_options.path;
+
+        // Validate
+        if (!(doc instanceof TJSDocument)) {
+            throw new TypeError(`updateDoc error: 'doc' must be an instance of TJSDocument.`);
+        }
+
+        if (typeof path !== 'string') {
+            throw new TypeError(`updateDoc error: 'path' must be a string.`);
+        }
+
+        unsubscribe = doc.subscribe(onDocChange);
+    }
+    setOptions(initial_options);
+    
 
     /**
      * Updates `doc` w/ current focused state.
@@ -84,7 +98,7 @@ export function updateDoc(node, { doc, path } = {}) {
     return {
         // Currently not implemented, but this is where you'd update the options for this action.
         // IE changing the TJSDocument or path field.
-        update: () => { },
+        update: setOptions,
 
         destroy: () => {
             removeListeners();
