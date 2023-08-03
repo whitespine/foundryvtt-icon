@@ -1,0 +1,133 @@
+<script>
+    import { getContext } from "svelte";
+    import { updateDoc } from "../actions/update";
+    import Portrait from "../components/Portrait.svelte";
+    import EditableDocArray from "../components/generic/EditableDocArray.svelte";
+    import Tabs from "../components/generic/Tabs.svelte";
+
+    let actor = getContext("tjs_actor");
+    let item = getContext("tjs_item"); // Alias
+    let doc = item;
+
+    // Our tab
+    let tab_choices = [];
+    $: tab_choices = $item.system.choices.map((s, i) => ({
+        label: s.name ?? `${i + 1}`,
+        key: i,
+    }));
+    let selected_tab = 0;
+    let selected_choice = {};
+    $: selected_choice = $item.system.choices[selected_tab];
+
+    function addChoice() {
+        $doc.update({
+            [`system.choices`]: [...$doc.system.choices, {}]
+        });
+    }
+</script>
+
+<main>
+    <!-- Sheet Header -->
+    <header>
+        <Portrait style="grid-area: pic" />
+        <input style="grid-area: ability_name" type="text" use:updateDoc={{ doc, path: "name" }} />
+        <input style="grid-area: chapter" type="text" use:updateDoc={{ doc, path: "system.chapter" }} />
+        <div class="flexrow" style="grid-area: tabs">
+            <Tabs horizontal={true} tabs={tab_choices} bind:selected={selected_tab} />
+            <i class="add-choice fas fa-plus" on:click={() => addChoice()}></i>
+        </div>
+    </header>
+
+    <!-- Sheet Body -->
+    <section class="sheet-body">
+        <div class="flexcol">
+            <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
+            <label for="name">Name:</label>
+            <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.name` }} />
+
+            <label for="actions">Actions:</label>
+            <input
+                name="actions"
+                type="number"
+                use:updateDoc={{ doc, path: `system.choices.${selected_tab}.actions` }}
+            />
+
+            <label for="round_action">Round action?:</label>
+            <input
+                name="round_action"
+                type="checkbox"
+                use:updateDoc={{ doc, path: `system.choices.${selected_tab}.round_action` }}
+            />
+
+            <label for="trigger">Trigger:</label>
+            <input name="trigger" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.trigger` }} />
+
+            <EditableDocArray title="Ranges" path={`system.choices.${selected_tab}.ranges`} numeric={true} />
+
+            <label for="combo">Combo:</label>
+            <select name="combo" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.combo` }}>
+                {#each [["None", 0], ["Start", 1], ["Finisher", -1]] as c}
+                    <option value={c[1]}>{c[0]}</option>
+                {/each}
+            </select>
+            <label for="resolve">Resolve:</label>
+            <input
+                name="resolve"
+                type="number"
+                use:updateDoc={{ doc, path: `system.choices.${selected_tab}.resolve` }}
+            />
+
+            <EditableDocArray title="Tags" path={`system.choices.${selected_tab}.tags`} />
+
+            <EditableDocArray title="Effects" path={`system.choices.${selected_tab}.effects`} />
+        </div>
+    </section>
+</main>
+
+<style lang="scss">
+    $border: solid black 1px;
+
+    main {
+        background-color: #99d9ea;
+        height: 100%;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        flex: 0 1 auto;
+        display: grid;
+        grid-template:
+            "pic  ability_name  chapter" 30px
+            "pic  tabs          tabs" 90px / 120px 1fr 1fr;
+        gap: 10px;
+        padding: 10px;
+        align-items: center;
+        text-align: center;
+
+        .stats {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            span {
+                padding-right: 3px;
+                padding-left: 3px;
+                &:not(:last-child) {
+                    border-right: $border;
+                }
+            }
+        }
+    }
+
+    .sheet-body {
+        padding: 5px;
+        flex: 1 0 auto;
+        max-height: calc(100% - 140px);
+    }
+
+    .add-choice {
+        cursor: pointer;
+    }
+</style>

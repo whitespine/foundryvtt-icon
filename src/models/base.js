@@ -14,8 +14,7 @@ export class IconDataModel extends foundry.abstract.DataModel {
    * @returns {object} update_data augmented with fixed arrays etc
    */
   fullUpdateData(update_data) {
-    // @ts-expect-error
-    const system = foundry.utils.duplicate(this.source);
+    const system = foundry.utils.duplicate(this._source);
     return fancyMerge({ system }, update_data);
   }
 

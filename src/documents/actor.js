@@ -8,6 +8,12 @@ import { SummonModel } from "../models/actors/summon";
  */
 export class IconActor extends Actor {
 
+    /** Patch update to preserve arrays */
+    async update(data, options = {}) {
+        data = this.system.fullUpdateData(data);
+        return super.update(data, options);
+    }
+
     static migrateData(data) {
         if (data.type == "character") {
             // Need to fixup SWB actor

@@ -7,6 +7,8 @@
     import { scale } from "svelte/transition";
     import PlayerSheet from "./PlayerSheet.svelte";
     import FoeSheet from "./FoeSheet.svelte";
+    import SummonSheet from "./SummonSheet.svelte";
+    import AbilitySheet from "./AbilitySheet.svelte";
 
     export let elementRoot = void 0;
 
@@ -24,6 +26,10 @@
         <PlayerSheet />
     {:else if $tjs_doc.type == "foe"}
         <FoeSheet />
+    {:else if $tjs_doc.type == "summon"}
+        <SummonSheet />
+    {:else if $tjs_doc.type == "ability"}
+        <AbilitySheet />
     {:else}
         <span>Unsupported doc</span>
     {/if}

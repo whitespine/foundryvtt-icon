@@ -6,7 +6,8 @@ import TJSDocSheet from "../view/sheets/DocSheetApp";
 export function setupSheets() {
     Actors.unregisterSheet("core", ActorSheet);
     Items.unregisterSheet("core", ItemSheet);
-    Actors.registerSheet(game.system.id, TJSDocSheet, { types: ["player", "foe"], makeDefault: true });
+    Actors.registerSheet(game.system.id, TJSDocSheet, { types: ["player", "foe", "summon"], makeDefault: true });
+    Items.registerSheet(game.system.id, TJSDocSheet, { types: ["ability"], makeDefault: true });
     /*
     Actors.registerSheet("lancer", LancerPilotSheet, { types: [EntryType.PILOT], makeDefault: true });
     Actors.registerSheet("lancer", LancerMechSheetLegacy, { types: [EntryType.MECH], makeDefault: true });

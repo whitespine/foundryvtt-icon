@@ -109,7 +109,6 @@
 
     main {
         background-color: #99D9EA;
-        color: #b00b69;
         height: 100%;
         overflow: auto;
         display: flex;

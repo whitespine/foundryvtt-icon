@@ -9,7 +9,7 @@
     export let selected;
 </script>
 
-<div class="icon-tabs" class:horizontal>
+<div class="icon-tabs" class:horizontal {...$$restProps}>
     {#each tabs as tab}
         <div class="icon-tab" class:active={selected == tab.key} on:click={() => (selected = tab.key)}>
             {tab.label}
