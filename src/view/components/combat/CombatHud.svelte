@@ -66,7 +66,6 @@
 </div>
 
 <style lang="scss">
-    $border: solid black 1px;
     .combat-grid {
         height: 100%;
         display: grid;
@@ -84,7 +83,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-right: $border;
+            border-right: var(--primary-border);
             overflow: auto;
 
             .interlink {
@@ -97,7 +96,7 @@
                 width: calc(100% - 20px);
                 display: flex;
                 flex-direction: row;
-                border: 1px solid black;
+                border: var(--primary-border);
                 padding: 5px;
                 margin: 2px;
                 cursor: pointer;
@@ -121,7 +120,7 @@
 
         .preview {
             grid-area: preview;
-            border-bottom: $border;
+            border-bottom: var(--primary-border);
         }
 
         .statuses {

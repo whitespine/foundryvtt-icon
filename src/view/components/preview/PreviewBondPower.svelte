@@ -31,7 +31,7 @@
     .root {
         display: flex;
         flex-direction: column;
-        border: 1px solid black;
+        border: var(--primary-border);
         border-radius: 10px;
         padding: 5px;
         margin: 2px;

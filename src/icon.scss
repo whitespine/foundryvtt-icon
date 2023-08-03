@@ -7,14 +7,29 @@ $document-types: join($item-types, $actor-types);
 :root {
     --main-font-family: Helvetica, Arial, sans-serif;
 
-    --main-theme-color: #991e2a;
-    --main-theme-text: #e8bcbe;
-    --secondary-theme-color: #121d21;
+    // Principalis
+    --primary-background: #0a0f1cd3;
+    --primary-color: #ddedf8;
+    --primary-border: 1px solid white;
 
+    // Tabs
+    --tab-background: #010101;
+    --tab-inactive-background: #344538;
+    --tab-active-background: #d2b760;
+    --tab-inactive-text: #fff1dd;
+    --tab-active-text: #290808;
+
+    // Clocks
     --clock-fill: rgb(164, 135, 6);
     --clock-empty: rgb(39, 240, 240);
     --clock-border: #0c1638;
 
+    // TJS overrides
+    --tjs-app-content-padding: 0px;
+
+    // Foundry overrides
+
+    // Patterns
     $gap: 5px;
     --inset-box-clip: polygon($gap 0,
             calc(100% - $gap) 0,
@@ -25,4 +40,19 @@ $document-types: join($item-types, $actor-types);
             $gap 100%,
             0 calc(100% - $gap),
             0 $gap );
+}
+
+
+// Fix inputs on sheets and other stuff core foundry is annoying about
+.icon.sheet > section > main {
+    background: var(--primary-background);
+    color: var(--primary-color);
+
+    input,select,textarea {
+        color: inherit;
+    }
+
+    h3 {
+        border-bottom: none;
+    }
 }

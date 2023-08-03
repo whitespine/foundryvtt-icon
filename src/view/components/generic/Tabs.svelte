@@ -24,7 +24,7 @@
         flex-direction: column;
         flex-wrap: nowrap;
         justify-content: flex-start;
-        background-color: rgb(56, 52, 56);
+        background-color: var(--tab-background);
         margin: 5px;
         min-height: max-content;
         align-items: center;
@@ -38,14 +38,15 @@
         clip-path: var(--inset-box-clip);
         margin: 5px;
         padding: 10px;
+        width: calc(100% - 20px);
         cursor: pointer;
 
-        background-color: rgb(98, 84, 58);
-        color: white;
+        background-color: var(--tab-inactive-background);
+        color: var(--tab-inactive-text);
 
         &.active {
-            background-color: rgb(225, 235, 90);
-            color: black;
+            background-color: var(--tab-active-background);
+            color: var(--tab-active-text);
         }
     }
 </style>

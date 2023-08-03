@@ -105,10 +105,7 @@
 </main>
 
 <style lang="scss">
-    $border: solid black 1px;
-
     main {
-        background-color: #99D9EA;
         height: 100%;
         overflow: auto;
         display: flex;
@@ -136,7 +133,7 @@
                 padding-right: 3px;
                 padding-left: 3px;
                 &:not(:last-child) {
-                    border-right: $border;
+                    border-right: var(--primary-border);
                 }
             }
         }

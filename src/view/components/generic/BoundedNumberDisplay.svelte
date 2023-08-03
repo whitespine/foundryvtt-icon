@@ -33,7 +33,7 @@
         display: grid;
         grid-template-columns: 1fr 30px 10px 30px;
         align-items: center;
-        border: solid black 1px;
+        border: var(--primary-border);
         border-radius: 10px;
         padding: 2px;
         margin: 2px;

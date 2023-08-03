@@ -22,6 +22,12 @@
             | {choice.resolve} Resolve
         {/if}
 
+        {#if choice.combo === 1}
+            | +Combo
+        {:else if choice.combo === -1}
+            | -Combo
+        {/if}
+
         {#if choice.ability.system.chapter == 2}
             | Chapter Ⅱ
         {:else if choice.ability.system.chapter == 3}

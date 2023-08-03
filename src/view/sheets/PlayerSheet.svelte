@@ -142,10 +142,7 @@
 </main>
 
 <style lang="scss">
-    $border: solid black 1px;
-
     main {
-        background-color: rgb(110, 166, 152);
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -173,8 +170,8 @@
             grid-template: 1fr / 180px 1fr 180px;
 
             > div {
-                border-right: $border;
-                border-bottom: $border;
+                border-right: var(--primary-border);
+                border-bottom: var(--primary-border);
             }
         }
 
@@ -183,7 +180,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-bottom: $border;
+            border-bottom: var(--primary-border);
         }
 
         .xp {
@@ -194,8 +191,8 @@
         }
         .burdens {
             grid-area: burdens;
-            border-bottom: $border;
-            border-top: $border;
+            border-bottom: var(--primary-border);
+            border-top: var(--primary-border);
         }
         .ambitions {
             grid-area: ambitions;
