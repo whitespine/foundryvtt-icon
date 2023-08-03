@@ -15,6 +15,13 @@ pack_root = proj_root / "packs"
 
 random.seed(1)
 
+# Roman numerals
+CHPT = {
+    1: "I",
+    2: "Ⅱ",
+    3: "Ⅲ"
+}
+
 
 # Generator which walks all of our actor json file
 def walk_files(base):
@@ -129,7 +136,7 @@ class Processor:
     # Lookup a trait or substitute a default
     def get_trait(self, trait):
         if trait in self.raw_traits:
-            return self.raw_traits[trait]
+            return copy.deepcopy(self.raw_traits[trait])
         else:
             return {"name": trait, "description": "No description."}
 
@@ -192,7 +199,9 @@ class ActorProcessor:
         # Populate traits
         traits = [*set(mandate_list(self.data.get("traits")))]
         for t in traits:
-            self.traits.append(self.parent.get_trait(t))
+            if isinstance(t, str):
+                t = self.parent.get_trait(t)
+            self.traits.append(t)
 
     def process_setup_info(self):
         """
@@ -207,21 +216,18 @@ class ActorProcessor:
         self.system["setup"] = "\n\n".join(setup)
 
     def process_conditional_abilities(self):
-        special_class = "Normal"
         for cond_ability in mandate_list(self.data.get("conditional_abilities")):
             # Check special classes, ignore those that don't apply
-            if cond_ability.get("is_special_classes", special_class) != special_class:
-                continue
-
-            # Update special classes
-            if cond_ability.get("special_class"):
-                special_class = cond_ability.get("special_class")
-
-            # Update hp multipliers
-            if cond_ability.get("h_p_multiplier"):
-                self.system["hp_multiplier"] = cond_ability["h_p_multiplier"]
+            add_reqs = []
+            if cond_ability.get("is_special_classes"):
+                add_reqs.append(f"Must be a {cond_ability['is_special_classes']}") 
+            if cond_ability.get("is_not_special_classes"):
+                add_reqs.append(f"Must not be a {cond_ability['is_not_special_classes']}") 
+            if cond_ability.get("uses_special_template"):
+                add_reqs.append(f"Must be a {cond_ability['uses_special_template']}") 
 
             # If remov traits specified, don't actually remove, but instead mark as explicitly chaptered
+            '''
             for removal_target in mandate_list(cond_ability.get("remove_traits")):
                 # Find the trait with the same name
                 corr_trait = ([x for x in self.traits if x["name"] == removal_target])[0]
@@ -236,20 +242,24 @@ class ActorProcessor:
                 # Mark it
                 if "chapter" in cond_ability:
                     corr_action["remove_at_chapter"] = cond_ability["chapter"]
+            '''
 
             # Add traits, mark similarly
             for add_target in mandate_list(cond_ability.get("traits")):
-                corr_trait = self.process_as_actor.get_trait(add_target)
+                if isinstance(add_target, str):
+                    add_target = self.parent.get_trait(add_target)
                 if "chapter" in cond_ability:
-                    corr_trait["add_at_chapter"] = cond_ability["chapter"]
-                if "is_not_special_class" in cond_ability:
-                    corr_trait["is_not_special_class"] = cond_ability["is_not_special_classes"]
-                self.traits.append(corr_trait)
+                    chpt = cond_ability["chapter"]
+                    add_target["chapter"] = chpt
+                    add_target["special_requirements"] = add_reqs
+                self.traits.append(add_target)
 
             # Add actions, mark similarly
             for add_target in mandate_list(cond_ability.get("actions")):
                 if "chapter" in cond_ability:
-                    add_target["add_at_chapter"] = cond_ability["chapter"]
+                    chpt = cond_ability["chapter"]
+                    add_target["chapter"] = chpt
+                    add_target["special_requirements"] = add_reqs
                 self.actions.append(add_target)
 
     def process_as_actor(self):
@@ -271,6 +281,7 @@ class ActorProcessor:
         self.actions.extend(mandate_list(self.data.get("actions")))
 
         self.process_setup_info()
+        self.process_conditional_abilities()
 
         # Finally, convert our actions & traits
         for action in self.actions:
