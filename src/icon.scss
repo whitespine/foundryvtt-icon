@@ -8,8 +8,12 @@ $document-types: join($item-types, $actor-types);
     --main-font-family: Helvetica, Arial, sans-serif;
 
     // Principalis
-    --primary-background: #0a0f1cd3;
+    --primary-background: #0a0f1c;
     --primary-color: #ddedf8;
+    --secondary-background: #044e48;
+    --secondary-color: #b2e7bf;
+    --tertiary-background: rgb(221, 244, 93);
+    --tertiary-color: rgb(221, 244, 93);
     --primary-border: 1px solid white;
 
     // Tabs

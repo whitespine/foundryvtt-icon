@@ -3,6 +3,7 @@
     import HydratedEffectBlock from "../generic/HydratedEffectBlock.svelte";
     import { IconItem } from "../../../documents/item";
     import AbilityDetail from "./AbilityDetail.svelte";
+    import { tooltip } from "@svelte-plugins/tooltips";
 
     let actor = getContext("tjs_actor");
 
@@ -49,10 +50,10 @@
     {/if}
     {#if selection}
         <div class="bottom-controls">
-            <i class="fas fa-edit" on:click={editSelected} />
-            <i class="fas fa-trash" on:click={deleteSelected} />
+            <i class="fas fa-edit" on:click={editSelected} use:tooltip={{content: "Edit"}} />
+            <i class="fas fa-trash" on:click={deleteSelected} use:tooltip={{content: "Delete"}} />
             {#if selection.ability}
-                <i class="fas fa-dice-d20" on:click={rollAbility} />
+                <i class="fas fa-dice-d20" on:click={rollAbility} use:tooltip={{content: "Activate"}} />
             {/if}
         </div>
     {/if}

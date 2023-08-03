@@ -113,7 +113,8 @@
                 }
 
                 &.selected {
-                    background-color: rgba(46, 40, 73, 0.5);
+                    background-color: var(--secondary-background);
+                    color: var(--secondary-color);
                 }
             }
         }
