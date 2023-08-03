@@ -65,8 +65,8 @@ def combine_list_desc(
     if mandate_list(listed_descriptions):
         li = []
         for i in listed_descriptions:
-            body = f"{i['description']}"
-            if i["name"]:
+            body = i.get('description', "ERROR - UNPARSED DATA CONSULT PDF")
+            if "name" in i:
                 body = f"{i['name']}: {body}"
             li.append(f"<li>{body}</li>")
         long_desc = f"<br><ul>{''.join(li)}</ul>"
@@ -419,7 +419,6 @@ class ItemProcessor:
             uuid = f"Compendium.icon.better-foes.Actor.{summon.id}"
             self.system["summons"].append(uuid)
 
-
         choice = {
             "actions": self.data.get("action_cost", 0),
             "round_action": self.data.get("round_action", False),
@@ -440,7 +439,7 @@ class ItemProcessor:
 
     def process_as_trait(self):
         self.type = "trait"
-        self.system["description"] = self.data.get("description", "Unknown")
+        self.system["description"] = combine_list_desc(self.data.get("description", "Unknown"), self.data.get("listed_items"))
         self.finalize()
 
     def finalize(self):
