@@ -6,7 +6,7 @@
     import Tabs from "../components/generic/Tabs.svelte";
     import Portrait from "../components/Portrait.svelte";
     import { dropDocs } from "../actions/drop";
-    import CombatHud from "../components/CombatHud.svelte";
+    import CombatHud from "../components/combat/CombatHud.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -108,7 +108,8 @@
     $border: solid black 1px;
 
     main {
-        background-color: rgb(110, 166, 152);
+        background-color: #99D9EA;
+        color: #b00b69;
         height: 100%;
         overflow: auto;
         display: flex;

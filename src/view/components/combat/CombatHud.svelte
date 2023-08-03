@@ -1,8 +1,8 @@
 <script>
     import { getContext } from "svelte";
-    import { stepwiseResolveDotpath } from "../../util/paths";
-    import HydratedEffectBlock from "./generic/HydratedEffectBlock.svelte";
-    import { IconItem } from "../../documents/item";
+    import { IconItem } from "../../../documents/item";
+    import AbilityDisplay from "./AbilityDisplay.svelte";
+    import StatusDisplay from "./StatusDisplay.svelte";
 
     let actor = getContext("tjs_actor");
 
@@ -28,35 +28,15 @@
         }
     }
 
-    function rollAbility() {
-        console.log("Ability");
-    }
-
-    function postTrait() {
-        console.log("Trait");
-    }
-
-    function saveAgainst(effect) {
-        console.log("Save");
-    }
-
-    function saveAgainstAll(effect) {
-        console.log("SaveAll");
-    }
-
-    function editSelected() {
-        selectedItem.render(true, { focus: true });
-    }
-
-    function deleteSelected() {
-        if (selectItem.type === "trait" || selectedItem.system.choices.length === 1) {
-            // Delete the item entirely
-            selectedItem.delete();
+    function chapter_symbol(chapter) {
+        if(chapter == 1) {
+            return "Ⅰ";
+        } else if(chapter == 2){
+            return "Ⅱ";
+        } else if(chapter == 3) {
+            return "Ⅲ";
         } else {
-            // Just remove the given choice
-            selectedItem.update({
-                "system.choices": selectedItem.filter((x) => x != selected),
-            });
+            console.error(chapter);
         }
     }
 </script>
@@ -68,7 +48,7 @@
             {#each ability.system.choices as choice (choice.name)}
                 <div class="ability" on:click={() => selectItem(choice)} class:selected={choice === selected}>
                     <img class="icon" src={ability.img} alt={choice.name || choice.ability.name} />
-                    <span>{choice.name || choice.ability.name}</span>
+                    <span>{choice.name || choice.ability.name} {chapter_symbol(ability.system.chapter)}</span>
                     <span style="margin-left: auto">
                         {choice.actionPips}
                     </span>
@@ -79,36 +59,17 @@
         {#each traits as trait (trait.id)}
             <div class="trait" on:click={() => selectItem(trait)} class:selected={trait === selected}>
                 <img class="icon" src={trait.img} alt={trait.name} />
-                <span>{trait.name}</span>
+                <span>{trait.name} {chapter_symbol(trait.system.chapter)}</span>
             </div>
         {/each}
     </div>
 
     <div class="preview">
-        {#if !selected}
-            <h3>Select an ability</h3>
-        {:else if selected.ability}
-            <h3>{selected.name}</h3>
-            <span>
-                <HydratedEffectBlock body={[...selected.ranges, ...selected.tags].join(", ")} />
-            </span>
-            {#each selected.effects as effect}
-                <HydratedEffectBlock body={effect} />
-            {/each}
-        {:else if selected.type === "trait"}
-            <h3>{selected.name}</h3>
-            <HydratedEffectBlock body={selected.system.description} />
-        {:else}
-            <span>ERROR</span>
-        {/if}
-        <div class="bottom-controls">
-            <i class="fas fa-edit" on:click={editSelected} />
-            <i class="fas fa-trash" on:click={deleteSelected} />
-        </div>
+        <AbilityDisplay selection={selected} />
     </div>
 
     <div class="statuses">
-        <h3>Statuses</h3>
+        <StatusDisplay />
     </div>
 </div>
 
@@ -162,22 +123,8 @@
         }
 
         .preview {
-            padding: 5px;
             grid-area: preview;
             border-bottom: $border;
-            display: flex;
-            flex-direction: column;
-
-            .bottom-controls {
-                margin-top: auto;
-                justify-items: end;
-                display: flex;
-                flex-direction: row-reverse;
-                i {
-                    cursor: pointer;
-                    padding-right: 5px;
-                }
-            }
         }
 
         .statuses {
