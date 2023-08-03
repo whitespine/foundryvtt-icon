@@ -14,11 +14,10 @@ export class AbilityChoiceField extends fields.SchemaField {
             // Is it a round action?
             round_action: new fields.BooleanField({ initial: false }),
             // What is/are its listed range(s)?
-            ranges: new fields.ArrayField(new fields.StringField({
-                validate: (val) => {
-                    return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
-                }
-            })),
+            ranges: new fields.ArrayField(new fields.StringField()),
+                // validate: (val) => {
+                    // return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
+                // }
 
 
             // ------- TAGS ---------------
