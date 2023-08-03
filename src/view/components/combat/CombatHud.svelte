@@ -28,17 +28,6 @@
         }
     }
 
-    function chapter_symbol(chapter) {
-        if(chapter == 1) {
-            return "Ⅰ";
-        } else if(chapter == 2){
-            return "Ⅱ";
-        } else if(chapter == 3) {
-            return "Ⅲ";
-        } else {
-            console.error(chapter);
-        }
-    }
 </script>
 
 <div class="combat-grid">
@@ -51,7 +40,7 @@
                 {/if}
                 <div class="ability" on:click={() => selectItem(choice)} class:selected={choice === selected}>
                     <img class="icon" src={ability.img} alt={choice.name || choice.ability.name} />
-                    <span>{choice.name || choice.ability.name} {chapter_symbol(ability.system.chapter)}</span>
+                    <span>{choice.name || choice.ability.name}</span>
                     <span style="margin-left: auto">
                         {choice.actionPips}
                     </span>
@@ -62,7 +51,7 @@
         {#each traits as trait (trait.id)}
             <div class="trait" on:click={() => selectItem(trait)} class:selected={trait === selected}>
                 <img class="icon" src={trait.img} alt={trait.name} />
-                <span>{trait.name} {chapter_symbol(trait.system.chapter)}</span>
+                <span>{trait.name}</span>
             </div>
         {/each}
     </div>
