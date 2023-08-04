@@ -8,7 +8,7 @@ $document-types: join($item-types, $actor-types);
     --main-font-family: Helvetica, Arial, sans-serif;
 
     // Principalis
-    --primary-background: #0a0f1c;
+    --primary-background: #202739;
     --primary-color: #ddedf8;
     --secondary-background: #044e48;
     --secondary-color: #b2e7bf;
@@ -54,6 +54,9 @@ $document-types: join($item-types, $actor-types);
 
     input,select,textarea {
         color: inherit;
+    }
+    textarea {
+        border: var(--primary-border);
     }
 
     h3 {
