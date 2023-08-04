@@ -1,6 +1,6 @@
 <script>
     import HydratedEffectBlock from "../generic/HydratedEffectBlock.svelte";
-    import SummonDetail from "./SummonDetail.svelte";
+    import SummonDetail from "./ActorUUIDReference.svelte";
 
     // An ability choice
     export let choice;
@@ -41,13 +41,7 @@
         <HydratedEffectBlock body={effect} />
     {/each}
     {#each choice.ability.system.summons as summon}
-        {#await fromUuid(summon)}
-            <span>Summon...</span>
-        {:then summonDoc} 
-            <span>Summon: <SummonDetail summon={summonDoc} /></span>
-        {:catch}
-            Failed to lookup summon {summon} 
-        {/await}
+        <span>Summon: <SummonDetail uuid={summon} /></span>
     {/each}
 </div>
 
