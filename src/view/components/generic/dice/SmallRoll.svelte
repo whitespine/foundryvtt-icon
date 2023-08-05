@@ -3,6 +3,4 @@
     export let roll;
 </script>
 
-<div>
-    {@html roll.toAnchor()}
-</div>
+{@html roll.toAnchor().outerHTML}

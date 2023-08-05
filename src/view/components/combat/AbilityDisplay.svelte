@@ -7,31 +7,31 @@
 
     let actor = getContext("tjs_actor");
 
-    function rollAbility() {
-        console.log("Ability");
-    }
-
     // Either an ability choice or a trait
     export let selection;
     let selectedItem = null;
     $: selectedItem = selection ? (selection instanceof IconItem ? selection : selection.ability) : null;
 
-    async function postSelected() {
-        let roll = new Roll(formula());
-        await roll.roll();
-        await ChatMessage.create({
-            [`flags.${game.system.id}.data`]: {
-                type: "ability",
-                actor_uuid:actor.uuid,
-                roll_data: roll.toJSON(),
-            },
-        });
+    async function rollAbility() {
+        if (selectedItem.type === "ability") {
+            await ChatMessage.create({
+                [`flags.${game.system.id}.data`]: {
+                    type: "ability",
+                    ability_uuid: selectedItem.uuid,
+                    tokens: {}
+                },
+            });
+        } else {
+            console.log("Posting cringe, are ye?");
+        }
     }
 
+    /** Opens the sheet for the selected item */
     function editSelected() {
         selectedItem.sheet.render(true, { focus: true });
     }
 
+    /** Deletes the selected item. choices are deleted individually first. */
     function deleteSelected() {
         if (selectedItem.type === "trait" || selectedItem.system.choices.length === 1) {
             // Delete the item entirely
@@ -58,11 +58,9 @@
     {/if}
     {#if selection}
         <div class="bottom-controls">
-            <i class="fas fa-edit" on:click={editSelected} use:tooltip={{content: "Edit"}} />
-            <i class="fas fa-trash" on:click={deleteSelected} use:tooltip={{content: "Delete"}} />
-            {#if selection.ability}
-                <i class="fas fa-dice-d20" on:click={rollAbility} use:tooltip={{content: "Activate"}} />
-            {/if}
+            <i class="fas fa-edit" on:click={editSelected} use:tooltip={{ content: "Edit" }} />
+            <i class="fas fa-trash" on:click={deleteSelected} use:tooltip={{ content: "Delete" }} />
+            <i class="fas fa-dice-d20" on:click={rollAbility} use:tooltip={{ content: "Activate" }} />
         </div>
     {/if}
 </div>

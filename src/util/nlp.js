@@ -68,6 +68,7 @@ export class Token {
         this.dragdata = options.dragdata;
         this.children = options.children?.map(t => new Token(t));
         this.roll = options.roll ? Roll.fromData(options.roll) : undefined;
+        this.formula = options.formula;
     }
 
     /** 
@@ -81,7 +82,8 @@ export class Token {
             tooltip: this.tooltip,
             dragdata: this.dragdata,
             children: this.children?.map(t => t.toObject()),
-            roll: this.roll?.toJSON()
+            roll: this.roll?.toJSON(),
+            formula: this.formula,
         }
     }
 
@@ -156,5 +158,7 @@ export function fullProcess(text, context) {
         }
         arr = newArr;
     }
+    arr = arr.map(text => typeof text === "string" ? new Token({ text }) : text);
+    console.log(arr);
     return arr;
 }

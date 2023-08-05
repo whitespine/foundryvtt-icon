@@ -10,7 +10,9 @@
     export let unique_id = null;
 
     function addSibling(evt, i) {
-        tokens = [...tokens.slice(0, i + 1), new Token(evt.detail), ...tokens.slice(i + 2)];
+        console.log("c", i);
+        tokens = [...tokens.slice(0, i + 1), new Token(evt.detail), ...tokens.slice(i + 1)];
+        console.log(tokens);
     }
 
     /**
@@ -18,23 +20,24 @@
      * @param evt Event to handle
      */
     function saveMessageTokens(evt) {
-        if(!unique_id) console.log("Not persisting change to ");
+        if (!unique_id) console.log("Not persisting change to unique idless TokenSequence");
         let msg = getContext("message");
-        if(!msg) console.log("Not persisting change to messageless TokenSequence")
+        if (!msg) console.log("Not persisting change to messageless TokenSequence");
 
-        msg.update({[`flags.${game.system.id}.data.tokens.${unique_id}`]: evt.detail})
+        msg.update({ [`flags.${game.system.id}.data.tokens.${unique_id}`]: evt.detail });
     }
 </script>
 
 <div>
-    {#each tokens as token, i}
-        <TokenRenderer {token} on:addSibling={(evt) => addSibling(evt, i)} on:saveMessageTokens={saveMessageTokens}/>
-    {/each}
+    {#if tokens?.length}
+        {#each tokens || [] as token, i}
+            <TokenRenderer
+                {token}
+                on:addsibling={(evt) => addSibling(evt, i)}
+                on:savetokens={saveMessageTokens}
+            />
+        {/each}
+    {:else}
+        Token error
+    {/if}
 </div>
-
-<style lang="scss">
-    div {
-        display: flex;
-        flex-direction: row;
-    }
-</style>

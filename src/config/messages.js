@@ -39,7 +39,7 @@ export function setupMessages() {
             const target = html[0];
 
             // Add the svelte component to the message instance loaded in client side memory.
-            if (type === "attack") {
+            if (type === "ability") {
                 msg._svelteComponent = new AbilityRollMessage({ target, props });
             } else if (type == "narrative") {
                 msg._svelteComponent = new NarrativeRollMessage({ target, props })

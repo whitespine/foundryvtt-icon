@@ -1,9 +1,7 @@
 <!-- Super simple Svelte component that takes in a prop and outputs it. -->
 <script>
-    import { localize } from "../../util/misc";
-    import AbilityDetail from "../components/combat/AbilityDetail.svelte";
+    import { Token } from "../../util/nlp";
     import TokenSequence from "../components/generic/TokenSequence.svelte";
-    import RollToolTip from "../components/generic/dice/MediumRoll.svelte";
 
     // import { fly, fade } from "svelte/transition";
 
@@ -23,15 +21,31 @@
      */
     export let tokens;
 
-    let item = fromUuidSync(ability_uuid);
+    // Deduce the item
+    let item;
+    $: item = fromUuidSync(ability_uuid);
 
-    /** @type {IconActor | null} */
-    let actor = fromUuidSync(actor_uuid);
+    // Defaults for our tokens etc
+    let default_attack_roll_token = [
+        new Token({
+            children: [
+                {
+                    text: "Hit: ",
+                },
+                {
+                    formula: "1d20",
+                },
+            ],
+        }),
+    ];
 </script>
 
 <div class="icon flexcol">
-    <TokenSequence tokens={tokens.a} unique_id="a" />
-    <span>Error resolving ability</span>
+    <h3>{item.name}</h3>
+    {#if true}
+        <TokenSequence tokens={tokens.to_hit || default_attack_roll_token} unique_id="to_hit" />
+    {/if}
+    <!--<TokenSequence tokens={tokens.body || item.} unique_id="body" />-->
 </div>
 
 <style lang="scss">
