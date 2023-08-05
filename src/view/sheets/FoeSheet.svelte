@@ -142,6 +142,6 @@
     .sheet-body {
         padding: 5px;
         flex: 1 0 auto;
-        max-height: calc(100% - 140px);
+        max-height: calc(100% - 120px);
     }
 </style>
