@@ -41,7 +41,6 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         <div class="flexcol">
-            <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
             <label for="name">Name:</label>
             <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.name` }} />
 
@@ -62,8 +61,6 @@
                 use:updateDoc={{ doc, path: `system.choices.${selected_tab}.round_action` }}
             />
 
-            <EditableDocArray title="Ranges" path={`system.choices.${selected_tab}.ranges`} numeric={true} />
-
             <label for="combo">Combo:</label>
             <select name="combo" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.combo` }}>
                 {#each [["None", 0], ["Start", 1], ["Finisher", -1]] as c}
@@ -77,9 +74,13 @@
                 use:updateDoc={{ doc, path: `system.choices.${selected_tab}.resolve` }}
             />
 
+            <EditableDocArray title="Ranges" path={`system.choices.${selected_tab}.ranges`} numeric={true} />
+
             <EditableDocArray title="Tags" path={`system.choices.${selected_tab}.tags`} />
 
             <EditableDocArray title="Effects" path={`system.choices.${selected_tab}.effects`} />
+
+            <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
         </div>
     </section>
 </main>
