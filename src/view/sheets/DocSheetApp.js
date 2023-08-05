@@ -11,6 +11,7 @@ export default class TJSDocSheet extends SvelteApplication {
    */
   constructor(doc, options = {}) {
     super({
+      id: `doc_${doc.id}`,
       title: doc.name,
       svelte: {
         props: {
@@ -27,7 +28,6 @@ export default class TJSDocSheet extends SvelteApplication {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       // TODO: How to get normal Foundry buttons in the window header?
-      id: `actor-sheet-${this.ticker++}`,
       classes: ["icon", "sheet", "actor"],
       resizable: true,
       minimizable: true,

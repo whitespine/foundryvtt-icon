@@ -29,7 +29,6 @@
             selected = item;
         }
     }
-
 </script>
 
 <div class="combat-grid">
@@ -59,7 +58,11 @@
     </div>
 
     <div class="preview">
-        <AbilityDisplay selection={selected} key={`${unique_prefix}_${selectedItem?.id}`} />
+        <AbilityDisplay
+            on:clear={() => (selected = null)}
+            selection={selected}
+            key={`${unique_prefix}_${selectedItem?.id}`}
+        />
     </div>
 
     <div class="statuses">

@@ -1,9 +1,10 @@
 <script>
-    import { getContext } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
     import RichTextDisplay from "../generic/RichTextDisplay.svelte";
     import { IconItem } from "../../../documents/item";
     import AbilityDetail from "./AbilityDetail.svelte";
     import { tooltip } from "@svelte-plugins/tooltips";
+    import { TJSDialog } from "#runtime/svelte/application";
 
     // Needed for token elements
     export let key;
@@ -32,17 +33,25 @@
         selectedItem.sheet.render(true, { focus: true });
     }
 
+    const dispatch = createEventDispatcher();
+
     /** Deletes the selected item. choices are deleted individually first. */
     function deleteSelected() {
-        if (selectedItem.type === "trait" || selectedItem.system.choices.length === 1) {
-            // Delete the item entirely
-            selectedItem.delete();
-        } else {
-            // Just remove the given choice
-            selectedItem.update({
-                "system.choices": selectedItem.filter((x) => x != selection),
-            });
-        }
+        TJSDialog.confirm({
+            content: `Delete ${selectedItem.name}?`,
+            onYes: () => {
+                if (selectedItem.type === "trait" || selectedItem.system.choices.length === 1) {
+                    // Delete the item entirely
+                    selectedItem.delete();
+                } else {
+                    // Just remove the given choice
+                    selectedItem.update({
+                        "system.choices": selectedItem.system.choices.filter((x) => x != selection),
+                    });
+                }
+                dispatch("clear");
+            },
+        });
     }
 </script>
 

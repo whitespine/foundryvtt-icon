@@ -37,15 +37,19 @@
 </script>
 
 <div class="icon flexcol">
-    <h3>{item.name}</h3>
-    {#if true}
-        <TokenSequence initial_tokens={attack_roll_tokens} key={`${msg.id}_to_hit`} />
-    {/if}
+    {#if item}
+        <h3>{item.name}</h3>
+        {#if true}
+            <TokenSequence initial_tokens={attack_roll_tokens} key={`${msg.id}_to_hit`} />
+        {/if}
 
-    {#if choice_index < item.system.choices.length}
-        <AbilityDetail choice={item.system.choices[choice_index]} key={`${msg.id}_body`} />
+        {#if choice_index < item.system.choices.length}
+            <AbilityDetail choice={item.system.choices[choice_index]} key={`${msg.id}_body`} />
+        {:else}
+            <span>Error: Ability choice could not be resolved</span>
+        {/if}
     {:else}
-        <span>Error: Ability choice could not be resolved</span>
+        Item deleted
     {/if}
     <!--<TokenSequence tokens={tokens.body || item.} unique_id="body" />-->
 </div>

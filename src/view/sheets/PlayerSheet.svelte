@@ -141,6 +141,7 @@
 <style lang="scss">
     main {
         height: 100%;
+        overflow: auto;
         display: flex;
         flex-direction: column;
     }
