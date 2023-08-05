@@ -7,20 +7,20 @@
     /** @type {Token[] | (() => Token[])} Our default token sequence if we do not recover any from token store */
     export let initial_tokens;
 
-    /** Used for saving changes to tokens. We do not react to changes of it */
+    /** Used for saving changes to tokens. */
     export let key;
 
     /** Likewise */
     let msg = getContext("message");
 
     /** Used for allowing updates / initialization from persistent token store */
-    let token_store = TOKEN_STORES.get(key);
+    let token_store = TOKEN_STORES.get(msg?.id || "transient", {});
 
     // Create our update loop thingy
     let tokens;
     $: {
-        if($token_store) {
-            tokens = $token_store;
+        if($token_store[key]) {
+            tokens = $token_store[key].map(t => new Token(t));
         } else {
             tokens = typeof initial_tokens === "function" ? initial_tokens() : initial_tokens;
         }
@@ -37,8 +37,8 @@
      * @param evt Event to handle
      */
     function saveTokens() {
-        if (!key) console.log("Not persisting change to keyless TokenSequence");
-        if (!msg) console.log("Not persisting change to messageless TokenSequence");
+        if (!key) return console.log("Not persisting change to keyless TokenSequence");
+        if (!msg) return console.log("Not persisting change to messageless TokenSequence");
 
         let token_data = tokens.map(t => t.toObject());
         msg.update({ [`flags.${game.system.id}.data.tokens.${key}`]: token_data });

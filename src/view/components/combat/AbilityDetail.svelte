@@ -40,8 +40,8 @@
     <span>
         <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} key={`${key}_tags`} />
     </span>
-    {#each choice.effects as effect}
-        <RichTextDisplay body={effect} key={`${key}_body`} />
+    {#each choice.effects as effect, i}
+        <RichTextDisplay body={effect} key={`${key}_body_${i}`} />
     {/each}
     {#each choice.ability.system.summons as summon}
         <span>Summon: <SummonDetail uuid={summon} /></span>

@@ -112,29 +112,28 @@ export function setupTransformers() {
         // Separate camel case for the keys
         let pattern = k.replaceAll(/([a-z])([A-Z])/g, "$1 $2")
         let t = Token.simpleTransformer(pattern, { tooltip: v })
-        StaticTransformers.push(t);
-
-        const exclusions = ["Fray"];
+        const exclusions = ["Fray", "Gamble"];
         if (!exclusions.includes(k)) {
-            MessageTransformers.push(t);
+            StaticTransformers.push(t);
         }
     }
 
     // And some more specific ones
     StaticTransformers.push(new Transformer(
-        /(\[D\])/g,
-        (ctx) => [ctx.actor?.system?.damage_die ? `${ctx.actor.system.damage_die}D` : "[D]"]
+        /<(fray|\[D\]|\s+|\+|\d+)+>/g,
+        (ctx) => [ctx.actor?.system?.fray_damage ?? "fray"]
     ));
 
-
-    MessageTransformers.push(new Transformer(
-        /(fray|\s+|\[D\]|\+|\d+)+/g,
-        (ctx) => [ctx.actor?.system?.fray_damage ?? "fray"]
+    StaticTransformers.push(new Transformer(
+        /(Gamble)/ig,
+        (ctx) => [new Token({
+            text: "Gamble",
+            formula: "1d6"
+        })]
     ));
 
 }
 export const StaticTransformers = [];
-export const MessageTransformers = [];
 
 
 /**

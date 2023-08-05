@@ -12,10 +12,11 @@ class KeyStoreLookup {
     /**
      * Retrieve the store with the provided name
      * @param {string} key Key to lookup
+     * @param {any} initial initial value if it does not exist
      */
-    get(key) {
+    get(key, initial=null) {
         if (!this.stores.has(key)) {
-            this.stores.set(key, writable(null));
+            this.stores.set(key, writable(initial));
         }
         return this.stores.get(key);
     }

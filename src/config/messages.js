@@ -7,20 +7,18 @@ import NarrativeRollMessage from "../view/chat/NarrativeRollMessage.svelte";
 
 export class SvelteChatLog extends ChatLog {
     // Alter update behavior so it updates props instead
-    updateMessage(message, notify=false) {
-        if(message._svelteComponent) {
+    updateMessage(msg, notify=false) {
+        if(msg._svelteComponent) {
             // Get probably updated flags, and send them to the message svelte component
-            let flagData = message.getFlag(game.system.id, 'data');
+            let flagData = msg.getFlag(game.system.id, 'data');
             flagData = foundry.utils.duplicate(flagData);
             delete flagData["type"];
-            message._svelteComponent.$$set(flagData);
+            msg._svelteComponent.$$set(flagData);
 
             // Update token stores
-            for(let [k, v] of Object.entries(flagData.tokens || {})) {
-                TOKEN_STORES.get(k).set(v.map(t => new Token(t)));
-            }
+            TOKEN_STORES.get(msg.id).set(flagData.tokens ?? {});
         } else {
-            super.updateMessage(message, notify);
+            super.updateMessage(msg, notify);
         }
     }
 }
@@ -53,9 +51,7 @@ export function setupMessages() {
             }
 
             // Update token stores
-            for(let [k, v] of Object.entries(flagData.tokens || {})) {
-                TOKEN_STORES.get(k).set(v.map(t => new Token(t)));
-            }
+            TOKEN_STORES.get(msg.id).set(flagData.tokens ?? {});
 
             // Scroll chat log to bottom.
             ui.chat.scrollBottom();

@@ -32,16 +32,8 @@
     // Defaults for our tokens etc
     let attack_roll_tokens;
     $: attack_roll_tokens = [
-        new Token({
-            children: [
-                {
-                    text: "Hit: ",
-                },
-                {
-                    formula: "1d20",
-                },
-            ],
-        }),
+        new Token({ text: "Hit: " }),
+        new Token({ formula: "1d20" })
     ];
 </script>
 
@@ -58,6 +50,3 @@
     {/if}
     <!--<TokenSequence tokens={tokens.body || item.} unique_id="body" />-->
 </div>
-
-<style lang="scss">
-</style>
