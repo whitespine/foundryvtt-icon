@@ -9,6 +9,7 @@
     import Portrait from "../components/Portrait.svelte";
     import PreviewBondPower from "../components/preview/PreviewBondPower.svelte";
     import { dropDocs } from "../actions/drop";
+    import CombatHud from "../components/combat/CombatHud.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -20,6 +21,11 @@
         filters: [(i) => i.type === "bond_power"],
         sort: name_alphabetical,
     });
+    const abilities = actor.embedded.create(Item, {
+        name: "abilities",
+        filters: [(i) => i.type === "ability"],
+        sort: name_alphabetical,
+    });
     const traits = actor.embedded.create(Item, {
         name: "traits",
         filters: [(i) => i.type === "trait"],
@@ -27,7 +33,7 @@
     });
 
     // Set our tabs
-    const tabs = ["ICON.Narrative", "ICON.Traits-Relics", "ICON.AbilitiesTrophies", "ICON.Attributes"].map((s) => ({
+    const tabs = ["ICON.Narrative", "ICON.Combat", "ICON.Attributes"].map((s) => ({
         label: localize(s),
         key: s,
     }));
@@ -39,7 +45,7 @@
     }
 
     function allowDrop(drop) {
-        return drop.type == "Item" && ["bond_power", "trait", "job"].includes(drop.document.type);
+        return drop.type == "Item" && ["bond_power", "trait", "job", "ability"].includes(drop.document.type);
     }
 </script>
 
@@ -70,18 +76,17 @@
             <span>{localize("ICON.Level")}: </span>
             <input type="number" use:updateDoc={{ doc, path: "system.level" }} />
         </div>
-        <div style="grid-area: stats" class="flexrow">
-            <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
-            <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
+
+        <div style="grid-area: tabs">
+            <!-- Sheet Tab Navigation -->
+            <Tabs {tabs} horizontal={false} bind:selected={selected_tab} />
         </div>
     </header>
 
-    <!-- Sheet Tab Navigation -->
-    <Tabs {tabs} bind:selected={selected_tab} />
 
     <!-- Sheet Body -->
-    <section class="sheet-body">
-        {#if selected_tab == "ICON.Narrative"}
+    {#if selected_tab == "ICON.Narrative"}
+        <section class="sheet-body narrative">
             <!-- Narrative Tab -->
             <div class="narrative-grid">
                 <div class="leftcol">
@@ -89,6 +94,11 @@
                         {#each Object.keys($actor.system.actions) as action_name}
                             <ActionRating path={`system.actions.${action_name}`} />
                         {/each}
+                    </div>
+                    <div class="bond">
+                        <h2>The Wolf</h2>
+                        <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
+                        <span>Second wind: foobar</span>
                     </div>
                 </div>
                 <div class="midcol">
@@ -115,30 +125,17 @@
                     </div>
                 </div>
             </div>
-        {:else if selected_tab === "ICON.Traits-Relics"}
-            <!-- Traits & Relics Tab -->
-            <div>
-                <div class="traitsrelics">
-                    <div class="traitheader">
-                        <span>Traits</span>
-                    </div>
-
-                    <!-- Abilities & Trophies Tab -->
-                    <div class="tab items" actor-group="primary" actor-tab="items">
-                        <div class="CombatBar">
-                            <div class="Personal Resolve">
-                                <span>Personal Resolve</span>
-                                <span>Wounds</span>
-                                <span>Abilities</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {:else}
-            <span>Tab does not exist</span>
-        {/if}
-    </section>
+        </section>
+    {:else if selected_tab === "ICON.Combat"}
+        <section class="sheet-body combat">
+            <span>Wounds</span>
+            <span>Resolve</span>
+            <span>Aether</span>
+            <CombatHud abilities={[...$abilities]} traits={[...$traits]} />
+        </section>
+    {:else}
+        <span>Tab does not exist</span>
+    {/if}
 </main>
 
 <style lang="scss">
@@ -152,10 +149,9 @@
         flex: 0 1 auto;
         display: grid;
         grid-template:
-            "pic    char_name   player_name" 30px
-            "pic    narr        comb" 80px
-            "pic    stats       stats" 1fr / 120px 1fr 1fr;
-        gap: 10px;
+            "pic    char_name   player_name tabs" 30px
+            "pic    narr        comb        tabs" 80px / 110px 1fr 1fr 1fr;
+        gap: 5px;
         padding: 10px;
 
         .header-information {
@@ -165,6 +161,12 @@
     }
 
     .sheet-body {
+        padding: 5px;
+        flex: 1 0 auto;
+        max-height: calc(100% - 150px);
+    }
+
+    .narrative {
         .narrative-grid {
             display: grid;
             grid-template: 1fr / 180px 1fr 180px;
@@ -196,6 +198,12 @@
         }
         .ambitions {
             grid-area: ambitions;
+        }
+
+        .bond {
+            h2 {
+                text-align: center;
+            }
         }
     }
 </style>

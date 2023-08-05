@@ -24,8 +24,6 @@
         flex-direction: column;
         flex-wrap: nowrap;
         justify-content: flex-start;
-        background-color: var(--tab-background);
-        margin: 5px;
         min-height: max-content;
         align-items: center;
     }
@@ -37,7 +35,8 @@
     .icon-tab {
         clip-path: var(--inset-box-clip);
         margin: 5px;
-        padding: 10px;
+        padding: 5px;
+        text-align: center;
         width: calc(100% - 20px);
         cursor: pointer;
 

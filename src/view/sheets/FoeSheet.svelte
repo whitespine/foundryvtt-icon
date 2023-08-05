@@ -119,7 +119,7 @@
             "pic    foe_name    foe_template    tabs" 30px
             "pic    foe_faction foe_class       tabs" 30px
             "pic    stats       stats           tabs" 30px / 120px 1fr 1fr 120px;
-        gap: 10px;
+        gap: 5px;
         padding: 10px;
         align-items: center;
         text-align: center;
