@@ -1,4 +1,5 @@
 <script>
+    import { getContext } from "svelte";
     import { fullProcess } from "../../../util/nlp";
     import TokenRenderer from "./TokenSequence.svelte";
 
@@ -8,8 +9,12 @@
     /** Key if we are being persistent */
     export let key;
 
+    export let actor = getContext("actor");
+
     // Our eventual value post processing
-    const init = fullProcess(body, {});
+    const init = fullProcess(body, {
+        actor
+    });
 </script>
 
 <TokenRenderer initial_tokens={init} key={key} />

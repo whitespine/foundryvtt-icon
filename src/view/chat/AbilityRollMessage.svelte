@@ -26,8 +26,9 @@
     export let choice_index;
 
     // Deduce the item
-    let item;
-    $: item = fromUuidSync(ability_uuid);
+    let item = fromUuidSync(ability_uuid);
+
+    if(item?.actor) setContext("actor", item.actor);
 
     // Defaults for our tokens etc
     let attack_roll_tokens;

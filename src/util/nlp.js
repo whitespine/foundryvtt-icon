@@ -132,6 +132,10 @@ export function setupTransformers() {
         })]
     ));
 
+    StaticTransformers.push(new Transformer(
+        /(\[name\])/ig,
+        (ctx) => [ctx.actor?.name ?? "[name]"]
+    ));
 }
 export const StaticTransformers = [];
 

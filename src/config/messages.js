@@ -13,10 +13,12 @@ export class SvelteChatLog extends ChatLog {
             let flagData = msg.getFlag(game.system.id, 'data');
             flagData = foundry.utils.duplicate(flagData);
             delete flagData["type"];
+            const tokens = flagData.tokens;
+            delete flagData["tokens"];
             msg._svelteComponent.$$set(flagData);
 
             // Update token stores
-            TOKEN_STORES.get(msg.id).set(flagData.tokens ?? {});
+            TOKEN_STORES.get(msg.id).set(tokens ?? {});
         } else {
             super.updateMessage(msg, notify);
         }
@@ -37,7 +39,9 @@ export function setupMessages() {
             // Fixup flag data
             flagData = foundry.utils.duplicate(flagData);
             const type = flagData.type;
+            const tokens = flagData.tokens;
             delete flagData["type"];
+            delete flagData["tokens"];
 
             // Form props and target
             const props = { msg, ...flagData };
@@ -51,7 +55,7 @@ export function setupMessages() {
             }
 
             // Update token stores
-            TOKEN_STORES.get(msg.id).set(flagData.tokens ?? {});
+            TOKEN_STORES.get(msg.id).set(tokens ?? {});
 
             // Scroll chat log to bottom.
             ui.chat.scrollBottom();
