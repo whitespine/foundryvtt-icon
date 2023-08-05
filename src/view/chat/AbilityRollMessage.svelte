@@ -1,6 +1,7 @@
 <!-- Super simple Svelte component that takes in a prop and outputs it. -->
 <script>
     import { setContext } from "svelte";
+    import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
     import { Token } from "../../util/nlp";
     import TokenSequence from "../components/generic/TokenSequence.svelte";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
@@ -28,14 +29,11 @@
     // Deduce the item
     let item = fromUuidSync(ability_uuid);
 
-    if(item?.actor) setContext("actor", item.actor);
+    if (item?.actor) setContext("tjs_actor", new TJSDocument(item.actor));
 
     // Defaults for our tokens etc
     let attack_roll_tokens;
-    $: attack_roll_tokens = [
-        new Token({ text: "Hit: " }),
-        new Token({ formula: "1d20" })
-    ];
+    $: attack_roll_tokens = [new Token({ text: "Hit: " }), new Token({ formula: "1d20" })];
 </script>
 
 <div class="icon flexcol">
