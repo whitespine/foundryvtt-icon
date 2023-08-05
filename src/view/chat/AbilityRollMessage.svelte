@@ -3,6 +3,7 @@
     import { setContext } from "svelte";
     import { Token } from "../../util/nlp";
     import TokenSequence from "../components/generic/TokenSequence.svelte";
+    import AbilityDetail from "../components/combat/AbilityDetail.svelte";
 
     // import { fly, fade } from "svelte/transition";
 
@@ -13,16 +14,16 @@
     setContext("message", msg);
 
     /**
-     * The ability's UUID, or null
+     * The ability's UUID
      * @type {string}
      */
     export let ability_uuid;
 
     /**
-     * Any editable token sequences embedded in this roll
-     * @type {Record<string, Token>[]}
+     * The ability's choice index, or 0
+     * @type {number}
      */
-    export let tokens;
+    export let choice_index;
 
     // Deduce the item
     let item;
@@ -30,7 +31,7 @@
 
     // Defaults for our tokens etc
     let attack_roll_tokens;
-    $: attack_roll_tokens = tokens.to_hit?.map(t => new Token(t))  ?? [
+    $: attack_roll_tokens = [
         new Token({
             children: [
                 {
@@ -47,7 +48,13 @@
 <div class="icon flexcol">
     <h3>{item.name}</h3>
     {#if true}
-        <TokenSequence tokens={attack_roll_tokens} unique_id="to_hit" />
+        <TokenSequence initial_tokens={attack_roll_tokens} key={`${msg.id}_to_hit`} />
+    {/if}
+
+    {#if choice_index < item.system.choices.length}
+        <AbilityDetail choice={item.system.choices[choice_index]} key={`${msg.id}_body`} />
+    {:else}
+        <span>Error: Ability choice could not be resolved</span>
     {/if}
     <!--<TokenSequence tokens={tokens.body || item.} unique_id="body" />-->
 </div>

@@ -4,6 +4,9 @@
 
     // An ability choice
     export let choice;
+
+    // For token persistence
+    export let key;
 </script>
 
 <div>
@@ -35,10 +38,10 @@
         {/if}
     </span>
     <span>
-        <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} />
+        <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} key={`${key}_tags`} />
     </span>
     {#each choice.effects as effect}
-        <RichTextDisplay body={effect} />
+        <RichTextDisplay body={effect} key={`${key}_body`} />
     {/each}
     {#each choice.ability.system.summons as summon}
         <span>Summon: <SummonDetail uuid={summon} /></span>

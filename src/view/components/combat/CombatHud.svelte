@@ -6,6 +6,8 @@
 
     let actor = getContext("tjs_actor");
 
+    let unique_prefix = getContext("unique_prefix");
+
     // Props
     export let abilities = [];
     export let traits = [];
@@ -57,7 +59,7 @@
     </div>
 
     <div class="preview">
-        <AbilityDisplay selection={selected} />
+        <AbilityDisplay selection={selected} key={`${unique_prefix}_${selectedItem?.id}`} />
     </div>
 
     <div class="statuses">

@@ -2,22 +2,33 @@
     import { getContext } from "svelte";
     import { Token } from "../../../util/nlp";
     import TokenRenderer from "./TokenRenderer.svelte";
+    import { TOKEN_STORES } from "../../../util/stores";
 
-    /** @type {Token[]} Parses out to our token sequence to render*/
-    export let tokens;
+    /** @type {Token[] | (() => Token[])} Our default token sequence if we do not recover any from token store */
+    export let initial_tokens;
 
-    $: console.log(tokens);
-
-    /** Used for saving changes to tokens */
-    export let unique_id = null;
+    /** Used for saving changes to tokens. We do not react to changes of it */
+    export let key;
 
     /** Likewise */
     let msg = getContext("message");
 
+    /** Used for allowing updates / initialization from persistent token store */
+    let token_store = TOKEN_STORES.get(key);
+
+    // Create our update loop thingy
+    let tokens;
+    $: {
+        if($token_store) {
+            tokens = $token_store;
+        } else {
+            tokens = typeof initial_tokens === "function" ? initial_tokens() : initial_tokens;
+        }
+    }
+
+    // Creates a new top level token. Purely a UI event.
     function addSibling(evt, i) {
-        console.log("c", i);
         tokens = [...tokens.slice(0, i + 1), new Token(evt.detail), ...tokens.slice(i + 1)];
-        console.log(tokens);
     }
 
 
@@ -25,13 +36,12 @@
      * If in a message & have a unique id, persists data changes to the DB
      * @param evt Event to handle
      */
-    function saveMessageTokens() {
-        if (!unique_id) console.log("Not persisting change to unique idless TokenSequence");
+    function saveTokens() {
+        if (!key) console.log("Not persisting change to keyless TokenSequence");
         if (!msg) console.log("Not persisting change to messageless TokenSequence");
 
-        console.log("Updating message");
         let token_data = tokens.map(t => t.toObject());
-        msg.update({ [`flags.${game.system.id}.data.tokens.${unique_id}`]: token_data });
+        msg.update({ [`flags.${game.system.id}.data.tokens.${key}`]: token_data });
     }
 </script>
 
@@ -41,7 +51,7 @@
             <TokenRenderer
                 {token}
                 on:addsibling={(evt) => addSibling(evt, i)}
-                on:savetokens={saveMessageTokens}
+                on:savetokens={saveTokens}
             />
         {/each}
     {:else}

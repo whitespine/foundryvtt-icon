@@ -5,7 +5,8 @@
     import AbilityDetail from "./AbilityDetail.svelte";
     import { tooltip } from "@svelte-plugins/tooltips";
 
-    let actor = getContext("tjs_actor");
+    // Needed for token elements
+    export let key;
 
     // Either an ability choice or a trait
     export let selection;
@@ -18,7 +19,7 @@
                 [`flags.${game.system.id}.data`]: {
                     type: "ability",
                     ability_uuid: selectedItem.uuid,
-                    tokens: {}
+                    choice_index: selection.ability ? selection.ability.system.choices.indexOf(selection) : 0,
                 },
             });
         } else {
@@ -49,10 +50,10 @@
     {#if !selection}
         <h3>Select an ability</h3>
     {:else if selection.ability}
-        <AbilityDetail choice={selection} />
+        <AbilityDetail choice={selection} key={`${key}_ability`} />
     {:else if selection.type === "trait"}
         <h3>{selection.name}</h3>
-        <RichTextDisplay body={selection.system.description} />
+        <RichTextDisplay body={selection.system.description} key={`${key}_trait`} />
     {:else}
         <span>ERROR</span>
     {/if}

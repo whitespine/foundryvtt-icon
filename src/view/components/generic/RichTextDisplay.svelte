@@ -5,9 +5,12 @@
     /** @type {string} Raw text to show */
     export let body;
 
+    /** Key if we are being persistent */
+    export let key;
+
     // Our eventual value post processing
-    export let tokens = [];
-    $: tokens = fullProcess(body, {}) ;
+    // const init = () => fullProcess(body, {});
+    const init = fullProcess(body, {});
 </script>
 
-<TokenRenderer tokens={tokens} />
+<TokenRenderer initial_tokens={init} key={key} />

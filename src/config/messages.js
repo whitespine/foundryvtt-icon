@@ -1,5 +1,7 @@
 // Sets up our svelte messages
 
+import { Token } from "../util/nlp";
+import { TOKEN_STORES } from "../util/stores";
 import AbilityRollMessage from "../view/chat/AbilityRollMessage.svelte";
 import NarrativeRollMessage from "../view/chat/NarrativeRollMessage.svelte";
 
@@ -12,6 +14,11 @@ export class SvelteChatLog extends ChatLog {
             flagData = foundry.utils.duplicate(flagData);
             delete flagData["type"];
             message._svelteComponent.$$set(flagData);
+
+            // Update token stores
+            for(let [k, v] of Object.entries(flagData.tokens || {})) {
+                TOKEN_STORES.get(k).set(v.map(t => new Token(t)));
+            }
         } else {
             super.updateMessage(message, notify);
         }
@@ -43,6 +50,11 @@ export function setupMessages() {
                 msg._svelteComponent = new AbilityRollMessage({ target, props });
             } else if (type == "narrative") {
                 msg._svelteComponent = new NarrativeRollMessage({ target, props })
+            }
+
+            // Update token stores
+            for(let [k, v] of Object.entries(flagData.tokens || {})) {
+                TOKEN_STORES.get(k).set(v.map(t => new Token(t)));
             }
 
             // Scroll chat log to bottom.

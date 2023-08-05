@@ -159,6 +159,5 @@ export function fullProcess(text, context) {
         arr = newArr;
     }
     arr = arr.map(text => typeof text === "string" ? new Token({ text }) : text);
-    console.log(arr);
     return arr;
 }
