@@ -30,10 +30,18 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <input style="grid-area: ability_name" type="text" use:updateDoc={{ doc, path: "name" }} />
-        <input style="grid-area: chapter" type="text" use:updateDoc={{ doc, path: "system.chapter" }} />
-        <div class="flexrow" style="grid-area: tabs">
-            <Tabs horizontal={true} tabs={tab_choices} bind:selected={selected_tab} />
+        <div style="grid-area: ability_name">
+            <label for="name">Name:</label>
+            <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
+        </div>
+        <div style="grid-area: options">
+            <label for="chapter">Chapter:</label>
+            <input type="text" use:updateDoc={{ doc, path: "system.chapter" }} />
+        </div>
+        <div class="option-select" style="grid-area: tabs">
+            <div>
+                <Tabs horizontal={true} tabs={tab_choices} bind:selected={selected_tab} />
+            </div>
             <i class="add-choice fas fa-plus" on:click={() => addChoice()} />
         </div>
     </header>
@@ -94,13 +102,30 @@
         flex-direction: column;
     }
 
+    header {
+        display: grid;
+        grid-template:
+            "pic ability_name options" 60px
+            "pic tabs tabs" 60px / 80px 1fr 1fr;
+    }
+
     .sheet-body {
         padding: 5px;
         flex: 1 0 auto;
         max-height: calc(100% - 140px);
     }
 
-    .add-choice {
-        cursor: pointer;
+    .option-select {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        div {
+            flex: 1 0 auto;
+        }
+        i {
+            margin-left: auto;
+            margin-right: 16px;
+            cursor: pointer;
+        }
     }
 </style>
