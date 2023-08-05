@@ -175,17 +175,27 @@ export const StaticTransformers = [];
 export function fullProcess(text, context) {
     let arr = [text];
     for (let transformer of StaticTransformers) {
-        let newArr = [];
+        let new_arr = [];
         for (let item of arr) {
             if (typeof item === "string") {
                 // Transform any strings
-                newArr.push(...transformer.splitApply(context, item, false));
+                let processed = transformer.splitApply(context, item, false);
+
+                // Push each of them, or just concat to existing string if both strings
+                for(let new_item of processed) {
+                    let tail = new_arr[new_arr.length - 1];
+                    if(typeof new_item == "string" && typeof tail == "string") {
+                        new_arr[new_arr.length - 1] = tail + new_item;
+                    } else {
+                        new_arr.push(new_item);
+                    }
+                }
             } else {
                 // Keep other items as is
-                newArr.push(item);
+                new_arr.push(item);
             }
         }
-        arr = newArr;
+        arr = new_arr;
     }
     arr = arr.map(text => typeof text === "string" ? new Token({ text }) : text);
     return arr;
