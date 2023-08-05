@@ -9,7 +9,6 @@
     export let key;
 
     // Our eventual value post processing
-    // const init = () => fullProcess(body, {});
     const init = fullProcess(body, {});
 </script>
 

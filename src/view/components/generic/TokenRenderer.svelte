@@ -3,6 +3,7 @@
     import { tooltip } from "@svelte-plugins/tooltips";
     import SmallRoll from "./dice/SmallRoll.svelte";
     import { createEventDispatcher } from "svelte";
+    import { TJSDialog } from "#runtime/svelte/application";
 
     /** @type {Token} Our specific token */
     export let token;
@@ -14,14 +15,26 @@
 
     const dispatch = createEventDispatcher();
 
-    /** We can be configured to request a roll! */
+    /** If configured with a formula, request a roll and add it as a token. */
     async function requestRoll() {
         let roll = new Roll(token.formula);
         await roll.roll();
-        dispatch("addsibling", { 
-            roll: roll.toJSON() 
+        dispatch("addsibling", {
+            roll: roll.toJSON(),
         });
         dispatch("savetokens");
+    }
+
+    /** Summon a full tooltip */
+    function summonDescription() {
+        console.log("hey");
+        /*
+         */
+        new TJSDialog({
+            content: token.tooltip,
+            modal: true,
+        }).render(true, { focus: true });
+        // TJSDialog.prompt({ content: token.tooltip });
     }
 </script>
 
@@ -36,7 +49,7 @@
     <span class="formula" on:click={requestRoll}>{token.text || token.formula}</span>
 {:else if token.text}
     {#if token.tooltip}
-        <span use:tooltip={{ content: token.tooltip }}><b>{token.text}</b></span>
+        <span use:tooltip={{ content: token.tooltip }} on:click={summonDescription}><b>{token.text}</b></span>
     {:else}
         {token.text}
     {/if}
