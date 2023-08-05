@@ -124,9 +124,9 @@ export function setupTransformers() {
         /(fray)/g,
         (ctx) => {
             if (ctx.actor) {
-                return [ctx.actor.system.fray_damage];
+                return [ctx.actor.system.fray_damage.toString()];
             } else {
-                return ["fray"];
+                return ["gay"];
             }
         }
     ));

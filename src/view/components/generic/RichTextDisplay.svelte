@@ -9,11 +9,11 @@
     /** Key if we are being persistent */
     export let key;
 
-    export let actor = getContext("actor");
+    export let actor = getContext("tjs_actor");
 
     // Our eventual value post processing
     let init;
-    $: init = fullProcess(body, { actor });
+    $: init = fullProcess(body, { actor: $actor });
 </script>
 
 <TokenRenderer initial_tokens={init} key={key} />

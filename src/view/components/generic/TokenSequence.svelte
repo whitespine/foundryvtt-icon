@@ -19,8 +19,8 @@
     // Create our update loop thingy
     let tokens;
     $: {
-        if($token_store[key]) {
-            tokens = $token_store[key].map(t => new Token(t));
+        if ($token_store[key]) {
+            tokens = $token_store[key].map((t) => new Token(t));
         } else {
             tokens = typeof initial_tokens === "function" ? initial_tokens() : initial_tokens;
         }
@@ -31,7 +31,6 @@
         tokens = [...tokens.slice(0, i + 1), new Token(evt.detail), ...tokens.slice(i + 1)];
     }
 
-
     /**
      * If in a message & have a unique id, persists data changes to the DB
      * @param evt Event to handle
@@ -40,21 +39,13 @@
         if (!key) return console.log("Not persisting change to keyless TokenSequence");
         if (!msg) return console.log("Not persisting change to messageless TokenSequence");
 
-        let token_data = tokens.map(t => t.toObject());
+        let token_data = tokens.map((t) => t.toObject());
         msg.update({ [`flags.${game.system.id}.data.tokens.${key}`]: token_data });
     }
 </script>
 
 <div>
-    {#if tokens?.length}
-        {#each tokens || [] as token, i}
-            <TokenRenderer
-                {token}
-                on:addsibling={(evt) => addSibling(evt, i)}
-                on:savetokens={saveTokens}
-            />
-        {/each}
-    {:else}
-        Token error
-    {/if}
+    {#each tokens || [] as token, i}
+        <TokenRenderer {token} on:addsibling={(evt) => addSibling(evt, i)} on:savetokens={saveTokens} />
+    {/each}
 </div>
