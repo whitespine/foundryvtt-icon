@@ -4,6 +4,8 @@
  * @property {IconActor} [actor] The relevant actor
  */
 
+import { localize } from "./misc";
+
 
 
 class Transformer {
@@ -154,6 +156,7 @@ export function setupTransformers() {
         /(Gamble)/ig,
         (ctx) => [new Token({
             text: "Gamble",
+            tooltip: localize("ICON.Glossary.Gamble"),
             formula: "1d6"
         })]
     ));
