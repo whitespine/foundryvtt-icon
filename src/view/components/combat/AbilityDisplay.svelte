@@ -1,6 +1,6 @@
 <script>
     import { getContext } from "svelte";
-    import HydratedEffectBlock from "../generic/HydratedEffectBlock.svelte";
+    import RichTextDisplay from "../generic/RichTextDisplay.svelte";
     import { IconItem } from "../../../documents/item";
     import AbilityDetail from "./AbilityDetail.svelte";
     import { tooltip } from "@svelte-plugins/tooltips";
@@ -16,8 +16,16 @@
     let selectedItem = null;
     $: selectedItem = selection ? (selection instanceof IconItem ? selection : selection.ability) : null;
 
-    function postSelected() {
-        console.log("Do u even post");
+    async function postSelected() {
+        let roll = new Roll(formula());
+        await roll.roll();
+        await ChatMessage.create({
+            [`flags.${game.system.id}.data`]: {
+                type: "ability",
+                actor_uuid:actor.uuid,
+                roll_data: roll.toJSON(),
+            },
+        });
     }
 
     function editSelected() {
@@ -44,7 +52,7 @@
         <AbilityDetail choice={selection} />
     {:else if selection.type === "trait"}
         <h3>{selection.name}</h3>
-        <HydratedEffectBlock body={selection.system.description} />
+        <RichTextDisplay body={selection.system.description} />
     {:else}
         <span>ERROR</span>
     {/if}

@@ -24,7 +24,7 @@
         data-uuid={uuid}
         draggable="true"
         on:click={() => openSheet(refActor)}
-        on:dragstart={(e) => setDragData(summon, e)}
+        on:dragstart={(e) => setDragData(refActor, e)}
     >
         {refActor.name}
     </span>

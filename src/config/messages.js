@@ -1,7 +1,22 @@
 // Sets up our svelte messages
 
-import AttackRollMessage from "../view/chat/AttackRollMessage.svelte";
+import AbilityRollMessage from "../view/chat/AbilityRollMessage.svelte";
 import NarrativeRollMessage from "../view/chat/NarrativeRollMessage.svelte";
+
+export class SvelteChatLog extends ChatLog {
+    // Alter update behavior so it updates props instead
+    updateMessage(message, notify=false) {
+        if(message._svelteComponent) {
+            // Get probably updated flags, and send them to the message svelte component
+            let flagData = message.getFlag(game.system.id, 'data');
+            flagData = foundry.utils.duplicate(flagData);
+            delete flagData["type"];
+            message._svelteComponent.$$set(flagData);
+        } else {
+            super.updateMessage(message, notify);
+        }
+    }
+}
 
 /**
  *
@@ -25,11 +40,15 @@ export function setupMessages() {
 
             // Add the svelte component to the message instance loaded in client side memory.
             if (type === "attack") {
-                msg._svelteComponent = new AttackRollMessage({ target, props });
+                msg._svelteComponent = new AbilityRollMessage({ target, props });
             } else if (type == "narrative") {
                 msg._svelteComponent = new NarrativeRollMessage({ target, props })
             }
+
+            // Scroll chat log to bottom.
+            ui.chat.scrollBottom();
         }
+
     };
 
     // Create a svelte component when rendering new chat components
@@ -54,6 +73,4 @@ export function setupMessages() {
         }
     });
 
-    // Scroll chat log to bottom.
-    ui.chat.scrollBottom();
 }

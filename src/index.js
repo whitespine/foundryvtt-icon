@@ -11,7 +11,7 @@ import { applyGlobalDragListeners } from './util/dragdrop.js';
 import BasicApplication from './view/apps/BasicApplication.js';
 
 import "./icon.scss";
-import { setupMessages } from './config/messages.js';
+import { SvelteChatLog, setupMessages } from './config/messages.js';
 import { setupTransformers } from './util/nlp.js';
 
 // Import sliding HUD (used for accuracy/difficulty windows)
@@ -20,7 +20,7 @@ import { setupTransformers } from './util/nlp.js';
 /* ------------------------------------ */
 /* Initialize system                    */
 /* ------------------------------------ */
-Hooks.once("init", async () => {
+Hooks.once("init", () => {
     console.log(`Initializing ICON RPG System`);
 
     // Register custom system settings
@@ -30,6 +30,8 @@ Hooks.once("init", async () => {
     setupSettings();
 
     // Assign custom classes and constants here
+    CONFIG.ui.chat = SvelteChatLog;
+
     // Create an Icon namespace within the game global
     game.icon = {
         applications: {

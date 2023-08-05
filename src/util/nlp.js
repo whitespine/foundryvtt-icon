@@ -11,15 +11,15 @@ class Transformer {
      * in a body of text into an arbitrary other sequence of data.
      * 
      * @param {RegExp} regex 
-     * @param {((ctx: TransformContext, groups: string[]) => Array<any>)} func Our split-handler
+     * @param {((ctx: TransformContext, groups: string[]) => Array<string | Token>)} splitter Our split-handler
      */
-    constructor(regex, func) {
+    constructor(regex, splitter) {
         this.regex = regex;
         this.num_groups = (new RegExp(regex.toString() + '|')).exec('').length - 1;
-        if(this.num_groups < 1) {
+        if (this.num_groups < 1) {
             throw new TypeError("Transforms must at least have one capturing group");
         }
-        this.func = func;
+        this.splitter = splitter;
     }
 
     /**
@@ -40,7 +40,7 @@ class Transformer {
             // If there is more to grab, then apply func and splat that into the array
             if (base + this.num_groups < split.length) {
                 let s = split.slice(base + 1, base + this.num_groups + 1);
-                let applied = this.func(context, s);
+                let applied = this.splitter(context, s);
                 result.push(...applied);
             }
         }
@@ -48,25 +48,50 @@ class Transformer {
     }
 }
 
+
+/**
+ * @typedef {object} TransformContext
+ * @property {string} [options.text] The base text
+ * @property {string} [options.tooltip] What shows on hover
+ * @property {object} [options.dragdata] What should be dragged, if anything
+ * @property {object} [options.roll] A JSON serialized roll
+ * @property {object[]} [options.children] Child tokens to create
+ */
+
 export class Token {
     /**
-     * @param {string} text The base text
-     * @param {string} tooltip What shows on hover
-     * @param {object} dragdata What should be dragged, if anything
+     * @param {TransformContext} options 
      */
-    constructor(text, {
-        tooltip,
-        dragdata
-    } = {}) {
-        this.text = text;
-        this.tooltip = tooltip;
-        this.dragdata = dragdata
+    constructor(options = {}) {
+        this.text = options.text;
+        this.tooltip = options.tooltip;
+        this.dragdata = options.dragdata;
+        this.children = options.children?.map(t => new Token(t));
+        this.roll = options.roll ? Roll.fromData(options.roll) : undefined;
     }
 
+    /** 
+     * Back into an object 
+     * 
+     * @returns {TransformContext}
+     **/
+    toObject() {
+        return {
+            text: this.text,
+            tooltip: this.tooltip,
+            dragdata: this.dragdata,
+            children: this.children?.map(t => t.toObject()),
+            roll: this.roll?.toJSON()
+        }
+    }
+
+    /** 
+     * Tokenizes everything matching keyword with a fixed slice of data
+     */
     static simpleTransformer(keyword, data) {
         return new Transformer(
             new RegExp(`(${keyword})`, "i"),
-            (_c, [base]) => [new Token(base, data)]
+            (_c, [text]) => [new Token({ text, ...data })]
         );
     }
 }
@@ -84,22 +109,30 @@ export function setupTransformers() {
     for (let [k, v] of generic) {
         // Separate camel case for the keys
         let pattern = k.replaceAll(/([a-z])([A-Z])/g, "$1 $2")
-        const exclusions = [];
-        if(exclusions.includes(k)) continue;
-        AllTransformers.push(Token.simpleTransformer(pattern, {tooltip: v}));
+        let t = Token.simpleTransformer(pattern, { tooltip: v })
+        StaticTransformers.push(t);
+
+        const exclusions = ["Fray"];
+        if (!exclusions.includes(k)) {
+            MessageTransformers.push(t);
+        }
     }
 
     // And some more specific ones
-    AllTransformers.push(new Transformer(
+    StaticTransformers.push(new Transformer(
         /(\[D\])/g,
         (ctx) => [ctx.actor?.system?.damage_die ? `${ctx.actor.system.damage_die}D` : "[D]"]
     ));
-    AllTransformers.push(new Transformer(
-        /(fray)/g,
+
+
+    MessageTransformers.push(new Transformer(
+        /(fray|\s+|\[D\]|\+|\d+)+/g,
         (ctx) => [ctx.actor?.system?.fray_damage ?? "fray"]
     ));
+
 }
-export const AllTransformers = [];
+export const StaticTransformers = [];
+export const MessageTransformers = [];
 
 
 /**
@@ -110,7 +143,7 @@ export const AllTransformers = [];
  */
 export function fullProcess(text, context) {
     let arr = [text];
-    for (let transformer of AllTransformers) {
+    for (let transformer of StaticTransformers) {
         let newArr = [];
         for (let item of arr) {
             if (typeof item === "string") {

@@ -93,32 +93,6 @@
         flex-direction: column;
     }
 
-    header {
-        flex: 0 1 auto;
-        display: grid;
-        grid-template:
-            "pic  ability_name  chapter" 30px
-            "pic  tabs          tabs" 90px / 120px 1fr 1fr;
-        gap: 10px;
-        padding: 10px;
-        align-items: center;
-        text-align: center;
-
-        .stats {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-
-            span {
-                padding-right: 3px;
-                padding-left: 3px;
-                &:not(:last-child) {
-                    border-right: var(--primary-border);
-                }
-            }
-        }
-    }
-
     .sheet-body {
         padding: 5px;
         flex: 1 0 auto;

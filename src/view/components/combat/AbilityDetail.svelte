@@ -1,5 +1,5 @@
 <script>
-    import HydratedEffectBlock from "../generic/HydratedEffectBlock.svelte";
+    import RichTextDisplay from "../generic/RichTextDisplay.svelte";
     import SummonDetail from "./ActorUUIDReference.svelte";
 
     // An ability choice
@@ -35,10 +35,10 @@
         {/if}
     </span>
     <span>
-        <HydratedEffectBlock body={[...choice.ranges, ...choice.tags].join(", ")} />
+        <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} />
     </span>
     {#each choice.effects as effect}
-        <HydratedEffectBlock body={effect} />
+        <RichTextDisplay body={effect} />
     {/each}
     {#each choice.ability.system.summons as summon}
         <span>Summon: <SummonDetail uuid={summon} /></span>
