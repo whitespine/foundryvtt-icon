@@ -12,7 +12,15 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <input style="grid-area: summon_name" type="text" use:updateDoc={{ doc, path: "name" }} />
+
+        <div style="grid-area: options">
+            <label for="object">Object?:</label>
+            <input name="object" type="checkbox" use:updateDoc={{ doc, path: `system.is_object` }} />
+        </div>
+        <div style="grid-area: summon_name">
+            <label for="name">Name:</label>
+            <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
+        </div>
     </header>
 
     <!-- Sheet Tab Navigation -->
@@ -20,8 +28,6 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         <div class="flexcol">
-            <label for="object">Object?:</label>
-            <input name="object" type="checkbox" use:updateDoc={{ doc, path: `system.is_object` }} />
 
             <label for="effects">Summon Effects:</label>
             <textarea use:updateDoc={{ doc, path: "system.summon_effects" }} rows="10" />
@@ -40,6 +46,11 @@
         overflow: auto;
         display: flex;
         flex-direction: column;
+    }
+
+    header {
+        display: grid;
+        grid-template: "pic options summon_name" 90px / 90px 1fr 1fr;
     }
 
     .sheet-body {
