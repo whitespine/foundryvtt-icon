@@ -3,11 +3,16 @@
     import { Token } from "../../../util/nlp";
     import TokenRenderer from "./TokenRenderer.svelte";
 
-    /** @type {Token[]} Our token sequence to render */
+    /** @type {Token[]} Parses out to our token sequence to render*/
     export let tokens;
+
+    $: console.log(tokens);
 
     /** Used for saving changes to tokens */
     export let unique_id = null;
+
+    /** Likewise */
+    let msg = getContext("message");
 
     function addSibling(evt, i) {
         console.log("c", i);
@@ -15,16 +20,18 @@
         console.log(tokens);
     }
 
+
     /**
      * If in a message & have a unique id, persists data changes to the DB
      * @param evt Event to handle
      */
-    function saveMessageTokens(evt) {
+    function saveMessageTokens() {
         if (!unique_id) console.log("Not persisting change to unique idless TokenSequence");
-        let msg = getContext("message");
         if (!msg) console.log("Not persisting change to messageless TokenSequence");
 
-        msg.update({ [`flags.${game.system.id}.data.tokens.${unique_id}`]: evt.detail });
+        console.log("Updating message");
+        let token_data = tokens.map(t => t.toObject());
+        msg.update({ [`flags.${game.system.id}.data.tokens.${unique_id}`]: token_data });
     }
 </script>
 

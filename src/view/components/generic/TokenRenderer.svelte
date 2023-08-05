@@ -21,20 +21,14 @@
         dispatch("addsibling", { 
             roll: roll.toJSON() 
         });
-        console.log("A");
-    }
-
-    function sayHello() {
-        dispatch("message", {
-            text: "Hello!",
-        });
+        dispatch("savetokens");
     }
 </script>
 
 {#if token.children}
     <!-- Nothing special for children-->
     {#each token.children as child}
-        <svelte:self token={child} on:addsibling={handleAddSibling} />
+        <svelte:self token={child} on:addsibling={handleAddSibling} on:savetokens />
     {/each}
 {:else if token.roll}
     <SmallRoll roll={token.roll} />

@@ -1,5 +1,6 @@
 <!-- Super simple Svelte component that takes in a prop and outputs it. -->
 <script>
+    import { setContext } from "svelte";
     import { Token } from "../../util/nlp";
     import TokenSequence from "../components/generic/TokenSequence.svelte";
 
@@ -8,6 +9,8 @@
     /** @type {ChatMessage} */
     // svelte-ignore unused-export-let
     export let msg;
+
+    setContext("message", msg);
 
     /**
      * The ability's UUID, or null
@@ -26,7 +29,8 @@
     $: item = fromUuidSync(ability_uuid);
 
     // Defaults for our tokens etc
-    let default_attack_roll_token = [
+    let attack_roll_tokens;
+    $: attack_roll_tokens = tokens.to_hit?.map(t => new Token(t))  ?? [
         new Token({
             children: [
                 {
@@ -43,7 +47,7 @@
 <div class="icon flexcol">
     <h3>{item.name}</h3>
     {#if true}
-        <TokenSequence tokens={tokens.to_hit || default_attack_roll_token} unique_id="to_hit" />
+        <TokenSequence tokens={attack_roll_tokens} unique_id="to_hit" />
     {/if}
     <!--<TokenSequence tokens={tokens.body || item.} unique_id="body" />-->
 </div>
