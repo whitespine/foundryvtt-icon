@@ -4,7 +4,6 @@
     import SmallRoll from "./dice/SmallRoll.svelte";
     import { createEventDispatcher } from "svelte";
     import { TJSDialog } from "#runtime/svelte/application";
-    import { slide } from 'svelte/transition';
 
 
     /** @type {Token} Our specific token */
@@ -41,7 +40,7 @@
     }
 </script>
 
-<span class:container={token.children} transition:slide>
+<span class:inline-container={token.children}>
     {#if token.roll}
         <SmallRoll roll={token.roll} />
     {:else if token.formula}
@@ -70,10 +69,4 @@
         cursor: pointer;
     }
 
-    .container {
-        border-radius: 5px;
-        line-height: 1.5em;
-        padding: 2px;
-        border: var(--primary-border);
-    }
 </style>

@@ -12,9 +12,8 @@
     export let actor = getContext("actor");
 
     // Our eventual value post processing
-    const init = fullProcess(body, {
-        actor
-    });
+    let init;
+    $: init = fullProcess(body, { actor });
 </script>
 
 <TokenRenderer initial_tokens={init} key={key} />

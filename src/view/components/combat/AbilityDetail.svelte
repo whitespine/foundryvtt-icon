@@ -1,6 +1,6 @@
 <script>
     import RichTextDisplay from "../generic/RichTextDisplay.svelte";
-    import SummonDetail from "./ActorUUIDReference.svelte";
+    import ActorUUIDReference from "./ActorUUIDReference.svelte";
 
     // An ability choice
     export let choice;
@@ -44,7 +44,7 @@
         <RichTextDisplay body={effect} key={`${key}_body_${i}`} />
     {/each}
     {#each choice.ability.system.summons as summon}
-        <span>Summon: <SummonDetail uuid={summon} /></span>
+        <span>Summon: <ActorUUIDReference uuid={summon} /></span>
     {/each}
 </div>
 

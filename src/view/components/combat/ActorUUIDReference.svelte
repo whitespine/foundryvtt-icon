@@ -21,6 +21,7 @@
     <span>...</span>
 {:then refActor}
     <span
+        class="inline-container"
         data-uuid={uuid}
         draggable="true"
         on:click={() => openSheet(refActor)}
@@ -33,11 +34,8 @@
 <style lang="scss">
     span {
         font-weight: bold;
-        border-radius: 5px;
-        border: var(--primary-border);
         background-color: var(--tertiary-background);
         color: var(--tertiary-color);
-        padding: 2px;
         cursor: pointer;
     }
 </style>

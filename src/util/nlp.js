@@ -119,11 +119,37 @@ export function setupTransformers() {
     }
 
     // And some more specific ones
+    // Substitute fray damage
     StaticTransformers.push(new Transformer(
-        /<(fray|\[D\]|\s+|\+|\d+)+>/g,
+        /(fray)/g,
+        (ctx) => {
+            if (ctx.actor) {
+                return [ctx.actor.system.fray_damage];
+            } else {
+                return ["fray"];
+            }
+        }
+    ));
+
+    // Substitute damage die
+    StaticTransformers.push(new Transformer(
+        /(\[D\])/g,
+        (ctx) => {
+            if (ctx.actor) {
+                return [`d${ctx.actor.system.damage_die}`];
+            } else {
+                return ["[D]"];
+            }
+        }
+    ));
+
+    // Make dice formulae in angle brackets rollable
+    StaticTransformers.push(new Transformer(
+        /<(\[D\]|\s+|\+|\d+)+>/g,
         (ctx) => [ctx.actor?.system?.fray_damage ?? "fray"]
     ));
 
+    // Make gamble rollable
     StaticTransformers.push(new Transformer(
         /(Gamble)/ig,
         (ctx) => [new Token({
