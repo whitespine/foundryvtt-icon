@@ -7,7 +7,7 @@ export const FOE_COLORS = ["Heavy", "Skirmisher", "Artillery", "Leader", "Specia
 export const PLAYER_COLORS = ["Stalwart", "Vagabond", "Wright", "Mendicant", "Special"];
 
 
-export const COLOR_FIELD = new CastingStringField({
+export const COLOR_FIELD = () => new CastingStringField({
     initial: "Special",
     choices: [
         "Red",
@@ -34,14 +34,13 @@ export const COLOR_FIELD = new CastingStringField({
             leader: "Green",
             mendicant: "Green",
         }[s.toLowerCase()] || "Special";
-        console.log(`${s} -> ${remapped}`);
         return remapped;
     }
 });
 export class ClassField extends foundry.data.fields.SchemaField {
     constructor(options = {}) {
         super({
-            color: COLOR_FIELD,
+            color: COLOR_FIELD(),
             vitality: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 0, min: 0 }),
             speed: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 4, min: 0 }),
             dash: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 2, min: 0 }),

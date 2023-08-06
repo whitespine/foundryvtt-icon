@@ -67,6 +67,13 @@
     function editBond() {
         $actor.system.bond.sheet.render(true, {focus: true});
     }
+
+    /**
+     * Open the current job for editing
+     */
+    function editJob() {
+        $actor.system.job.sheet.render(true, {focus: true});
+    }
 </script>
 
 <main use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
@@ -92,7 +99,14 @@
             <span><strong>{localize("ICON.Class")}:</strong></span>
             <span>{$actor.system.class?.player_class_name ?? "None"}</span>
             <span><strong>{localize("ICON.Job")}:</strong></span>
-            <span>{$actor.system.job?.name ?? "None"}</span>
+            <span>
+                {#if $actor.system.job}
+                    {$actor.system.job?.name}
+                    <i class="fas fa-edit" style="float: right; cursor: pointer" on:click={editJob} />
+                {:else}
+                    None
+                {/if}
+            </span>
             <span>{localize("ICON.Level")}:</span>
             <input type="number" use:updateDoc={{ doc, path: "system.level" }} />
         </div>

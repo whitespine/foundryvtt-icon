@@ -81,7 +81,7 @@ export class PlayerModel extends ActorModel {
         // Grab key data
         this.job = this.parent.items.find(i => i.type === "job");
         if(this.job) {
-            this.class = this.job.class; // Alias for ease of access
+            this.class = this.job.system.class; // Alias for ease of access
             // Set max hp & fill hp if none set
             this.hp.max = this.class.vitality * 4;
             if(this._source.hp === null) {

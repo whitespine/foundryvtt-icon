@@ -2,8 +2,9 @@
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
     import Portrait from "../components/Portrait.svelte";
-    import EditableDocArray from "../components/generic/EditableDocArray.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
+    import { GENERIC_COLORS, PLAYER_COLORS } from "../../models/items/job";
+    import { localize } from "../../util/misc";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -41,13 +42,15 @@
             <span> TODO: Abilities previews </span>
         {:else if selected_tab === "ICON.JobSheet.Attributes"}
             <div class="flexcol">
+                <label for="color">Color</label>
+                <select name="color" use:updateDoc={{ doc, path: "system.class.color" }}>
+                    {#each PLAYER_COLORS as c, i}
+                        <option value={GENERIC_COLORS[i]}>{c}</option>
+                    {/each}
+                </select>
                 {#each ["defense", "damage_die", "fray_damage", "speed", "dash"] as stat}
                     <label for={stat}>{stat}:</label>
-                    <input
-                        name={stat}
-                        type="number"
-                        use:updateDoc={{ doc, path: `system.class.${stat}` }}
-                    />
+                    <input name={stat} type="number" use:updateDoc={{ doc, path: `system.class.${stat}` }} />
                 {/each}
             </div>
         {:else}
