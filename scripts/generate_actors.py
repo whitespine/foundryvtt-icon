@@ -285,13 +285,15 @@ class ActorProcessor:
 
         # Do initial copying
         self.system["chapter"] = self.data.get("chapter", 1)
-        self.system["class"] = self.data.get("class", "Unknown")
         self.system["faction"] = self.data.get("faction", "Unknown")
-        self.system["vitality"] = self.data.get("vitality", 4)
-        self.system["speed"] = self.data.get("speed", 4)
-        self.system["defense"] = self.data.get("defense", 4)
-        self.system["fray_damage"] = self.data.get("fray_damage", 1)
-        self.system["damage_die"] = self.data.get("damage_die", 6)
+        foe_class = {}
+        self.system["class"] = foe_class
+        foe_class["color"] = self.data.get("class", "Special")
+        foe_class["vitality"] = self.data.get("vitality", 4)
+        foe_class["speed"] = self.data.get("speed", 4)
+        foe_class["defense"] = self.data.get("defense", 4)
+        foe_class["fray_damage"] = self.data.get("fray_damage", 1)
+        foe_class["damage_die"] = self.data.get("damage_die", 6)
         self.actions.extend(mandate_list(self.data.get("actions")))
 
         self.process_setup_info()

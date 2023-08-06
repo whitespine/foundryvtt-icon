@@ -7,6 +7,7 @@
     import Portrait from "../components/Portrait.svelte";
     import { dropDocs } from "../actions/drop";
     import CombatHud from "../components/combat/CombatHud.svelte";
+    import { FOE_COLORS, GENERIC_COLORS } from "../../models/items/job";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -52,19 +53,19 @@
             {/each}
         </select>
         <input style="grid-area: foe_faction" type="text" use:updateDoc={{ doc, path: "system.faction" }} />
-        <select style="grid-area: foe_class" use:updateDoc={{ doc, path: "system.class" }}>
-            {#each ["Special", "Red", "Yellow", "Blue", "Green"] as c}
-                <option value={c}>{c}</option>
+        <select style="grid-area: foe_class" use:updateDoc={{ doc, path: "system.class.color" }}>
+            {#each FOE_COLORS as c, i}
+                <option value={GENERIC_COLORS[i]}>{c}</option>
             {/each}
         </select>
         <div style="grid-area: stats" class="stats">
             <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
             <BoundedNumberDisplay name={localize("ICON.Vigor")} path="system.vigor" />
-            <span>Def: {$actor.system.defense}</span>
-            <span>Die: D{$actor.system.damage_die}</span>
-            <span>Fray: {$actor.system.fray_damage}</span>
-            <span>Speed: {$actor.system.speed}</span>
-            <span>Dash: {$actor.system.dash}</span>
+            <span>Def: {$actor.system.class.defense}</span>
+            <span>Die: D{$actor.system.class.damage_die}</span>
+            <span>Fray: {$actor.system.class.fray_damage}</span>
+            <span>Speed: {$actor.system.class.speed}</span>
+            <span>Dash: {$actor.system.class.dash}</span>
         </div>
         <div style="grid-area: tabs">
             <Tabs horizontal={false} {tabs} bind:selected={selected_tab} />
@@ -92,9 +93,8 @@
                     <label for={stat}>{stat}:</label>
                     <input
                         name={stat}
-                        style="grid-area: foe_class"
-                        type="text"
-                        use:updateDoc={{ doc, path: `system.${stat}` }}
+                        type="number"
+                        use:updateDoc={{ doc, path: `system.class.${stat}` }}
                     />
                 {/each}
             </div>

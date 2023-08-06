@@ -9,6 +9,8 @@
     import FoeSheet from "./FoeSheet.svelte";
     import SummonSheet from "./SummonSheet.svelte";
     import AbilitySheet from "./AbilitySheet.svelte";
+    import BondSheet from "./BondSheet.svelte";
+    import JobSheet from "./JobSheet.svelte";
 
     export let elementRoot = void 0;
 
@@ -22,7 +24,7 @@
     setContext("unique_prefix", $tjs_doc.uuid); // For Tokens
 </script>
 
-<TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 200 }}>
+<TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 100 }}>
     {#if $tjs_doc.type == "player"}
         <PlayerSheet />
     {:else if $tjs_doc.type == "foe"}
@@ -31,6 +33,10 @@
         <SummonSheet />
     {:else if $tjs_doc.type == "ability"}
         <AbilitySheet />
+    {:else if $tjs_doc.type == "bond"}
+        <BondSheet />
+    {:else if $tjs_doc.type == "job"}
+        <JobSheet />
     {:else}
         <span>Unsupported doc</span>
     {/if}

@@ -39,13 +39,33 @@
     }));
     let selected_tab = "ICON.Narrative";
 
-    // Handle dropped documents
+    /**
+     * Add dropped items to this actor
+     * @param {import("../../util/dragdrop").ResolvedDrop} drop
+     */
     function handleDrop(drop) {
+        // Destroy old job or bond
+        if(drop.type === "Item") {
+            if(drop.document.type === "bond") $actor.system.bond?.delete();
+            if(drop.document.type === "job") $actor.system.job?.delete();
+        } 
+        // Create the item
         $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(drop.document.toObject(true))]);
     }
 
+    /**
+     * Test whether to allow the specified drop
+     * @param {import("../../util/dragdrop").ResolvedDrop} drop Resolved drop data
+     */
     function allowDrop(drop) {
         return drop.type == "Item" && ["bond_power", "trait", "job", "ability"].includes(drop.document.type);
+    }
+
+    /**
+     * Open the current bond for editing
+     */
+    function editBond() {
+        $actor.system.bond.sheet.render(true, {focus: true});
     }
 </script>
 
@@ -61,19 +81,19 @@
             placeholder="Player Name"
         />
         <div style="grid-area: narr" class="header-information">
-            <span>{localize("ICON.Kintype")}: </span>
+            <span><strong>{localize("ICON.Kintype")}:</strong></span>
             <input type="text" use:updateDoc={{ doc, path: "system.kin" }} />
-            <span>{localize("ICON.Culture")}: </span>
+            <span><strong>{localize("ICON.Culture")}:</strong> </span>
             <input type="text" use:updateDoc={{ doc, path: "system.culture" }} />
-            <span>{localize("ICON.Bond")}: </span>
-            <input type="text" use:updateDoc={{ doc, path: "system.bond" }} />
+            <span><strong>{localize("ICON.Bond")}:</strong></span>
+            <span>{$actor.system.bond?.name ?? "None"}</span>
         </div>
         <div style="grid-area: comb" class="header-information">
-            <span>{localize("ICON.Class")}: </span>
-            <input type="text" use:updateDoc={{ doc, path: "system.class" }} />
-            <span>{localize("ICON.Job")}: </span>
-            <input type="text" use:updateDoc={{ doc, path: "system.job" }} />
-            <span>{localize("ICON.Level")}: </span>
+            <span><strong>{localize("ICON.Class")}:</strong></span>
+            <span>{$actor.system.class?.player_class_name ?? "None"}</span>
+            <span><strong>{localize("ICON.Job")}:</strong></span>
+            <span>{$actor.system.job?.name ?? "None"}</span>
+            <span>{localize("ICON.Level")}:</span>
             <input type="number" use:updateDoc={{ doc, path: "system.level" }} />
         </div>
 
@@ -82,7 +102,6 @@
             <Tabs {tabs} horizontal={false} bind:selected={selected_tab} />
         </div>
     </header>
-
 
     <!-- Sheet Body -->
     {#if selected_tab == "ICON.Narrative"}
@@ -96,9 +115,18 @@
                         {/each}
                     </div>
                     <div class="bond">
-                        <h2>The Wolf</h2>
-                        <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
-                        <span>Second wind: foobar</span>
+                        {#if $actor.system.bond}
+                            <h2>
+                                {$actor.system.bond.name} 
+                                <i class="fas fa-edit" style="margin-left: auto" on:click={editBond} />
+                            </h2>
+                            <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
+                            <span><strong>Second Wind:</strong> {$actor.bond.system.second_wind}</span>
+                            <span><strong>Special:</strong> {$actor.bond.system.special_ability}</span>
+                        {:else}
+                            <h2>No Bonds???</h2>
+                            <p>Drag a bond from the compendium or item tab!</p>
+                        {/if}
                     </div>
                 </div>
                 <div class="midcol">
@@ -150,7 +178,7 @@
         flex: 0 1 auto;
         display: grid;
         grid-template:
-            "pic    char_name   player_name tabs" 30px
+            "pic    char_name   player_name tabs" 20px
             "pic    narr        comb        tabs" 80px / 110px 1fr 1fr 1fr;
         gap: 5px;
         padding: 10px;
@@ -158,6 +186,7 @@
         .header-information {
             display: grid;
             grid-template: 1fr 1fr 1fr / 1fr 1fr;
+            align-items: center;
         }
     }
 

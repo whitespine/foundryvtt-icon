@@ -1,4 +1,5 @@
 import { ClockField, FakeBoundedNumberField } from "../base";
+import { ClassField } from "../items/job";
 import { ActorModel } from "./actor";
 
 export class ConditionsField extends foundry.data.fields.SchemaField {
@@ -34,27 +35,11 @@ export class FoeModel extends ActorModel {
                 "Mob",
                 "Legend",
             ]}),
-            class: new foundry.data.fields.StringField({initial: "Special", choices: [
-                "Special",
-                "Red",
-                "Heavy",
-                "Yellow",
-                "Skirmisher",
-                "Blue",
-                "Artillery",
-                "Green",
-                "Leader"
-            ]}),
             faction: new foundry.data.fields.StringField({initial: "Folk"}),
 
-            // Stats are just built into a foe
-            vitality: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 0, min: 0}),
-            speed: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 4, min: 0}),
-            dash: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 2, min: 0}),
-            defense: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 0, min: 0}),
-            fray_damage: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 1, min: 0}),
-            damage_die: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 6, min: 4}),
-            hp_multiplier: new foundry.data.fields.NumberField({nullable: false, integer: true, initial: 4, min: 1}),
+            // Class is built directly into the foe
+            class: new ClassField(),
+            hp_multiplier: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 4, min: 1 }),
 
             // Mutable stats:
             hp: new FakeBoundedNumberField(),
@@ -70,12 +55,11 @@ export class FoeModel extends ActorModel {
 
     prepareDerivedData() {
         // Initialize our fields
-        console.log(this);
-        this.hp.max = this.vitality * this.hp_multiplier;
+        this.hp.max = this.class.vitality * this.hp_multiplier;
         if(this._source.hp === null) {
             this.hp.value = this.hp.max;
         }
-        this.vigor.max = this.vitality;
+        this.vigor.max = this.class.vitality;
     }
 
     static convertSWB(data) {

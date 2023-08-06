@@ -346,6 +346,11 @@
       "Faction": "Faction",
       "Setup": "Combat Setup Information"
     },
+    "JobSheet": {
+      "Details": "Details",
+      "Abilities": "Abilities",
+      "Attributes": "Attributes"
+    },
     "Rolls": {
       "Narrative": {
         "Title": "Narrative Roll",

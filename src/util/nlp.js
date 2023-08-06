@@ -125,8 +125,8 @@ export function setupTransformers() {
     StaticTransformers.push(new Transformer(
         /(\[?fray\]?)/g,
         (ctx) => {
-            if (ctx.actor) {
-                return [ctx.actor.system.fray_damage.toString()];
+            if (ctx.actor.system.class?.fray_damage) {
+                return [ctx.actor.system.class.fray_damage.toString()];
             } else {
                 return ["fray"];
             }
@@ -137,8 +137,8 @@ export function setupTransformers() {
     StaticTransformers.push(new Transformer(
         /(\[D\])/g,
         (ctx) => {
-            if (ctx.actor) {
-                return [`d${ctx.actor.system.damage_die}`];
+            if (ctx.actor.system.class?.damage_die) {
+                return [`d${ctx.actor.system.class.damage_die}`];
             } else {
                 return ["[D]"];
             }

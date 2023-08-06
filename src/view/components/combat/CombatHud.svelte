@@ -34,7 +34,7 @@
 <div class="combat-grid">
     <div class="abilities">
         <h3>Abilities</h3>
-        {#each abilities as ability (ability.id)}
+        {#each abilities as ability (ability.id ?? "err")}
             {#each ability.system.choices as choice, i}
                 {#if i >= 1}
                     <i class="fas fa-grip-lines-vertical interlink" />
@@ -49,7 +49,7 @@
             {/each}
         {/each}
         <h3>Traits</h3>
-        {#each traits as trait (trait.id)}
+        {#each traits as trait (trait.id ?? "err")}
             <div class="trait" on:click={() => selectItem(trait)} class:selected={trait === selected}>
                 <img class="icon" src={trait.img} alt={trait.name} />
                 <span>{trait.name}</span>

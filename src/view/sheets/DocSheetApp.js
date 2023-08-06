@@ -11,8 +11,8 @@ export default class TJSDocSheet extends SvelteApplication {
    */
   constructor(doc, options = {}) {
     super({
-      id: `doc_${doc.id}`,
-      title: doc.name,
+      id: `doc_${doc.uuid.replaceAll(".", "_")}`,
+      title: doc.name + (doc.isToken ? " [TOKEN]" : ""),
       svelte: {
         props: {
           tjs_doc: new TJSDocument(doc),

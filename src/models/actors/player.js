@@ -60,11 +60,45 @@ export class PlayerModel extends ActorModel {
     }
 
     prepareBaseData() {
-        this.ideals = [];
     }
 
     prepareDerivedData() {
-        console.log(this);
+        ///////////////// Narrative:
+        // Initialize sane defaults in absence of hard-set values
+        for(let [k, v] of Object.entries(this.burdens)) {
+            if(!this._source.burdens[k].name == null) {
+                this._source.burdens[k].name = `${v.max} burden`;
+            }
+        }
+        for(let [k, v] of Object.entries(this.ambitions)) {
+            if(!this._source.ambitions[k].name == null) {
+                this._source.ambitions[k].name = `${v.max} ambition`;
+            }
+        }
+        this.bond = this.parent.items.find(i => i.type === "bond");
+
+        ///////////////// Combat:
+        // Grab key data
+        this.job = this.parent.items.find(i => i.type === "job");
+        if(this.job) {
+            this.class = this.job.class; // Alias for ease of access
+            // Set max hp & fill hp if none set
+            this.hp.max = this.class.vitality * 4;
+            if(this._source.hp === null) {
+                this.hp.value = this.hp.max;
+            }
+
+            // Set max vigor based on vitality
+            this.vigor.max = this.vitality;
+
+            // Set our wound-reduced max hp
+            this.current_max_hp = this.vitality * (4 - this.wounds);
+        } else {
+            this.job = null;
+            this.class = null;
+            this.current_max_hp = 0;
+        }
+
     }
 
     static convertSWB(data) {
