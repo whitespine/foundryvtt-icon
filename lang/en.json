@@ -223,6 +223,7 @@
     "Level": "Level",
     "Health": "HP",
     "Vigor": "Vigor",
+    "Wounds": "Wounds",
     "JobResource": "Job Resource",
     "Strain": "Strain",
     "Effort": "Effort",

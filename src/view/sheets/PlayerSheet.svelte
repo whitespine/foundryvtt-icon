@@ -10,6 +10,7 @@
     import PreviewBondPower from "../components/preview/PreviewBondPower.svelte";
     import { dropDocs } from "../actions/drop";
     import CombatHud from "../components/combat/CombatHud.svelte";
+    import StatsDisplay from "../components/combat/StatsDisplay.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -170,9 +171,7 @@
         </section>
     {:else if selected_tab === "ICON.Combat"}
         <section class="sheet-body combat">
-            <span>Wounds</span>
-            <span>Resolve</span>
-            <span>Aether</span>
+            <StatsDisplay style="grid-area: stats" actor={$actor} />
             <CombatHud abilities={[...$abilities]} traits={[...$traits]} />
         </section>
     {:else}

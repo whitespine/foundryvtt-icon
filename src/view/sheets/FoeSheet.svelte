@@ -8,6 +8,7 @@
     import { dropDocs } from "../actions/drop";
     import CombatHud from "../components/combat/CombatHud.svelte";
     import { FOE_COLORS, GENERIC_COLORS } from "../../models/items/job";
+    import StatsDisplay from "../components/combat/StatsDisplay.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -58,15 +59,7 @@
                 <option value={GENERIC_COLORS[i]}>{c}</option>
             {/each}
         </select>
-        <div style="grid-area: stats" class="stats">
-            <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
-            <BoundedNumberDisplay name={localize("ICON.Vigor")} path="system.vigor" />
-            <span>Def: {$actor.system.class.defense}</span>
-            <span>Die: D{$actor.system.class.damage_die}</span>
-            <span>Fray: {$actor.system.class.fray_damage}</span>
-            <span>Speed: {$actor.system.class.speed}</span>
-            <span>Dash: {$actor.system.class.dash}</span>
-        </div>
+        <StatsDisplay style="grid-area: stats" actor={$actor} />
         <div style="grid-area: tabs">
             <Tabs horizontal={false} {tabs} bind:selected={selected_tab} />
         </div>
@@ -91,11 +84,7 @@
             <div class="flexcol">
                 {#each ["defense", "damage_die", "fray_damage", "speed", "dash"] as stat}
                     <label for={stat}>{stat}:</label>
-                    <input
-                        name={stat}
-                        type="number"
-                        use:updateDoc={{ doc, path: `system.class.${stat}` }}
-                    />
+                    <input name={stat} type="number" use:updateDoc={{ doc, path: `system.class.${stat}` }} />
                 {/each}
             </div>
         {:else}
@@ -123,20 +112,6 @@
         padding: 10px;
         align-items: center;
         text-align: center;
-
-        .stats {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-
-            span {
-                padding-right: 3px;
-                padding-left: 3px;
-                &:not(:last-child) {
-                    border-right: var(--primary-border);
-                }
-            }
-        }
     }
 
     .sheet-body {

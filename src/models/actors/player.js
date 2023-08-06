@@ -50,9 +50,9 @@ export class PlayerModel extends ActorModel {
             }),
 
             // Combat
-            hp: new FakeBoundedNumberField(),
-            vigor: new FakeBoundedNumberField(),
-            wounds: new FakeBoundedNumberField(),
+            hp: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0 }),
+            vigor: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0 }),
+            wounds: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0, max: 4 }),
             level: new fields.NumberField({ nullable: false, min: 0, max: 9, initial: 0 }), // Eventually will be item
             class: new fields.StringField({ initial: "Stalwart" }), // Eventually will be item
             job: new fields.StringField({ initial: "Knave" }), // Eventually will be item
@@ -65,13 +65,13 @@ export class PlayerModel extends ActorModel {
     prepareDerivedData() {
         ///////////////// Narrative:
         // Initialize sane defaults in absence of hard-set values
-        for(let [k, v] of Object.entries(this.burdens)) {
-            if(!this._source.burdens[k].name == null) {
+        for (let [k, v] of Object.entries(this.burdens)) {
+            if (!this._source.burdens[k].name == null) {
                 this._source.burdens[k].name = `${v.max} burden`;
             }
         }
-        for(let [k, v] of Object.entries(this.ambitions)) {
-            if(!this._source.ambitions[k].name == null) {
+        for (let [k, v] of Object.entries(this.ambitions)) {
+            if (!this._source.ambitions[k].name == null) {
                 this._source.ambitions[k].name = `${v.max} ambition`;
             }
         }
@@ -80,19 +80,19 @@ export class PlayerModel extends ActorModel {
         ///////////////// Combat:
         // Grab key data
         this.job = this.parent.items.find(i => i.type === "job");
-        if(this.job) {
+        if (this.job) {
             this.class = this.job.system.class; // Alias for ease of access
             // Set max hp & fill hp if none set
             this.hp.max = this.class.vitality * 4;
-            if(this._source.hp === null) {
+            if (this._source.hp === null) {
                 this.hp.value = this.hp.max;
             }
 
             // Set max vigor based on vitality
-            this.vigor.max = this.vitality;
+            this.vigor.max = this.class.vitality;
 
             // Set our wound-reduced max hp
-            this.current_max_hp = this.vitality * (4 - this.wounds);
+            this.current_max_hp = this.class.vitality * (4 - this.wounds);
         } else {
             this.job = null;
             this.class = null;
