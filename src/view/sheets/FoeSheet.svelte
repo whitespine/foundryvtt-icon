@@ -59,7 +59,7 @@
                 <option value={GENERIC_COLORS[i]}>{c}</option>
             {/each}
         </select>
-        <StatsDisplay style="grid-area: stats" actor={$actor} />
+        <StatsDisplay style="grid-area: stats" />
         <div style="grid-area: tabs">
             <Tabs horizontal={false} {tabs} bind:selected={selected_tab} />
         </div>

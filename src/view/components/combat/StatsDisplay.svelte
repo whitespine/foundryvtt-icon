@@ -1,23 +1,29 @@
 <script>
     import BoundedNumberDisplay from "../generic/BoundedNumberDisplay.svelte";
     import { localize } from "../../../util/misc";
+    import { updateDoc } from "../../actions/update";
+    import { getContext } from "svelte";
 
-    export let actor;
+    let actor = getContext("tjs_actor");
 </script>
 
 <div {...$$restProps}>
-    <div class:bloodied={actor.system.bloodied}>
+    <div class:bloodied={$actor.system.bloodied}>
         <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
     </div>
     <BoundedNumberDisplay name={localize("ICON.Vigor")} path="system.vigor" />
-    {#if actor.system.wounds?.max}
+    {#if $actor.system.wounds?.max}
         <BoundedNumberDisplay name={localize("ICON.Wounds")} path="system.wounds" />
     {/if}
-    <span>Def: {actor.system.class.defense}</span>
-    <span>Die: D{actor.system.class.damage_die}</span>
-    <span>Fray: {actor.system.class.fray_damage}</span>
-    <span>Speed: {actor.system.class.speed}</span>
-    <span>Dash: {actor.system.class.dash}</span>
+    {#if $actor.type === "player"}
+        <label for="aether">{localize("ICON.Aether")}</label>
+        <input name="aether" type="number" use:updateDoc={{doc: actor, path: "system.aether"}} />
+    {/if}
+    <span>Def: {$actor.system.class.defense}</span>
+    <span>Die: D{$actor.system.class.damage_die}</span>
+    <span>Fray: {$actor.system.class.fray_damage}</span>
+    <span>Speed: {$actor.system.class.speed}</span>
+    <span>Dash: {$actor.system.class.dash}</span>
 </div>
 
 <style lang="scss">
@@ -36,6 +42,11 @@
 
         .bloodied {
             color: red;
+        }
+
+        input {
+            width: 24px;
+            text-align: center;
         }
     }
 </style>

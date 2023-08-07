@@ -181,7 +181,7 @@
         </section>
     {:else if selected_tab === "ICON.Combat"}
         <section class="sheet-body combat">
-            <StatsDisplay style="grid-area: stats" actor={$actor} />
+            <StatsDisplay style="grid-area: stats" />
             <CombatHud abilities={[...$abilities]} traits={[...$traits]} />
         </section>
     {:else}
