@@ -1,5 +1,4 @@
 <script>
-    import { getContext } from "svelte";
     import BoundedNumberDisplay from "../generic/BoundedNumberDisplay.svelte";
     import { localize } from "../../../util/misc";
 
@@ -7,7 +6,9 @@
 </script>
 
 <div {...$$restProps}>
-    <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
+    <div class:bloodied={actor.system.bloodied}>
+        <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
+    </div>
     <BoundedNumberDisplay name={localize("ICON.Vigor")} path="system.vigor" />
     {#if actor.system.wounds?.max}
         <BoundedNumberDisplay name={localize("ICON.Wounds")} path="system.wounds" />
@@ -31,6 +32,10 @@
             &:not(:last-child) {
                 border-right: var(--primary-border);
             }
+        }
+
+        .bloodied {
+            color: red;
         }
     }
 </style>
