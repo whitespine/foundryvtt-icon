@@ -6,7 +6,6 @@ import { BondModel } from "../models/items/bond";
 import { BondPowerModel } from "../models/items/bond_power";
 import { ItemModel } from "../models/items/item";
 import { JobModel } from "../models/items/job";
-import { TraitModel } from "../models/items/trait";
 
 /**
  * Configure all of our system documents
@@ -15,7 +14,6 @@ export function setupModels() {
     // Setup models
     CONFIG.Item.dataModels["junk"] = ItemModel; // Where we send items we don't really care to / know how to render yet
     CONFIG.Item.dataModels["job"] = JobModel;
-    CONFIG.Item.dataModels["trait"] = TraitModel;
     CONFIG.Item.dataModels["ability"] = AbilityModel;
     CONFIG.Item.dataModels["bond"] = BondModel;
     CONFIG.Item.dataModels["bond_power"] = BondPowerModel;

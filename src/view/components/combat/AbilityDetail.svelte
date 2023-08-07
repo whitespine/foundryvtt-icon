@@ -9,16 +9,16 @@
     export let key;
 </script>
 
-<div>
+<div {...$$restProps}>
     <span class="title">
-        {choice.name} |
+        {choice.name}
 
         {#if choice.actions == 0}
-            Free Action
+            | Free Action
         {:else if choice.actions == 1}
-            1 Action
+            | 1 Action
         {:else if choice.actions == 2}
-            2 Actions
+            | 2 Actions
         {/if}
 
         {#if choice.resolve}
@@ -43,7 +43,7 @@
     {#each choice.effects as effect, i}
         <RichTextDisplay body={effect} key={`${key}_body_${i}`} />
     {/each}
-    {#each choice.ability.system.summons as summon}
+    {#each choice.summons as summon}
         <span>Summon: <ActorUUIDReference uuid={summon} /></span>
     {/each}
 </div>

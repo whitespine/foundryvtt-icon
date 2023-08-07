@@ -9,23 +9,17 @@
     // Needed for token elements
     export let key;
 
-    // Either an ability choice or a trait
-    export let selection;
-    let selectedItem = null;
-    $: selectedItem = selection ? (selection instanceof IconItem ? selection : selection.ability) : null;
+    // An ability
+    export let ability;
 
-    async function rollAbility() {
-        if (selectedItem.type === "ability") {
-            await ChatMessage.create({
-                [`flags.${game.system.id}.data`]: {
-                    type: "ability",
-                    ability_uuid: selectedItem.uuid,
-                    choice_index: selection.ability ? selection.ability.system.choices.indexOf(selection) : 0,
-                },
-            });
-        } else {
-            console.log("Posting cringe, are ye?");
-        }
+    async function rollChoice(index) {
+        await ChatMessage.create({
+            [`flags.${game.system.id}.data`]: {
+                type: "ability",
+                ability_uuid: ability.uuid,
+                choice_index: index,
+            },
+        });
     }
 
     /** Opens the sheet for the selected item */
@@ -56,21 +50,20 @@
 </script>
 
 <div class="preview">
-    {#if !selection}
+    {#if !ability}
         <h3>Select an ability</h3>
-    {:else if selection.ability}
-        <AbilityDetail choice={selection} key={`${key}_ability`} />
-    {:else if selection.type === "trait"}
-        <h3>{selection.name}</h3>
-        <RichTextDisplay body={selection.system.description} key={`${key}_trait`} />
     {:else}
-        <span>ERROR</span>
+        {#each ability.system.choices as choice, i}
+            <div class="choice" class:bottomed={i < ability.system.choices.length - 1}>
+                <AbilityDetail {choice} key={`${key}_ability_${i}`} style="flex: auto" />
+                <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} use:tooltip={{ content: "Activate" }} />
+            </div>
+        {/each}
     {/if}
-    {#if selection}
+    {#if ability}
         <div class="bottom-controls">
             <i class="fas fa-edit" on:click={editSelected} use:tooltip={{ content: "Edit" }} />
             <i class="fas fa-trash" on:click={deleteSelected} use:tooltip={{ content: "Delete" }} />
-            <i class="fas fa-dice-d20" on:click={rollAbility} use:tooltip={{ content: "Activate" }} />
         </div>
     {/if}
 </div>
@@ -81,6 +74,16 @@
         padding: 5px;
         display: flex;
         flex-direction: column;
+
+        .choice {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            &.bottomed {
+                border-bottom: var(--primary-border);
+            }
+        }
 
         .bottom-controls {
             margin-top: auto;

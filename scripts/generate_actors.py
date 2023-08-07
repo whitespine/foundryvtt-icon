@@ -313,7 +313,7 @@ class ActorProcessor:
         Uses an ItemProcessor to process the given item as an action
         """
         ip = ItemProcessor(self, data)
-        ip.process_as_action()
+        ip.process_as_ability()
 
     def process_trait(self, data):
         """
@@ -321,6 +321,7 @@ class ActorProcessor:
         """
         ip = ItemProcessor(self, data)
         ip.process_as_trait()
+
 
     def finalize(self):
         """
@@ -368,10 +369,10 @@ class ItemProcessor:
         self.type = None
         self.system = {}
 
-    def process_as_action(self):
-        # Get tag data
-        self.type = "ability"
-        all_tags = self.data.get("tags", [])
+    def action_to_choices(self, action_data):
+        # Convert an action to a choice (or, choices)
+        choices = []
+        all_tags = action_data.get("tags", [])
         ranges = []
         other_tags = []
         for tag in all_tags:
@@ -382,7 +383,7 @@ class ItemProcessor:
 
         # Siphon effects. Do it via entries rather than via keys so we preserve order
         effects = []
-        for k, v in self.data.items():
+        for k, v in action_data.items():
             if k == "hit":
                 effects.append(f"Hit: {v}")
             if k == "auto_hit":
@@ -402,46 +403,81 @@ class ItemProcessor:
                 effects.append(f"Charge: {v}")
 
         # Subprocess interrupts
-        for interrupt in mandate_list(self.data.get("interrupts")):
-            interrupt["name"] += " (int)"
-            self.data.setdefault("sub_ability", []).append(interrupt["name"])
-            self.parent.process_action(interrupt)
+        for interrupt in mandate_list(action_data.get("interrupts")):
+            if interrupt.get("name", action_data["name"]) == action_data["name"]:
+                interrupt["name"] += f"{action_data['name']} (interrupt)"  # Add a unique suffix if necessary
+            choices = choices + self.action_to_choices(interrupt)
 
         # Subprocess combos
-        if self.data.get("combo"):
-            self.data["combo"]["name"] += " (combo)"
-            self.data.setdefault("sub_ability", []).append(self.data["combo"]["name"])
-            self.parent.process_action(self.data["combo"])
+        if action_data.get("combo"):
+            combo = action_data["combo"]
+            combo["name"] += f"[COMBO] {combo['name'] or action_data['name']}"  # Add a unique prefix
+            choices = choices + self.action_to_choices(action_data["combo"])
 
         # Subprocess summons
-        self.system["summons"] = []
-        for summon in mandate_list(self.data.get("summons")):
-            summon["name"] += " " + CHPT[self.data.get("chapter", 1)]
+        summons = []
+        for summon in mandate_list(action_data.get("summons")):
+            summon["name"] += " " + CHPT[action_data.get("chapter", 1)]
             summon = self.parent.parent.process_summon(summon)
             uuid = f"Compendium.icon.better-foes.Actor.{summon.id}"
-            self.system["summons"].append(uuid)
-
-        choice = {
-            "actions": self.data.get("action_cost", 0),
-            "round_action": self.data.get("round_action", False),
+            summons.append(uuid)
+        
+        # Build the primary choice
+        primary_choice = {
+            "name": action_data.get("name"),
+            "actions": action_data.get("action_cost", 0),
+            "round_action": action_data.get("round_action", False),
             "tags": other_tags,
             "ranges": ranges,
-            "trigger": self.data.get("trigger", ""),
+            "trigger": action_data.get("trigger", ""),
             "combo": 0,
-            "sub_abilities": self.data.get("sub_abilities", []),
             "resolve": 0,
             "effects": effects,
+            "summons": summons
         }
-        self.system["choices"] = [choice]
-        self.system["chapter"] = (self.data.get("chapter", 1),)
+        return [primary_choice] + choices
+
+    def process_as_ability(self):
+        # Process our main data as an action
+        self.type = "ability"
+
+        self.system["choices"] = self.action_to_choices(self.data)
+        self.system["chapter"] = self.data.get("chapter", 1)
         self.system["special_requirements"] = (
             self.data.get("special_requirements", []),
         )
+        self.system["trait"] = False
         self.finalize()
 
     def process_as_trait(self):
-        self.type = "trait"
-        self.system["description"] = combine_list_desc(self.data.get("description", "Unknown"), self.data.get("listed_items"))
+        # Traits follow the same format as actions, actually
+        self.type = "ability"
+        choices = []
+        if self.data.get("description"):
+            description = combine_list_desc(self.data.get("description", "Unknown"), self.data.get("listed_items"))
+            choices.append({
+                "actions": None,
+                "round_action": False,
+                "tags": [],
+                "ranges": [],
+                "trigger": self.data.get("trigger", ""),
+                "combo": 0,
+                "resolve": 0,
+                "effects": [description],
+            })
+        for action in mandate_list(self.data.get("actions")):
+            choices += self.action_to_choices(action)
+
+        # Give all of them the Trait tag
+        for choice in choices:
+            choice["tags"] = ["Trait"] + choice["tags"]
+
+        self.system["choices"] = choices
+        self.system["chapter"] = self.data.get("chapter", 1)
+        self.system["special_requirements"] = (
+            self.data.get("special_requirements", []),
+        )
+        self.system["trait"] = True
         self.finalize()
 
     def finalize(self):

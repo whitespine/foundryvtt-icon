@@ -3,6 +3,7 @@
     import { IconItem } from "../../../documents/item";
     import AbilityDisplay from "./AbilityDisplay.svelte";
     import StatusDisplay from "./StatusDisplay.svelte";
+    import { chapterIcon } from "../../../util/misc";
 
     let actor = getContext("tjs_actor");
 
@@ -19,8 +20,6 @@
      * Either the selected trait, or the selected choice of an ability
      */
     let selected = null;
-    let selectedItem = null;
-    $: selectedItem = selected ? (selected instanceof IconItem ? selected : selected.ability) : null;
 
     function selectItem(item) {
         if (selected === item) {
@@ -35,24 +34,19 @@
     <div class="abilities">
         <h3>Abilities</h3>
         {#each abilities as ability (ability.id ?? "err")}
-            {#each ability.system.choices as choice, i}
-                {#if i >= 1}
-                    <i class="fas fa-grip-lines-vertical interlink" />
-                {/if}
-                <div class="ability" on:click={() => selectItem(choice)} class:selected={choice === selected}>
-                    <img class="icon" src={ability.img} alt={choice.name || choice.ability.name} />
-                    <span>{choice.name || choice.ability.name}</span>
-                    <span style="margin-left: auto">
-                        {choice.actionPips}
-                    </span>
-                </div>
-            {/each}
+            <div class="ability" on:click={() => selectItem(ability)} class:selected={ability === selected}>
+                <img class="icon" src={ability.img} alt={ability.name} />
+                <span>{chapterIcon(ability.system.chapter)} {ability.name}</span>
+                <span style="margin-left: auto">
+                    {ability.system.choices[0].actionPips}
+                </span>
+            </div>
         {/each}
         <h3>Traits</h3>
         {#each traits as trait (trait.id ?? "err")}
             <div class="trait" on:click={() => selectItem(trait)} class:selected={trait === selected}>
                 <img class="icon" src={trait.img} alt={trait.name} />
-                <span>{trait.name}</span>
+                <span>{chapterIcon(trait.system.chapter)} {trait.name}</span>
             </div>
         {/each}
     </div>
@@ -60,8 +54,8 @@
     <div class="preview">
         <AbilityDisplay
             on:clear={() => (selected = null)}
-            selection={selected}
-            key={`${unique_prefix}_${selectedItem?.id}`}
+            ability={selected}
+            key={`${unique_prefix}_${selected?.id}`}
         />
     </div>
 

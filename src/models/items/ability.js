@@ -9,8 +9,8 @@ export class AbilityChoiceField extends fields.SchemaField {
         super({
             // What is this sub-ability called? Leave null for default choice, typically
             name: new fields.StringField({ nullable: true, initial: null }),
-            // How many actions does it take?
-            actions: new fields.NumberField({ nullable: false, integer: true, min: 0, max: 2, initial: 1 }),
+            // How many actions does it take? Null if not an action (e.x. a trait description)
+            actions: new fields.NumberField({ nullable: true, integer: true, min: 0, max: 2, initial: 1 }),
             // Is it a round action?
             round_action: new fields.BooleanField({ initial: false }),
             // What is/are its listed range(s)?
@@ -18,13 +18,12 @@ export class AbilityChoiceField extends fields.SchemaField {
                 // validate: (val) => {
                     // return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
                 // }
+            // UUIDs of any summons it might have
+            summons: new fields.ArrayField(new fields.StringField()),
 
 
             // ------- TAGS ---------------
             tags: new fields.ArrayField(new CastingStringField({cast: titleCaseString})),
-
-            // Does it have any sub abilities? Mostly this is for interrupts, though sometimes marks can grant them
-            sub_abilities: new fields.ArrayField(new fields.StringField()),
 
             // As an interrupt, what's its trigger?
             trigger: new fields.StringField(),
@@ -62,6 +61,9 @@ export class AbilityChoiceField extends fields.SchemaField {
      * @returns {string} A simple unicode string
      */
     actionPips(data) {
+        // Traits have nothing
+        if(data.actions === null) return "";
+
         // Interrupts look special
         if (data.interrupt) {
             return "⧰".repeat(data.interrupt);
@@ -137,8 +139,9 @@ export class AbilityModel extends ItemModel {
             // Special rules for it
             special_requirements: new fields.ArrayField(new fields.StringField()),
 
-            // UUIDs of any summons it might have
-            summons: new fields.ArrayField(new fields.StringField()),
+            // Is it actually a trait? 
+            // This really doesn't end up meaning much considering some traits are abilities, etc
+            trait: new fields.BooleanField({initial: false}),
 
             // Upgrades for player abilities
             talents: new fields.ArrayField(new AbilityAugmentationField()),
@@ -191,6 +194,9 @@ export class AbilityModel extends ItemModel {
                 dc.range = range_match[0];
             }
         }
+
+        // Deduce if it's a trait
+        data.system.trait = data.flags.icon_data?.isTrait ?? false;
 
         // Remove empty parens from the name & re-assign
         name = name.replaceAll(/\([ ,]*\)/g, "");

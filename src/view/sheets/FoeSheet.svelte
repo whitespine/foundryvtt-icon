@@ -17,12 +17,12 @@
     const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
     const abilities = actor.embedded.create(Item, {
         name: "abilities",
-        filters: [(i) => i.type === "ability"],
+        filters: [(i) => i.type === "ability" && !i.system.trait],
         sort: name_alphabetical,
     });
     const traits = actor.embedded.create(Item, {
         name: "traits",
-        filters: [(i) => i.type === "trait"],
+        filters: [(i) => i.type === "ability" && i.system.trait],
         sort: name_alphabetical,
     });
 
@@ -39,7 +39,7 @@
     }
 
     function allowDrop(drop) {
-        return drop.type == "Item" && ["ability", "trait"].includes(drop.document.type);
+        return drop.type == "Item" && ["ability"].includes(drop.document.type);
     }
 </script>
 

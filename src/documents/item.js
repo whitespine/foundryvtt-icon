@@ -1,7 +1,6 @@
 import { ICON } from "../consts";
 import { AbilityModel } from "../models/items/ability";
 import { BondPowerModel } from "../models/items/bond_power";
-import { TraitModel } from "../models/items/trait";
 
 /**
  * Our custom class for Icon Items
@@ -21,7 +20,7 @@ export class IconItem extends Item {
             let ntlc = data.name.toLowerCase();
             if (data.flags.icon_data?.isTrait) {
                 // Flags confirm
-                TraitModel.convertSWB(data);
+                AbilityModel.convertSWB(data);
             } else if (data.flags.icon_data?.isBondPower) {
                 // Flags confirm
                 BondPowerModel.convertSWB(data);
