@@ -56,7 +56,7 @@
         {#each ability.system.choices as choice, i}
             <div class="choice" class:bottomed={i < ability.system.choices.length - 1}>
                 <AbilityDetail {choice} key={`${key}_ability_${i}`} style="flex: auto" />
-                <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} use:tooltip={{ content: "Activate" }} />
+                <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} use:tooltip={{ content: "Activate", position: "left" }} />
             </div>
         {/each}
     {/if}

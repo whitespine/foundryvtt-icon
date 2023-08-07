@@ -35,6 +35,7 @@
         new TJSDialog({
             content: token.tooltip,
             modal: true,
+            title: `Define: ${token.text}`
         }).render(true, { focus: true });
     }
 
@@ -75,7 +76,7 @@
     class:inline-container={token.children}
     class:clickable
     on:click={click}
-    use:condTooltip={token.tooltip ? { content: token.tooltip } : null}
+    use:condTooltip={token.tooltip ? { content: token.tooltip, autoPosition: true } : null}
 >
     {#if token.roll}
         <SmallRoll roll={token.roll} />

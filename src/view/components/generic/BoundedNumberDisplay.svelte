@@ -31,8 +31,9 @@
 <style lang="scss">
     div {
         display: grid;
-        grid-template-columns: 1fr 30px 10px 30px;
+        grid-template-columns: 1fr 30px 10px 25px;
         align-items: center;
+        text-align: center;
         border: var(--primary-border);
         border-radius: 10px;
         padding: 2px;

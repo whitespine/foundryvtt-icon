@@ -1,4 +1,5 @@
 <script>
+    import { tooltip } from "@svelte-plugins/tooltips";
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
     import { localize } from "../../util/misc";
@@ -46,10 +47,10 @@
      */
     function handleDrop(drop) {
         // Destroy old job or bond
-        if(drop.type === "Item") {
-            if(drop.document.type === "bond") $actor.system.bond?.delete();
-            if(drop.document.type === "job") $actor.system.job?.delete();
-        } 
+        if (drop.type === "Item") {
+            if (drop.document.type === "bond") $actor.system.bond?.delete();
+            if (drop.document.type === "job") $actor.system.job?.delete();
+        }
         // Create the item
         $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(drop.document.toObject(true))]);
     }
@@ -66,14 +67,14 @@
      * Open the current bond for editing
      */
     function editBond() {
-        $actor.system.bond.sheet.render(true, {focus: true});
+        $actor.system.bond.sheet.render(true, { focus: true });
     }
 
     /**
      * Open the current job for editing
      */
     function editJob() {
-        $actor.system.job.sheet.render(true, {focus: true});
+        $actor.system.job.sheet.render(true, { focus: true });
     }
 </script>
 
@@ -131,13 +132,22 @@
                     </div>
                     <div class="bond">
                         {#if $actor.system.bond}
-                            <h2>
-                                {$actor.system.bond.name} 
-                                <i class="fas fa-edit" style="margin-left: auto" on:click={editBond} />
+                            <h2
+                                style="text-align: center;"
+                                use:tooltip={{ content: $actor.system.bond.system.description }}
+                            >
+                                {$actor.system.bond.name}
+                                <i class="fas fa-edit fa-xs" on:click={editBond} />
                             </h2>
                             <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
-                            <span><strong>Second Wind:</strong> {$actor.bond.system.second_wind}</span>
-                            <span><strong>Special:</strong> {$actor.bond.system.special_ability}</span>
+                            <span><strong>Second Wind:</strong> {$actor.system.bond.system.second_wind}</span>
+                            <span><strong>Special:</strong> {$actor.system.bond.system.special_ability}</span>
+                            <span><strong>Ideals:</strong></span>
+                            <ul>
+                                {#each $actor.system.bond.system.ideals as ideal}
+                                    <li>{ideal}</li>
+                                {/each}
+                            </ul>
                         {:else}
                             <h2>No Bonds???</h2>
                             <p>Drag a bond from the compendium or item tab!</p>
@@ -206,18 +216,31 @@
     .sheet-body {
         padding: 5px;
         flex: 1 0 auto;
-        max-height: calc(100% - 150px);
+    }
+
+    .sheet-body.narrative {
+        max-height: calc(100% - 100px);
+    }
+
+    .sheet-body.combat {
+        max-height: calc(100% - 160px);
     }
 
     .narrative {
         .narrative-grid {
             display: grid;
-            grid-template: 1fr / 180px 1fr 180px;
+            grid-template: 1fr / 220px 1fr 220px;
+            height: 100%;
+        }
 
-            > div {
-                border-right: var(--primary-border);
-                border-bottom: var(--primary-border);
-            }
+        .leftcol,
+        .midcol {
+            border-right: var(--primary-border);
+            padding-right: 10px;
+        }
+        .midcol,
+        .rightcol {
+            padding-left: 10px;
         }
 
         .actions {
@@ -226,6 +249,7 @@
             flex-direction: column;
             align-items: center;
             border-bottom: var(--primary-border);
+            padding-bottom: 10px;
         }
 
         .xp {
@@ -247,6 +271,9 @@
             h2 {
                 text-align: center;
             }
+            display: flex;
+            flex-direction: column;
+            padding-top: 10px;
         }
     }
 </style>
