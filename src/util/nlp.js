@@ -147,8 +147,13 @@ export function setupTransformers() {
 
     // Make dice formulae in angle brackets rollable
     StaticTransformers.push(new Transformer(
-        /<(\[D\]|\s+|\+|\d+)+>/g,
-        (ctx) => [ctx.actor?.system?.fray_damage ?? "fray"]
+        /<(\S+)>/g,
+        (ctx, m) => [
+            new Token({
+                formula: m[0],
+                text: m[0]
+            })
+        ]
     ));
 
     // Make gamble rollable

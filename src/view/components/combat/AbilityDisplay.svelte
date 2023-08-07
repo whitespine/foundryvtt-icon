@@ -24,7 +24,7 @@
 
     /** Opens the sheet for the selected item */
     function editSelected() {
-        selectedItem.sheet.render(true, { focus: true });
+        ability.sheet.render(true, { focus: true });
     }
 
     const dispatch = createEventDispatcher();
@@ -32,17 +32,11 @@
     /** Deletes the selected item. choices are deleted individually first. */
     function deleteSelected() {
         TJSDialog.confirm({
-            content: `Delete ${selectedItem.name}?`,
+            content: `Delete ${ability.name}?`,
             onYes: () => {
-                if (selectedItem.type === "trait" || selectedItem.system.choices.length === 1) {
-                    // Delete the item entirely
-                    selectedItem.delete();
-                } else {
-                    // Just remove the given choice
-                    selectedItem.update({
-                        "system.choices": selectedItem.system.choices.filter((x) => x != selection),
-                    });
-                }
+                // Delete the item entirely
+                ability.delete();
+                
                 dispatch("clear");
             },
         });

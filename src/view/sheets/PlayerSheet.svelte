@@ -35,7 +35,7 @@
     });
 
     // Set our tabs
-    const tabs = ["ICON.Narrative", "ICON.Combat", "ICON.Attributes"].map((s) => ({
+    const tabs = ["ICON.Narrative", "ICON.Combat"].map((s) => ({
         label: localize(s),
         key: s,
     }));
