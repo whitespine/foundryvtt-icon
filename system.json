@@ -83,6 +83,14 @@
         }
       },
       {
+        "id": "icon-status-icons",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/Eranziel/icon-status-icons/main/module.json",
+        "compatibility": {
+          "verified": "1.1.0"
+        }
+      },
+      {
         "id": "socketlib",
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
