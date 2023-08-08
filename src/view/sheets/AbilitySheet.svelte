@@ -84,7 +84,7 @@
                 use:updateDoc={{ doc, path: `system.choices.${selected_tab}.resolve` }}
             />
 
-            <EditableDocArray title="Ranges" path={`system.choices.${selected_tab}.ranges`} numeric={true} />
+            <EditableDocArray title="Ranges" path={`system.choices.${selected_tab}.ranges`} />
 
             <EditableDocArray title="Tags" path={`system.choices.${selected_tab}.tags`} />
 
