@@ -21,7 +21,7 @@
     setContext("tjs_actor", tjs_doc); // TODO: conditional on tjs item
     setContext("tjs_item", tjs_doc); // TODO: Only if an item
     setContext("tjs_doc", tjs_doc); // Always the root doc
-    setContext("unique_prefix", $tjs_doc.uuid); // For Tokens
+    setContext("unique_prefix", tjs_doc.uuid); // For Tokens
 </script>
 
 <TJSApplicationShell bind:elementRoot transition={scale} transitionOptions={{ duration: 100 }}>

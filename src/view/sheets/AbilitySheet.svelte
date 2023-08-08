@@ -36,7 +36,9 @@
         </div>
         <div style="grid-area: options">
             <label for="chapter">Chapter:</label>
-            <input type="text" use:updateDoc={{ doc, path: "system.chapter" }} />
+            <input type="text" name="chapter" use:updateDoc={{ doc, path: "system.chapter" }} />
+            <label for="trait">Is Trait?:</label>
+            <input type="checkbox" name="trait" use:updateDoc={{ doc, path: "system.trait" }} />
         </div>
         <div class="option-select" style="grid-area: tabs">
             <div>

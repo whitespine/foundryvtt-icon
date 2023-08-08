@@ -3,7 +3,6 @@ import { setupModels } from './config/models.js';
 import { setupIndexes } from './config/packs.js';
 import { setupSettings } from './config/settings.js';
 import { setupSheets } from './config/sheets.js';
-import { setupStatuses } from './config/statuses.js';
 import { ICON } from './consts.js';
 import { IconActor } from './documents/actor.js';
 import { IconItem } from './documents/item.js';
@@ -58,7 +57,6 @@ Hooks.once("ready", async () => {
     setupTransformers();
     setupSheets();
     applyGlobalDragListeners();
-    setupStatuses();
     setupDSN();
     setupMessages();
 });

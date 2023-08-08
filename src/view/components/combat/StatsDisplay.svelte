@@ -19,11 +19,11 @@
         <label for="aether">{localize("ICON.Aether")}</label>
         <input name="aether" type="number" use:updateDoc={{doc: actor, path: "system.aether"}} />
     {/if}
-    <span>Def: {$actor.system.class.defense}</span>
-    <span>Die: D{$actor.system.class.damage_die}</span>
-    <span>Fray: {$actor.system.class.fray_damage}</span>
-    <span>Speed: {$actor.system.class.speed}</span>
-    <span>Dash: {$actor.system.class.dash}</span>
+    <span>Def: {$actor.system.class?.defense ?? 0}</span>
+    <span>Die: D{$actor.system.class?.damage_die ?? 0}</span>
+    <span>Fray: {$actor.system.class?.fray_damage ?? 0}</span>
+    <span>Speed: {$actor.system.class?.speed ?? 0}</span>
+    <span>Dash: {$actor.system.class?.dash ?? 0}</span>
 </div>
 
 <style lang="scss">
