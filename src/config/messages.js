@@ -58,7 +58,7 @@ export function setupMessages() {
             TOKEN_STORES.get(msg.id).set(tokens ?? {});
 
             // Scroll chat log to bottom.
-            ui.chat.scrollBottom();
+            setTimeout(() => ui.chat.scrollBottom(), 20);
         }
 
     };
@@ -85,4 +85,5 @@ export function setupMessages() {
         }
     });
 
+    setTimeout(() => ui.chat.scrollBottom(), 500);
 }
