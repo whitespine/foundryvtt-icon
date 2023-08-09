@@ -77,6 +77,9 @@
             <label for="name">Name:</label>
             <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.name` }} />
 
+            <label for="description">Description:</label>
+            <textarea name="description" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.description` }} rows="5" />
+
             <label for="actions">Actions:</label>
             <input
                 name="actions"

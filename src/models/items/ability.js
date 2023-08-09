@@ -9,6 +9,8 @@ export class AbilityChoiceField extends fields.SchemaField {
         super({
             // What is this sub-ability called? Leave null for default choice, typically
             name: new fields.StringField({ nullable: true, initial: null }),
+            // Its description
+            description: new fields.HTMLField(),
             // How many actions does it take? Null if not an action (e.x. a trait description)
             actions: new fields.NumberField({ nullable: true, integer: true, min: 0, max: 2, initial: 1 }),
             // Is it a round action?
@@ -156,7 +158,11 @@ export class AbilityModel extends ItemModel {
         let name = data.name;
 
         // Establish some values. SWB values code abilities one at a time
-        let dc = {}; // Short for default choice
+        let dc = {
+            ranges: [],
+            tags: [],
+            description: data.system.description,
+        }; // Short for default choice
         data.system.choices = [dc];
 
         // Extract the subcomponents from the name
@@ -167,32 +173,35 @@ export class AbilityModel extends ItemModel {
             const action_match = part.match(/(\d)\s+actions?/i);
             if (action_match) {
                 dc.actions = Number.parseInt(action_match[1]);
+                continue;
             }
 
             const resolve_match = part.match(/(\d)\s+resolve?/i);
             if (resolve_match) {
                 dc.resolve = Number.parseInt(resolve_match[1]);
+                continue;
+            }
+
+            let range_match = part.match(/(Range|Arc|Line) (\d)+/);
+            if (range_match) {
+                dc.ranges.push(range_match[0]);
+                continue;
             }
 
             const interrupt_match = part.match(/(\d)\s+interrupt?/i);
             if (interrupt_match) {
                 dc.interrupt = Number.parseInt(interrupt_match[1]);
-            }
-
-            const true_strike_match = part.match(/true strike/i);
-            if (true_strike_match) {
-                dc = true;
+                continue;
             }
 
             let combo_match = part.match(/combo (\d)/i);
             if (combo_match) {
                 dc.combo = combo_match[1] == "1" ? 1 : -1;
+                continue;
             }
 
-            let range_match = part.match(/(Range|Arc|Line) (\d)+/);
-            if (range_match) {
-                dc.range = range_match[0];
-            }
+            // Otherwise generic tag
+            dc.tags.push(part);
         }
 
         // Deduce if it's a trait
