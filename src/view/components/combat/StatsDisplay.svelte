@@ -16,8 +16,8 @@
         <BoundedNumberDisplay name={localize("ICON.Wounds")} path="system.wounds" />
     {/if}
     {#if $actor.type === "player"}
-        <label for="aether">{localize("ICON.Aether")}</label>
-        <input name="aether" type="number" use:updateDoc={{doc: actor, path: "system.aether"}} />
+        <label for="resolve">{localize("ICON.Resolve")}</label>
+        <input name="resolve" type="number" use:updateDoc={{doc: actor, path: "system.resolve"}} />
     {/if}
     <span>Def: {$actor.system.class?.defense ?? 0}</span>
     <span>Die: D{$actor.system.class?.damage_die ?? 0}</span>
