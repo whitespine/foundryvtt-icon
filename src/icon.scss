@@ -24,6 +24,7 @@ $document-types: join($item-types, $actor-types);
 
     // Clocks
     --clock-fill: rgb(164, 135, 6);
+    --clock-alt-fill: rgb(158, 20, 18);
     --clock-empty: rgb(39, 240, 240);
     --clock-border: #0c1638;
 

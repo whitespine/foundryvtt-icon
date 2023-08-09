@@ -4,6 +4,7 @@ import { ActorModel } from "./actor";
 const fields = foundry.data.fields;
 
 const actionField = () => new fields.NumberField({ nullable: false, integer: true, min: 0, max: 4, initial: 0 });
+const actionPenaltyField = () => new fields.NumberField({ nullable: false, integer: true, min: 0, max: 4, initial: 0 });
 
 export class PlayerModel extends ActorModel {
     static defineSchema() {
@@ -40,6 +41,18 @@ export class PlayerModel extends ActorModel {
                 smash: actionField(),
                 endure: actionField(),
             }),
+            action_penalties: new fields.SchemaField({
+                sneak: actionPenaltyField(),
+                traverse: actionPenaltyField(),
+                sense: actionPenaltyField(),
+                study: actionPenaltyField(),
+                charm: actionPenaltyField(),
+                command: actionPenaltyField(),
+                tinker: actionPenaltyField(),
+                excel: actionPenaltyField(),
+                smash: actionPenaltyField(),
+                endure: actionPenaltyField(),
+            }),
             xp: new FakeBoundedNumberField({ max: 15 }),
             dust: new FakeBoundedNumberField({ max: 8 }),
             xp_tracker: new fields.SchemaField({
@@ -67,13 +80,13 @@ export class PlayerModel extends ActorModel {
         ///////////////// Narrative:
         // Initialize sane defaults in absence of hard-set values
         for (let [k, v] of Object.entries(this.burdens)) {
-            if (!this._source.burdens[k].name == null) {
-                this._source.burdens[k].name = `${v.max} burden`;
+            if (this._source.burdens[k].name === `New ${k[1]} Clock`) {
+                this._source.burdens[k].name = `${v.size} Burden`;
             }
         }
         for (let [k, v] of Object.entries(this.ambitions)) {
-            if (!this._source.ambitions[k].name == null) {
-                this._source.ambitions[k].name = `${v.max} ambition`;
+            if (this._source.ambitions[k].name === `New ${k[1]} Clock`) {
+                this._source.ambitions[k].name = `${v.size} Ambition`;
             }
         }
         this.bond = this.parent.items.find(i => i.type === "bond");
@@ -100,7 +113,6 @@ export class PlayerModel extends ActorModel {
             this.class = null;
             this.current_max_hp = 0;
         }
-
     }
 
     static convertSWB(data) {

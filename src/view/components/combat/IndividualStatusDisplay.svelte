@@ -54,7 +54,7 @@
         class="fas fa-edit fa-lg"
         use:tooltip={{ content: "Edit" }}
     />-->
-    <i on:click={() => status.delete()} class="fas fa-trash" use:tooltip={{ content: "Delete", position: "left" }} />
+    <i on:click={() => status.delete()} class="fas fa-trash" use:tooltip={{ content: `Delete ${status.name}`, position: "left" }} />
 </div>
 
 <style lang="scss">

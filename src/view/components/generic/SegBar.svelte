@@ -7,14 +7,17 @@
     /** @type {number} Number of filled segments */
     export let value;
 
+    /** @type {number} Number of alternately filled segments. Prioritized over normally filled segments */
+    export let alt_value;
+
     // Generate our segments automagically 
     let segments;
     $: {
         segments = [];
         for(let i=1; i <= size; i++) {
             segments.push({
-                value: i == value ? value - 1 : i,
-                filled: i <= value
+                filled: alt_value < i && i <= value,
+                alt_filled: i <= alt_value
             })
         }
     }
@@ -24,8 +27,12 @@
 </script>
 
 <div>
-    {#each segments as seg}
-        <div class="segment" class:filled={seg.filled} on:click={() => dispatch('change', seg.value)} />
+    {#each segments as seg, i}
+        <div class="segment" 
+        class:filled={seg.filled} 
+        class:alt-filled={seg.alt_filled} 
+        on:click={() => dispatch("change", (i+1) === value ? i : i+1)} 
+        on:contextmenu={() => dispatch("alt_change", (i+1) === alt_value ? i : i+1)} />
     {/each}
 </div>
 
@@ -47,6 +54,10 @@
 
         .segment.filled {
             background-color: var(--clock-fill);
+        }
+
+        .segment.alt-filled {
+            background-color: var(--clock-alt-fill);
         }
     }
 </style>
