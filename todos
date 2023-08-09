@@ -7,8 +7,6 @@ Better ability conversion
 
 Prompt boon bane (max +/- 2)
 
-Strain indicator (above effort)
-
 Action penalties (right click penalize up to the right click?)
 
 Combo token
@@ -33,3 +31,5 @@ Fray case insensitive
 Better handling of selected item being deleted out from under
 
 Fix clock preopulate
+
+Prosemirror

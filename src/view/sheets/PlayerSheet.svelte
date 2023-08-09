@@ -139,6 +139,7 @@
                                 {$actor.system.bond.name}
                                 <i class="fas fa-edit fa-xs" on:click={editBond} />
                             </h2>
+                            <BoundedNumberDisplay name={localize("ICON.Strain")} path="system.strain" />
                             <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
                             <span><strong>Second Wind:</strong> {$actor.system.bond.system.second_wind}</span>
                             <span><strong>Special:</strong> {$actor.system.bond.system.special_ability}</span>
