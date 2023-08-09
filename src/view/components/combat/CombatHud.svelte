@@ -4,6 +4,7 @@
     import AbilityDisplay from "./AbilityDisplay.svelte";
     import StatusDisplay from "./StatusDisplay.svelte";
     import { chapterIcon } from "../../../util/misc";
+    import { dragAsDoc } from "../../actions/drag";
 
     let actor = getContext("tjs_actor");
 
@@ -34,7 +35,13 @@
     <div class="abilities">
         <h3>Abilities</h3>
         {#each abilities as ability (ability.id ?? "err")}
-            <div class="ability" on:click={() => selectItem(ability)} class:selected={ability === selected}>
+            <div
+                class="ability"
+                on:click={() => selectItem(ability)}
+                class:selected={ability === selected}
+                draggable="true"
+                use:dragAsDoc={{ doc: ability }}
+            >
                 <img class="icon" src={ability.img} alt={ability.name} />
                 <span>{chapterIcon(ability.system.chapter)} {ability.name}</span>
                 <span style="margin-left: auto">
@@ -44,7 +51,13 @@
         {/each}
         <h3>Traits</h3>
         {#each traits as trait (trait.id ?? "err")}
-            <div class="trait" on:click={() => selectItem(trait)} class:selected={trait === selected}>
+            <div
+                class="trait"
+                on:click={() => selectItem(trait)}
+                class:selected={trait === selected}
+                draggable="true"
+                use:dragAsDoc={{ doc: trait }}
+            >
                 <img class="icon" src={trait.img} alt={trait.name} />
                 <span>{chapterIcon(trait.system.chapter)} {trait.name}</span>
             </div>

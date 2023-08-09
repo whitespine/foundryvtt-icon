@@ -69,6 +69,24 @@ $document-types: join($item-types, $actor-types);
     a.content-link {
         background: var(--secondary-background);
     }
+
+    .tjs-editor.prosemirror {
+        min-height: 20px;
+
+        .editor-menu {
+            span,i,option {
+                color: var(--primary-color);
+            }
+            
+            button:hover, button ul {
+                background: var(--secondary-background);
+            }
+
+            .pm-dropdown,option {
+                background: var(--secondary-background);
+            }
+        }
+    }
 }
 
 /** For inline text containers **/
