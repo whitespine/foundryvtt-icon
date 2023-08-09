@@ -78,7 +78,7 @@
             <label for="name">Name:</label>
             <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.name` }} />
 
-            <label>Description:</label>
+            <span>Description:</span>
             <ProseMirrorEditor doc={$doc} path={`system.choices.${selected_tab}.description`} />
 
             <label for="actions">Actions:</label>

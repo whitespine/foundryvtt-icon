@@ -3,6 +3,7 @@
     import { updateDoc } from "../actions/update";
     import Portrait from "../components/Portrait.svelte";
     import EditableDocArray from "../components/generic/EditableDocArray.svelte";
+    import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -22,16 +23,16 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         <div class="flexcol">
-            <label for="description">Description:</label>
-            <textarea name="description" use:updateDoc={{ doc, path: "system.description" }} rows="5" />
+            <span>Description:</span>
+            <ProseMirrorEditor doc={$doc} path={"system.description" } />
 
             <EditableDocArray title="Ideals" path={"system.ideals"}></EditableDocArray>
 
-            <label for="second_wind">Second Wind:</label>
-            <textarea name="second_wind" use:updateDoc={{ doc, path: "system.second_wind" }} rows="5" />
+            <span>Second Wind:</span>
+            <ProseMirrorEditor doc={$doc} path={"system.second_wind" } />
 
-            <label for="special_ability">Special Ability:</label>
-            <textarea name="special_ability" use:updateDoc={{ doc, path: "system.special_ability" }} rows="5" />
+            <span>Special Ability:</span>
+            <ProseMirrorEditor doc={$doc} path={"system.special_ability" } />
 
             <EditableDocArray title="Action Upgrades" path={"system.plus_two_options"}></EditableDocArray>
 

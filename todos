@@ -1,11 +1,11 @@
 # High:
 Status pane - done ish
 
+Relics
 
 # Medium:
 Prompt boon bane (max +/- 2)
 
-Relics
 Way to drag items back to compendium
 
 # Low:
@@ -18,7 +18,3 @@ Select color set attributes?
 Delete ability choices
 
 Better handling of selected item being deleted out from under
-
-Fix clock preopulate
-
-Prosemirror

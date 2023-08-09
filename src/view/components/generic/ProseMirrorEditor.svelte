@@ -49,10 +49,5 @@
 </div>
 
 <style lang="scss">
-    div {
-        border: var(--primary-border);
-        border-radius: 10px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
+
 </style>

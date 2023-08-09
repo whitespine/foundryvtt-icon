@@ -2,6 +2,7 @@
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
     import Portrait from "../components/Portrait.svelte";
+    import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -21,8 +22,8 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         <div class="flexcol">
-            <label for="description">Description:</label>
-            <textarea name="description" use:updateDoc={{ doc, path: "system.description" }} rows="10" />
+            <span>Description:</span>
+            <ProseMirrorEditor doc={$doc} path={"system.description" } />
         </div>
     </section>
 </main>

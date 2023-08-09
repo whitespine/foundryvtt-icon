@@ -3,6 +3,7 @@
     import { updateDoc } from "../actions/update";
     import Portrait from "../components/Portrait.svelte";
     import EditableDocArray from "../components/generic/EditableDocArray.svelte";
+    import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -28,14 +29,13 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         <div class="flexcol">
+            <span>Summon Effects:</span>
+            <ProseMirrorEditor doc={$doc} path={"system.summon_effects"} />
 
-            <label for="effects">Summon Effects:</label>
-            <textarea use:updateDoc={{ doc, path: "system.summon_effects" }} rows="10" />
+            <span>Summon Actions:</span>
+            <ProseMirrorEditor doc={$doc} path={"system.summon_actions"} />
 
-            <label for="actions">Summon Actions:</label>
-            <textarea use:updateDoc={{ doc, path: "system.summon_actions" }} rows="10" />
-
-            <EditableDocArray title="Tags" path={"system.tags"}></EditableDocArray>
+            <EditableDocArray title="Tags" path={"system.tags"} />
         </div>
     </section>
 </main>

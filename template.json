@@ -1,7 +1,7 @@
 {
     "Actor": {
         "types": ["player", "foe", "summon", "junk"],
-        "htmlFields": ["biography"],
+        "htmlFields": ["biography", "summon_actions", "summon_effects", "setup"],
 
         "player": {},
         "foe": {}

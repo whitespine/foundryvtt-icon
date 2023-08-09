@@ -5,6 +5,7 @@
     import Tabs from "../components/generic/Tabs.svelte";
     import { GENERIC_COLORS, PLAYER_COLORS } from "../../models/items/job";
     import { localize } from "../../util/misc";
+    import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -35,8 +36,8 @@
     <section class="sheet-body">
         {#if selected_tab === "ICON.JobSheet.Details"}
             <div class="flexcol">
-                <label for="description">Description:</label>
-                <textarea name="description" use:updateDoc={{ doc, path: "system.description" }} rows="5" />
+                <span>Description:</span>
+                <ProseMirrorEditor doc={$doc} path={"system.description"} />
             </div>
         {:else if selected_tab === "ICON.JobSheet.Abilities"}
             <span> TODO: Abilities previews </span>

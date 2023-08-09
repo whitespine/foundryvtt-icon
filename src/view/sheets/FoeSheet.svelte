@@ -9,6 +9,7 @@
     import CombatHud from "../components/combat/CombatHud.svelte";
     import { FOE_COLORS, GENERIC_COLORS } from "../../models/items/job";
     import StatsDisplay from "../components/combat/StatsDisplay.svelte";
+    import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -74,11 +75,9 @@
         {:else if selected_tab === "ICON.Foe.Description"}
             <div class="flexcol">
                 <h2>{localize("ICON.Description")}</h2>
-                <!-- TODO: Prosemirror -->
-                <textarea use:updateDoc={{ doc, path: "system.description" }} rows="10" />
+                <ProseMirrorEditor doc={$doc} path={"system.description" } />
                 <h2>{localize("ICON.Foe.Setup")}</h2>
-                <!-- TODO: Prosemirror -->
-                <textarea use:updateDoc={{ doc, path: "system.setup" }} rows="10" />
+                <ProseMirrorEditor doc={$doc} path={"system.setup" } />
             </div>
         {:else if selected_tab === "ICON.Foe.Stats"}
             <div class="flexcol">
