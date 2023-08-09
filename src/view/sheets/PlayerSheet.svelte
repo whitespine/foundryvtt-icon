@@ -12,6 +12,7 @@
     import { dropDocs } from "../actions/drop";
     import CombatHud from "../components/combat/CombatHud.svelte";
     import StatsDisplay from "../components/combat/StatsDisplay.svelte";
+    import { dragAsDoc } from "../actions/drag";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -101,7 +102,7 @@
             <span><strong>{localize("ICON.Class")}:</strong></span>
             <span>{$actor.system.class?.player_class_name ?? "None"}</span>
             <span><strong>{localize("ICON.Job")}:</strong></span>
-            <span>
+            <span draggable="true" use:dragAsDoc={{ doc: $actor.system.job }}>
                 {#if $actor.system.job}
                     {$actor.system.job?.name}
                     <i class="fas fa-edit" style="float: right; cursor: pointer" on:click={editJob} />
@@ -135,6 +136,8 @@
                             <h2
                                 style="text-align: center;"
                                 use:tooltip={{ content: $actor.system.bond.system.description }}
+                                use:dragAsDoc={{ doc: $actor.system.bond }}
+                                draggable="true"
                             >
                                 {$actor.system.bond.name}
                                 <i class="fas fa-edit fa-xs" on:click={editBond} />

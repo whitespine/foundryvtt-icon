@@ -97,7 +97,8 @@ export const dropDocs = easyActionBuilder({
             // Unfortunately, if global drag preview isn't set then it is necessary for us to aggressively cancel events to prevent possible duplicate drop handling
             event.stopImmediatePropagation();
             event.preventDefault();
-            resolveNativeDrop(event.originalEvent.dataTransfer.getData("text/plain")).then((rdd) => {
+            let data = event.dataTransfer?.getData("text/plain") ?? event.originalEvent.dataTransfer.getData("text/plain");
+            resolveNativeDrop(data).then((rdd) => {
                 if (rdd && (options.allow?.(rdd, event) ?? true)) {
                     options.handle?.(rdd, event);
                 }
