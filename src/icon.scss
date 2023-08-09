@@ -65,6 +65,10 @@ $document-types: join($item-types, $actor-types);
     h3 {
         border-bottom: none;
     }
+
+    a.content-link {
+        background: var(--secondary-background);
+    }
 }
 
 /** For inline text containers **/

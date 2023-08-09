@@ -5,6 +5,7 @@
     import Portrait from "../components/Portrait.svelte";
     import EditableDocArray from "../components/generic/EditableDocArray.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
+    import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -77,8 +78,8 @@
             <label for="name">Name:</label>
             <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.name` }} />
 
-            <label for="description">Description:</label>
-            <textarea name="description" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.description` }} rows="5" />
+            <label>Description:</label>
+            <ProseMirrorEditor doc={$doc} path={`system.choices.${selected_tab}.description`} />
 
             <label for="actions">Actions:</label>
             <input
