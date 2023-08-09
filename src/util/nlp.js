@@ -123,7 +123,7 @@ export function setupTransformers() {
     // And some more specific ones
     // Substitute fray damage
     StaticTransformers.push(new Transformer(
-        /(\[?fray\]?)/g,
+        /(\[?fray\]?)/ig,
         (ctx) => {
             if (ctx.actor.system.class?.fray_damage) {
                 return [ctx.actor.system.class.fray_damage.toString()];

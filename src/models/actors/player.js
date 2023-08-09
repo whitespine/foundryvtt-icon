@@ -67,10 +67,9 @@ export class PlayerModel extends ActorModel {
             vigor: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0 }),
             wounds: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0, max: 4 }),
             aether: new fields.NumberField({ nullable: false, initial: 0, min: 0, max: 999 }),
-            resolve: new fields.NumberField({ nullable: false, initial: 0, min: 0, max: 999 }),
-            level: new fields.NumberField({ nullable: false, min: 0, max: 9, initial: 0 }), // Eventually will be item
-            class: new fields.StringField({ initial: "Stalwart" }), // Eventually will be item
-            job: new fields.StringField({ initial: "Knave" }), // Eventually will be item
+            resolve: new fields.NumberField({ nullable: false, initial: 0, min: 0, max: 999 }), // Personal resolve
+            combo: new fields.BooleanField({ initial: false }), // Combo token
+            level: new fields.NumberField({ nullable: false, min: 0, max: 9, initial: 0 }), 
         };
     }
 

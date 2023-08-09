@@ -19,11 +19,15 @@
         <label for="resolve">{localize("ICON.Resolve")}</label>
         <input name="resolve" type="number" use:updateDoc={{doc: actor, path: "system.resolve"}} />
     {/if}
-    <span>Def: {$actor.system.class?.defense ?? 0}</span>
+    <span class="noborder">Def: {$actor.system.class?.defense ?? 0}</span>
     <span>Die: D{$actor.system.class?.damage_die ?? 0}</span>
     <span>Fray: {$actor.system.class?.fray_damage ?? 0}</span>
     <span>Speed: {$actor.system.class?.speed ?? 0}</span>
     <span>Dash: {$actor.system.class?.dash ?? 0}</span>
+    {#if $actor.type === "player"}
+        <label for="combo" id="combolabel">{localize("ICON.Combo")}</label>
+        <input name="combo" type="checkbox" use:updateDoc={{doc: actor, path: "system.combo"}} />
+    {/if}
 </div>
 
 <style lang="scss">
@@ -32,12 +36,14 @@
         flex-direction: row;
         align-items: center;
 
-        span {
-            padding-right: 3px;
+        span, input, label {
             padding-left: 3px;
             &:not(:last-child) {
-                border-right: var(--primary-border);
+                padding-right: 3px;
             }
+        }
+        span:not(.noborder), #combolabel {
+            border-left: var(--primary-border);
         }
 
         .bloodied {
