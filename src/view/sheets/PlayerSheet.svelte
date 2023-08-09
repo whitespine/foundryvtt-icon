@@ -95,7 +95,7 @@
             <input type="text" use:updateDoc={{ doc, path: "system.kin" }} />
             <span><strong>{localize("ICON.Culture")}:</strong> </span>
             <input type="text" use:updateDoc={{ doc, path: "system.culture" }} />
-            <span><strong>{localize("ICON.Bond")}:</strong></span>
+            <span><strong>{localize("ICON.Bond.Bond")}:</strong></span>
             <span>{$actor.system.bond?.name ?? "None"}</span>
         </div>
         <div style="grid-area: comb" class="header-information">
@@ -142,11 +142,19 @@
                                 {$actor.system.bond.name}
                                 <i class="fas fa-edit fa-xs" on:click={editBond} />
                             </h2>
-                            <BoundedNumberDisplay name={localize("ICON.Strain")} path="system.strain" />
-                            <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
-                            <span><strong>Second Wind:</strong> {$actor.system.bond.system.second_wind}</span>
-                            <span><strong>Special:</strong> {$actor.system.bond.system.special_ability}</span>
-                            <span><strong>Ideals:</strong></span>
+                            <div class="flexrow">
+                                <BoundedNumberDisplay name={localize("ICON.Strain")} path="system.strain" />
+                                <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
+                            </div>
+                            <span>
+                                <strong>{localize("ICON.Bond.SecondWind")}</strong>
+                                {$actor.system.bond.system.second_wind}
+                            </span>
+                            <span>
+                                <strong>{localize("ICON.Bond.SpecialAbility")}:</strong>
+                                {$actor.system.bond.system.special_ability}
+                            </span>
+                            <span><strong>{localize("ICON.Bond.Ideals")}:</strong></span>
                             <ul>
                                 {#each $actor.system.bond.system.ideals as ideal}
                                     <li>{ideal}</li>

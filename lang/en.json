@@ -217,7 +217,6 @@
   "ICON": {
     "Kintype": "Kintype",
     "Culture": "Culture",
-    "Bond": "Bond",
     "Class": "Class",
     "Job": "Job",
     "Level": "Level",
@@ -237,12 +236,15 @@
     "Attributes": "Attributes",
     "XP": "XP",
     "Dust": "Dust",
-    "SpecialAbility": "Special Ability",
-    "SecondWind": "Second Wind",
-    "Ideals": "Ideals",
     "NarrativeInfo": "Narrative Info",
-    "BondPowers": "Bond Powers",
     "Description": "Description",
+    "Bond": {
+      "Bond": "Bond",
+      "Powers": "Bond Powers",
+      "SecondWind": "Second Wind",
+      "Ideals": "Ideals",
+      "SpecialAbility": "Special Ability"
+    },
     "Glossary": {
       "Armor": "Reduce all damage taken by X.  Always reduce by the highest value.",
       "AreaAbility": "An ability that applies area effects in a large, fixed pattern.",
