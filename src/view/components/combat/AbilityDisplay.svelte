@@ -29,7 +29,7 @@
 
     const dispatch = createEventDispatcher();
 
-    /** Deletes the selected item. choices are deleted individually first. */
+    /** Deletes the selected item. */
     function deleteSelected() {
         TJSDialog.confirm({
             content: `Delete ${ability.name}?`,

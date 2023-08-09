@@ -1,5 +1,6 @@
 <script>
     import { slide } from "svelte/transition";
+    import { TJSDialog } from "#runtime/svelte/application";
     /** @type {TJSDocument<IconItem>}*/
     export let power;
 
@@ -14,6 +15,14 @@
             content: `${power.name}<br>${power.system.description}`
         })
     }
+
+    /** Deletes the selected item. choices are deleted individually first. */
+    function promptDelete() {
+        TJSDialog.confirm({
+            content: `Delete ${power.name}?`,
+            onYes: () => power.delete()
+        });
+    }
 </script>
 
 <div class="root">
@@ -23,7 +32,13 @@
         <span>{power.name}</span>
     </div>
     {#if expanded}
-        <div class="description" transition:slide>{@html power.system.description}</div>
+        <div class="description" transition:slide>
+            <div>{@html power.system.description}</div>
+            <div style="float: right">
+                <i class="fas fa-edit" on:click={power.sheet.render(true, {focus: true})}/>
+                <i class="fas fa-trash" on:click={promptDelete}/>
+            </div>
+        </div>
     {/if}
 </div>
 
@@ -57,5 +72,9 @@
         span {
             margin-left: 5px;
         }
+    }
+    i {
+        cursor: pointer;
+        margin-right: 5px
     }
 </style>
