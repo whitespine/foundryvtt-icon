@@ -24,16 +24,7 @@
         filters: [(i) => i.type === "bond_power"],
         sort: name_alphabetical,
     });
-    const abilities = actor.embedded.create(Item, {
-        name: "abilities",
-        filters: [(i) => i.type === "ability"],
-        sort: name_alphabetical,
-    });
-    const traits = actor.embedded.create(Item, {
-        name: "traits",
-        filters: [(i) => i.type === "trait"],
-        sort: name_alphabetical,
-    });
+
 
     // Set our tabs
     const tabs = ["ICON.Narrative", "ICON.Combat"].map((s) => ({
@@ -148,11 +139,11 @@
                             </div>
                             <span>
                                 <strong>{localize("ICON.Bond.SecondWind")}</strong>
-                                {$actor.system.bond.system.second_wind}
+                                {@html $actor.system.bond.system.second_wind}
                             </span>
                             <span>
                                 <strong>{localize("ICON.Bond.SpecialAbility")}:</strong>
-                                {$actor.system.bond.system.special_ability}
+                                {@html $actor.system.bond.system.special_ability}
                             </span>
                             <span><strong>{localize("ICON.Bond.Ideals")}:</strong></span>
                             <ul>
@@ -194,7 +185,7 @@
     {:else if selected_tab === "ICON.Combat"}
         <section class="sheet-body combat">
             <StatsDisplay style="grid-area: stats" />
-            <CombatHud abilities={[...$abilities]} traits={[...$traits]} />
+            <CombatHud />
         </section>
     {:else}
         <span>Tab does not exist</span>

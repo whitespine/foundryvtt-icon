@@ -14,19 +14,6 @@
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
 
-    // Initialize our embedded categories
-    const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
-    const abilities = actor.embedded.create(Item, {
-        name: "abilities",
-        filters: [(i) => i.type === "ability" && !i.system.trait],
-        sort: name_alphabetical,
-    });
-    const traits = actor.embedded.create(Item, {
-        name: "traits",
-        filters: [(i) => i.type === "ability" && i.system.trait],
-        sort: name_alphabetical,
-    });
-
     // Set our tabs
     const tabs = ["ICON.Foe.Abilities", "ICON.Foe.Description", "ICON.Foe.Stats"].map((s) => ({
         label: localize(s),
@@ -71,7 +58,7 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         {#if selected_tab == "ICON.Foe.Abilities"}
-            <CombatHud abilities={[...$abilities]} traits={[...$traits]} />
+            <CombatHud />
         {:else if selected_tab === "ICON.Foe.Description"}
             <div class="flexcol">
                 <h2>{localize("ICON.Description")}</h2>

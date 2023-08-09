@@ -11,8 +11,17 @@
     let unique_prefix = getContext("unique_prefix");
 
     // Props
-    export let abilities = [];
-    export let traits = [];
+    const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
+    const abilities = actor.embedded.create(Item, {
+        name: "abilities",
+        filters: [(i) => i.type === "ability"],
+        sort: name_alphabetical,
+    });
+    const traits = actor.embedded.create(Item, {
+        name: "traits",
+        filters: [(i) => i.type === "trait"],
+        sort: name_alphabetical,
+    });
 
     // State
 
@@ -34,7 +43,7 @@
 <div class="combat-grid">
     <div class="abilities">
         <h3>Abilities</h3>
-        {#each abilities as ability (ability.id ?? "err")}
+        {#each [...$abilities] as ability (ability.id ?? "err")}
             <div
                 class="ability"
                 on:click={() => selectItem(ability)}
@@ -50,7 +59,7 @@
             </div>
         {/each}
         <h3>Traits</h3>
-        {#each traits as trait (trait.id ?? "err")}
+        {#each [...$traits] as trait (trait.id ?? "err")}
             <div
                 class="trait"
                 on:click={() => selectItem(trait)}
