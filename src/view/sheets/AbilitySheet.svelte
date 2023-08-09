@@ -39,7 +39,6 @@
         return drop.type == "Actor" && ["summon"].includes(drop.document.type);
     }
 
-
     // Delete the summon at the specified index for the current choice
     function deleteSummon(index) {
         let summons = selected_choice.summons;
@@ -117,14 +116,17 @@
             <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
 
             <div class="flexcol">
-                <h3>Summons <em> - Drag onto this sheet to add! </em> </h3>
+                <h3>Summons <em> - Drag onto this sheet to add! </em></h3>
                 {#each selected_choice.summons as uuid, index}
                     <div class="flexrow">
-                        <input type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.summons.${index}` }} />
+                        <input
+                            type="text"
+                            use:updateDoc={{ doc, path: `system.choices.${selected_tab}.summons.${index}` }}
+                        />
                         <span>
                             {#await fromUuid(uuid)}
-                                Loading... 
-                            {:then actor} 
+                                Loading...
+                            {:then actor}
                                 {#if actor}
                                     {actor.name}
                                 {:else}
@@ -171,10 +173,10 @@
         div {
             flex: 1 0 auto;
         }
-        i {
-            margin-left: auto;
-            margin-right: 16px;
-            cursor: pointer;
-        }
+    }
+    i {
+        margin-left: auto;
+        margin-right: 16px;
+        cursor: pointer;
     }
 </style>

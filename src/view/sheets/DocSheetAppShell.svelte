@@ -11,6 +11,7 @@
     import AbilitySheet from "./AbilitySheet.svelte";
     import BondSheet from "./BondSheet.svelte";
     import JobSheet from "./JobSheet.svelte";
+    import BondPowerSheet from "./BondPowerSheet.svelte";
 
     export let elementRoot = void 0;
 
@@ -35,6 +36,8 @@
         <AbilitySheet />
     {:else if $tjs_doc.type == "bond"}
         <BondSheet />
+    {:else if $tjs_doc.type == "bond_power"}
+        <BondPowerSheet />
     {:else if $tjs_doc.type == "job"}
         <JobSheet />
     {:else}
