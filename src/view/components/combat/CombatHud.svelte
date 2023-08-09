@@ -85,11 +85,6 @@
             border-right: var(--primary-border);
             overflow: auto;
 
-            .interlink {
-                margin-top: -4px;
-                margin-bottom: -4px;
-            }
-
             .ability,
             .trait {
                 width: calc(100% - 20px);

@@ -5,6 +5,7 @@ export const ICON = {
         dsn_setup: "dice_so_nice_setup"
     },
     flags: {
-        swb_needs_commit: "swb_needs_commit"
+        swb_needs_commit: "swb_needs_commit",
+        status_ongoing: "status_ongoing"
     }
 };
