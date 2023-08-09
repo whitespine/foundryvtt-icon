@@ -1,6 +1,7 @@
 <script>
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
+    import { dropDocs } from "../actions/drop";
     import Portrait from "../components/Portrait.svelte";
     import EditableDocArray from "../components/generic/EditableDocArray.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
@@ -24,9 +25,32 @@
             [`system.choices`]: [...$doc.system.choices, {}],
         });
     }
+
+    // Handle dropped documents
+    function handleDrop(drop) {
+        let summons = selected_choice.summons;
+        summons = [...summons, drop.document.uuid];
+        $doc.update({
+            [`system.choices.${selected_tab}.summons`]: summons,
+        });
+    }
+
+    function allowDrop(drop) {
+        return drop.type == "Actor" && ["summon"].includes(drop.document.type);
+    }
+
+
+    // Delete the summon at the specified index for the current choice
+    function deleteSummon(index) {
+        let summons = selected_choice.summons;
+        summons = [...summons.slice(0, index), ...summons.slice(index + 1)];
+        $doc.update({
+            [`system.choices.${selected_tab}.summons`]: summons,
+        });
+    }
 </script>
 
-<main>
+<main use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
@@ -91,6 +115,29 @@
             <EditableDocArray title="Effects" path={`system.choices.${selected_tab}.effects`} />
 
             <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
+
+            <div class="flexcol">
+                <h3>Summons <em> - Drag onto this sheet to add! </em> </h3>
+                {#each selected_choice.summons as uuid, index}
+                    <div class="flexrow">
+                        <input type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.summons.${index}` }} />
+                        <span>
+                            {#await fromUuid(uuid)}
+                                Loading... 
+                            {:then actor} 
+                                {#if actor}
+                                    {actor.name}
+                                {:else}
+                                    NOT FOUND
+                                {/if}
+                            {:catch}
+                                INVALID
+                            {/await}
+                        </span>
+                        <i class="fas fa-trash" on:click={() => deleteSummon(index)} />
+                    </div>
+                {/each}
+            </div>
         </div>
     </section>
 </main>
