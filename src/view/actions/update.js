@@ -55,8 +55,9 @@ export function updateDoc(node, initial_options = {}) {
             console.warn('updateDoc.onChange warning: no associated document on change.');
             return;
         }
+        let value = ev.target.type === "checkbox" ? ev.target.checked : ev.target.value;
 
-        document.update({ [path]: ev.target.value });
+        document.update({ [path]: value });
     }
 
     /**
