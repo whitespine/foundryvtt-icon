@@ -1,3 +1,4 @@
+import { removeAllUUIDRefs } from "../../util/misc";
 import { CastingStringField, ControlledLengthArrayField, titleCaseString } from "../base";
 import { ItemModel } from "./item";
 
@@ -158,10 +159,14 @@ export class AbilityModel extends ItemModel {
         let name = data.name;
 
         // Establish some values. SWB values code abilities one at a time
+        let description = removeAllUUIDRefs(data.system.description);
+        let effects = description.replaceAll("<p>", "").split("</p>");
+        effects = effects.map(p => p.replaceAll(/<\/? ?(strong)>/g, ""));
         let dc = {
             ranges: [],
             tags: [],
-            description: data.system.description,
+            description: description,
+            effects: effects
         }; // Short for default choice
         data.system.choices = [dc];
 

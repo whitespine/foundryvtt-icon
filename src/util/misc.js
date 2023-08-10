@@ -20,3 +20,11 @@ export function chapterIcon(n) {
         3: "Ⅲ"
     }[n] ?? "I";
 }
+
+/**
+ * Remove UUID refs 
+ * @param {string} text The text to clean up
+ */
+export function removeAllUUIDRefs(text) {
+    return text.replaceAll(/@UUID\[.*?\]\{(.*?)\}/g, (_, n) => n);
+}
