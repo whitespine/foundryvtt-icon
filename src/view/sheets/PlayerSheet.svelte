@@ -65,7 +65,7 @@
             <input type="text" use:updateDoc={{ doc, path: "system.kin" }} />
             <span><strong>{localize("ICON.Culture")}:</strong> </span>
             <input type="text" use:updateDoc={{ doc, path: "system.culture" }} />
-            <span><strong>{localize("ICON.Bond.Bond")}:</strong></span>
+            <span><strong>{localize("ICON.Bonds.Bond")}:</strong></span>
             <span>{$actor.system.bond?.name ?? "None"}</span>
         </div>
         <div style="grid-area: comb" class="header-information">
@@ -132,38 +132,6 @@
     .sheet-body {
         padding: 5px 5px 0px 5px;
         flex: 1 0 auto;
-    }
-
-    .sheet-body.narrative {
-        max-height: calc(100% - 125px);
-    }
-
-    .sheet-body.combat {
         max-height: calc(100% - 162px);
-    }
-
-    .narrative {
-        display: grid;
-        grid-template: 1fr / 220px 1fr 220px;
-        height: 100%;
-
-        .leftcol,
-        .midcol {
-            border-right: var(--primary-border);
-            padding-right: 10px;
-        }
-        .midcol,
-        .rightcol {
-            padding-left: 10px;
-        }
-
-        .actions {
-            grid-area: actions;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-bottom: var(--primary-border);
-            padding-bottom: 10px;
-        }
     }
 </style>
