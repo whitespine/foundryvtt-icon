@@ -37,17 +37,8 @@
 </script>
 
 <div>
-    <TJSProseMirror
-        {options}
-        on:editor:cancel={() => console.log("! event - editor:cancel")}
-        on:editor:document:deleted={() => console.log("! event - editor:document:deleted")}
-        on:editor:enrichedContent={(event) =>
-            console.log(`! event - editor:enrichedContent - ${event.detail.enrichedContent}`)}
-        on:editor:save={(event) => console.log(`! event - editor:save - ${event.detail.content}`)}
-        on:editor:start={() => console.log("! event - editor:start")}
-    />
+    <TJSProseMirror {options} />
 </div>
 
 <style lang="scss">
-
 </style>
