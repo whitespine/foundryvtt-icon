@@ -1,5 +1,4 @@
 <script>
-    import { tooltip } from "@svelte-plugins/tooltips";
     import { getContext } from "svelte";
     import { localize } from "../../../util/misc";
     import DocClock from "../../components/generic/DocClock.svelte";
