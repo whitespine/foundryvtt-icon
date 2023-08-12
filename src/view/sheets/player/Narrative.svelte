@@ -1,5 +1,4 @@
 <script>
-    import { tooltip } from "@svelte-plugins/tooltips";
     import { getContext } from "svelte";
     import { localize } from "../../../util/misc";
     import BoundedNumberDisplay from "../../components/generic/BoundedNumberDisplay.svelte";
@@ -48,7 +47,7 @@
             {#if $actor.system.bond}
                 <h2
                     style="text-align: center;"
-                    use:tooltip={{ content: $actor.system.bond.system.description }}
+                    data-tooltip={ $actor.system.bond.system.description }
                     use:dragAsDoc={{ doc: $actor.system.bond }}
                     draggable="true"
                 >

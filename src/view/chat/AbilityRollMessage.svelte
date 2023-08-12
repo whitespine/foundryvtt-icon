@@ -26,25 +26,43 @@
      */
     export let choice_index;
 
+    /**
+     * Boons on attack rolll
+     * @type {number}
+     */
+    export let boon;
+    let attack_roll_formula;
+    $: attack_roll_formula = boon === 0 ? "1d20" : boon > 0 ? `1d20 + ${boon}d6kh1` : `1d20 - ${-boon}d6kh1`;
+
     // Deduce the item
     let item = fromUuidSync(ability_uuid);
 
+    // Setup context
+    let doc = null;
+    if (item) {
+        doc = new TJSDocument(item.actor);
+        setContext("tjs_doc", doc);
+        setContext("tjs_item", doc);
+    }
     if (item?.actor) setContext("tjs_actor", new TJSDocument(item.actor));
+
+    let choice = item?.system.choices[choice_index] ?? null;
 
     // Defaults for our tokens etc
     let attack_roll_tokens;
-    $: attack_roll_tokens = [new Token({ text: "Hit: " }), new Token({ formula: "1d20" })];
+    $: attack_roll_tokens = [new Token({ text: "Attack: " }), new Token({ formula: attack_roll_formula })];
 </script>
 
 <div class="icon flexcol">
+    {boon}
     {#if item}
         <h3>{item.name}</h3>
-        {#if true}
+        {#if choice?.is_attack}
             <TokenSequence initial_tokens={attack_roll_tokens} key={`${msg.id}_to_hit`} />
         {/if}
 
-        {#if choice_index < item.system.choices.length}
-            <AbilityDetail choice={item.system.choices[choice_index]} key={`${msg.id}_body`} />
+        {#if choice}
+            <AbilityDetail {choice} key={`${msg.id}_body`} />
         {:else}
             <span>Error: Ability choice could not be resolved</span>
         {/if}

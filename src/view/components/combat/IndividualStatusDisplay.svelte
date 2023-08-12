@@ -1,6 +1,5 @@
 <script>
     import { getContext } from "svelte";
-    import { tooltip } from "@svelte-plugins/tooltips";
     import { ICON } from "../../../consts";
 
     export let status;
@@ -49,12 +48,8 @@
             {count}
         {/if}
     </span>
-    <!--<i
-        on:click={() => status.sheet?.render(true, { focus: true })}
-        class="fas fa-edit fa-lg"
-        use:tooltip={{ content: "Edit" }}
-    />-->
-    <i on:click={() => status.delete()} class="fas fa-trash" use:tooltip={{ content: `Delete ${status.name}`, position: "left" }} />
+
+    <i on:click={() => status.delete()} class="fas fa-trash" data-tooltip="Delete" />
 </div>
 
 <style lang="scss">

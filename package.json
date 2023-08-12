@@ -12,7 +12,6 @@
     "#standard/*": "@typhonjs-fvtt/svelte-standard/*"
   },
   "dependencies": {
-    "@svelte-plugins/tooltips": "^0.1.6",
     "@typhonjs-fvtt/runtime": "^0.1.1",
     "@typhonjs-fvtt/svelte-standard": "^0.1.0",
     "svelte": "^4.0.0"

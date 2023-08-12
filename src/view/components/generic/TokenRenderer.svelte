@@ -1,6 +1,5 @@
 <script>
     import { Token } from "../../../util/nlp";
-    import { tooltip } from "@svelte-plugins/tooltips";
     import SmallRoll from "./dice/SmallRoll.svelte";
     import { createEventDispatcher } from "svelte";
     import { TJSDialog } from "#runtime/svelte/application";
@@ -30,33 +29,11 @@
         dispatch("savetokens");
     }
 
-    /** Summon a full tooltip */
-    function summonDescription() {
-        new TJSDialog({
-            content: token.tooltip,
-            modal: true,
-            title: `Define: ${token.text}`
-        }).render(true, { focus: true });
-    }
-
-    /** Conditionally invokes the tooltip action if options is not null */
-    function condTooltip(node, options) {
-        let curr_sub = null;
-        function update(new_options) {
-            if (!new_options && curr_sub) {
-                curr_sub.destroy();
-                curr_sub = null;
-            } else if (new_options && !curr_sub) {
-                curr_sub = tooltip(node, new_options);
-            } else if (curr_sub) {
-                curr_sub.update?.(new_options);
-            }
-        }
-        update(options);
-        return {
-            destroy: () => curr_sub?.destroy?.(),
-            update,
-        };
+    /** Post the tooltip */
+    function postDescription() {
+        ChatMessage.create({
+            content: `<strong>${token.text}</strong>: ${token.tooltip}`,
+        });
     }
 
     /** Generic click handler, multiplexes to more specific options */
@@ -64,7 +41,7 @@
         if (token.formula) {
             requestRoll();
         } else if (token.tooltip) {
-            summonDescription();
+            postDescription();
         }
     }
 
@@ -76,7 +53,7 @@
     class:inline-container={token.children}
     class:clickable
     on:click={click}
-    use:condTooltip={token.tooltip ? { content: token.tooltip, autoPosition: true } : null}
+    data-tooltip={token.tooltip ?? null}
 >
     {#if token.roll}
         <SmallRoll roll={token.roll} />

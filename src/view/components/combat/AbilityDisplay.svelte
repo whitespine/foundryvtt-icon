@@ -1,10 +1,8 @@
 <script>
     import { createEventDispatcher, getContext } from "svelte";
-    import RichTextDisplay from "../generic/RichTextDisplay.svelte";
-    import { IconItem } from "../../../documents/item";
     import AbilityDetail from "./AbilityDetail.svelte";
-    import { tooltip } from "@svelte-plugins/tooltips";
     import { TJSDialog } from "#runtime/svelte/application";
+    import { BoonBaneApplication } from "../../apps/BoonBaneApplication";
 
     // Needed for token elements
     export let key;
@@ -13,11 +11,20 @@
     export let ability;
 
     async function rollChoice(index) {
+        let choice = ability.system.choices[index];
+        let boon = 0;
+        // Prompt boon if we are an attack
+        if (choice.is_attack) {
+            boon = await BoonBaneApplication.promptBoonBane({
+                content: `Select Boons/Banes for ${choice.name} Attack Roll`,
+            });
+        }
         await ChatMessage.create({
             [`flags.${game.system.id}.data`]: {
                 type: "ability",
                 ability_uuid: ability.uuid,
                 choice_index: index,
+                boon,
             },
         });
     }
@@ -36,7 +43,7 @@
             onYes: () => {
                 // Delete the item entirely
                 ability.delete();
-                
+
                 dispatch("clear");
             },
         });
@@ -50,14 +57,14 @@
         {#each ability.system.choices as choice, i}
             <div class="choice" class:bottomed={i < ability.system.choices.length - 1}>
                 <AbilityDetail {choice} key={`${key}_ability_${i}`} style="flex: auto" />
-                <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} use:tooltip={{ content: "Activate", position: "left" }} />
+                <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} data-tooltip="Activate" />
             </div>
         {/each}
     {/if}
     {#if ability}
         <div class="bottom-controls">
-            <i class="fas fa-edit" on:click={editSelected} use:tooltip={{ content: "Edit" }} />
-            <i class="fas fa-trash" on:click={deleteSelected} use:tooltip={{ content: "Delete" }} />
+            <i class="fas fa-edit" on:click={editSelected} data-tooltip="Edit" />
+            <i class="fas fa-trash" on:click={deleteSelected} data-tooltip="Delete" />
         </div>
     {/if}
 </div>
