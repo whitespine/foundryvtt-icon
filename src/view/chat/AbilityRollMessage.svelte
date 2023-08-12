@@ -54,7 +54,6 @@
 </script>
 
 <div class="icon flexcol">
-    {boon}
     {#if item}
         <h3>{item.name}</h3>
         {#if choice?.is_attack}

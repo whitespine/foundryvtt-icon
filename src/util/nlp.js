@@ -147,7 +147,7 @@ export function setupTransformers() {
 
     // Make dice formulae in angle brackets rollable
     StaticTransformers.push(new Transformer(
-        /<(\S+)>/g,
+        /\[\[(\S+)\]\]/g,
         (ctx, m) => [
             new Token({
                 formula: m[0],

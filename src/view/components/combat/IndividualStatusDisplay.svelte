@@ -49,19 +49,24 @@
         {/if}
     </span>
 
+    <i on:click={() => status.delete()} class="fas fa-circle-plus" data-tooltip="Delete" />
+    <!-- svelte-ignore missing-declaration -->
+    <i on:click={() => ChatMessage.create({
+        content: status.name
+    })} class="fas fa-comment" data-tooltip="Post" />
+    <i on:click={() => status.sheet?.render(true, {focus: true})} class="fas fa-edit" data-tooltip="Edit" />
     <i on:click={() => status.delete()} class="fas fa-trash" data-tooltip="Delete" />
 </div>
 
 <style lang="scss">
     div {
         display: grid;
-        grid-template-columns: 48px 1fr repeat(1, 24px);
+        grid-template-columns: 48px 1fr repeat(4, 24px);
         grid-auto-flow: dense;
 
         align-items: center;
 
-        i,
-        strong {
+        i {
             cursor: pointer;
         }
 

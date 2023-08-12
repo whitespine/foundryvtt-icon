@@ -23,6 +23,8 @@
     async function requestRoll() {
         let roll = new Roll(token.formula);
         await roll.roll();
+        let volume = game.settings.get("core", "globalInterfaceVolume");
+        game.audio.play(CONFIG.sounds.dice, {volume});
         addChild({
             roll: roll.toJSON(),
         });
