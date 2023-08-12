@@ -14,12 +14,12 @@
     const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
     const abilities = actor.embedded.create(Item, {
         name: "abilities",
-        filters: [(i) => i.type === "ability"],
+        filters: [(i) => !i.system.trait],
         sort: name_alphabetical,
     });
     const traits = actor.embedded.create(Item, {
         name: "traits",
-        filters: [(i) => i.type === "trait"],
+        filters: [(i) => i.system.trait],
         sort: name_alphabetical,
     });
 
