@@ -1,5 +1,4 @@
 <script>
-    import { getContext } from "svelte";
     import { ICON } from "../../../consts";
 
     export let status;
@@ -35,11 +34,19 @@
 
     // Definition if we can grab it
     let definition;
+    $: definition = status.getFlag(game.system.id, "description") ?? "No description";
+
+    // Post it in chat
+    function post() {
+        ChatMessage.create({
+            content: `<strong>${status.name}</strong>  ${definition}`,
+        });
+    }
 </script>
 
 <div class="statuses">
     <img src={status.img} />
-    <span>
+    <span data-tooltip={definition}>
         {status.name}
         {#if ongoing}
             (+)
@@ -49,12 +56,14 @@
         {/if}
     </span>
 
-    <i on:click={() => status.delete()} class="fas fa-circle-plus" data-tooltip="Delete" />
+    <i
+        on:click={() => ui.notifications.warn("Not yet supported")}
+        class="fas fa-circle-plus"
+        data-tooltip="Make Ongoing"
+    />
     <!-- svelte-ignore missing-declaration -->
-    <i on:click={() => ChatMessage.create({
-        content: status.name
-    })} class="fas fa-comment" data-tooltip="Post" />
-    <i on:click={() => status.sheet?.render(true, {focus: true})} class="fas fa-edit" data-tooltip="Edit" />
+    <i on:click={post} class="fas fa-comment" data-tooltip="Post" />
+    <i on:click={() => status.sheet?.render(true, { focus: true })} class="fas fa-edit" data-tooltip="Edit" />
     <i on:click={() => status.delete()} class="fas fa-trash" data-tooltip="Delete" />
 </div>
 
