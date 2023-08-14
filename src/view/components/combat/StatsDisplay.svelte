@@ -9,11 +9,11 @@
 
 <div {...$$restProps}>
     <div class:bloodied={$actor.system.bloodied}>
-        <BoundedNumberDisplay name={localize("ICON.Health")} path="system.hp" />
+        <BoundedNumberDisplay name={localize("ICON.Harm.Health")} path="system.hp" />
     </div>
-    <BoundedNumberDisplay name={localize("ICON.Vigor")} path="system.vigor" />
+    <BoundedNumberDisplay name={localize("ICON.Harm.Vigor")} path="system.vigor" />
     {#if $actor.system.wounds?.max}
-        <BoundedNumberDisplay name={localize("ICON.Wounds")} path="system.wounds" />
+        <BoundedNumberDisplay name={localize("ICON.Harm.Wounds")} path="system.wounds" />
     {/if}
     {#if $actor.type === "player"}
         <label for="resolve">{localize("ICON.Resolve")}</label>

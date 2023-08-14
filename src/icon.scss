@@ -15,6 +15,7 @@ $document-types: join($item-types, $actor-types);
     --tertiary-background: rgb(146, 228, 38);
     --tertiary-color: rgb(50, 11, 46);
     --primary-border: 1px solid white;
+    --secondary-border: 1px solid rgb(27, 10, 55);
 
     // Tabs
     --tab-inactive-background: #344538;
@@ -48,7 +49,7 @@ $document-types: join($item-types, $actor-types);
 
 
 // Fix inputs on sheets and other stuff core foundry is annoying about
-.icon.sheet > section > main {
+.icon > section > main {
     background: var(--primary-background);
     color: var(--primary-color);
 
@@ -87,6 +88,10 @@ $document-types: join($item-types, $actor-types);
             }
         }
     }
+}
+
+div.icon section.window-content {
+    padding: 0px;
 }
 
 /** For inline text containers **/

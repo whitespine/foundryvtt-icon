@@ -54,7 +54,5 @@
         .burdens {
             border-right: var(--primary-border);
         }
-        .ambitions {
-        }
     }
 </style>

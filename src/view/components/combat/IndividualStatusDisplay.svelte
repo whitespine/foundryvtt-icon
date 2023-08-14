@@ -56,6 +56,7 @@
         {/if}
     </span>
 
+    <!-- svelte-ignore missing-declaration -->
     <i
         on:click={() => ui.notifications.warn("Not yet supported")}
         class="fas fa-circle-plus"

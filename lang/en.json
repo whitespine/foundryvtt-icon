@@ -220,9 +220,6 @@
     "Class": "Class",
     "Job": "Job",
     "Level": "Level",
-    "Health": "HP",
-    "Vigor": "Vigor",
-    "Wounds": "Wounds",
     "JobResource": "Job Resource",
     "Strain": "Strain",
     "Effort": "Effort",
@@ -351,6 +348,12 @@
       "Standard": "Standard",
       "Great": "Great",
       "Super": "S.Powered"
+    },
+    "Harm": {
+      "Title": "Harm",
+      "Health": "HP",
+      "Vigor": "Vigor",
+      "Wounds": "Wounds"
     },
     "Foe": {
       "Abilities": "Abilities",

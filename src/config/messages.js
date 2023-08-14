@@ -1,8 +1,8 @@
 // Sets up our svelte messages
 
-import { Token } from "../util/nlp";
 import { TOKEN_STORES } from "../util/stores";
 import AbilityRollMessage from "../view/chat/AbilityRollMessage.svelte";
+import HarmManifestMessage from "../view/chat/HarmManifestMessage.svelte";
 import NarrativeRollMessage from "../view/chat/NarrativeRollMessage.svelte";
 
 export class SvelteChatLog extends ChatLog {
@@ -52,6 +52,8 @@ export function setupMessages() {
                 msg._svelteComponent = new AbilityRollMessage({ target, props });
             } else if (type == "narrative") {
                 msg._svelteComponent = new NarrativeRollMessage({ target, props })
+            } else if (type == "harm") {
+                msg._svelteComponent = new HarmManifestMessage({ target, props })
             }
 
             // Update token stores
