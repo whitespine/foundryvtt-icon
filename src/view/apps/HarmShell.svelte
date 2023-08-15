@@ -28,7 +28,7 @@
         <div class="targs">
             <span>Targets:</span>
             {#each $SELECTED_TOKENS as st (st.id)}
-                <img transition:slide={{ axis: "x", duration: 200 }} src={st.actor.img} data-tooltip={st.actor.name} />
+                <img transition:slide={{ axis: "x", duration: 200 }} src={st.document.texture?.src} data-tooltip={st.actor.name} />
             {/each}
             {#if $SELECTED_TOKENS.size === 0}
                 <span>Select tokens to apply damage to</span>

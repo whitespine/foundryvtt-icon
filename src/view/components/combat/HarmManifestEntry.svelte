@@ -1,7 +1,8 @@
 <script>
     import * as harm from "../../../util/harm";
     import HarmRecord from "./HarmRecord.svelte";
-    import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
+    import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
+    import { slide } from "svelte/transition";
 
     /** @type {string} */
     export let actor_uuid;
@@ -17,15 +18,24 @@
 
     /** @type {boolean} */
     let can_apply;
-    $: can_apply = last_record.final_hp != $actor.system.hp.value || last_record.final_vigor != $actor.system.vigor.value;
+    $: can_apply =
+        last_record.final_hp != $actor.system.hp.value || last_record.final_vigor != $actor.system.vigor.value;
+
+    /** @type {boolean} */
+    let can_see;
+    $: can_see = $actor.testUserPermission(game.user, "OBSERVER");
 
     // Sets the actors hp/vigor to match the end of the record
     function apply() {
         $actor.update({
             "system.hp.value": last_record.final_hp,
             "system.vigor.value": last_record.final_vigor,
-        })
+        });
     }
+
+    setTimeout(() => {
+        records = records.push()
+    })
 </script>
 
 <div class="flexcol">
@@ -39,7 +49,9 @@
     </div>
 
     {#each records as rec}
-        <HarmRecord record={rec} />
+        <div transition:slide={{ axis: "y", duration: 200 }}>
+            <HarmRecord record={rec} obscure={!can_see} />
+        </div>
     {/each}
 
     {#if can_apply}

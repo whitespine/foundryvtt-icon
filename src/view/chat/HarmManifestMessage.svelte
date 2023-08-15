@@ -4,6 +4,7 @@
     import * as harm from "../../util/harm";
     import HarmManifestEntry from "../components/combat/HarmManifestEntry.svelte";
     import { simpleUnslugifyObject } from "../actions/util";
+    import HarmApplication from "../apps/HarmApplication";
 
     /** @type {ChatMessage} */
     // svelte-ignore unused-export-let
@@ -23,8 +24,17 @@
 </script>
 
 <div class="icon flexcol">
-    <h1>Damage</h1>
+    <h1 on:click={() => new HarmApplication().render(true, {focus: true})}>
+        Damage Planner
+        <i class="fas fa-spider" />
+    </h1>
     {#each Object.entries(fixed_manifest) as [actor_uuid, records]}
         <HarmManifestEntry actor_uuid={actor_uuid} records={records} />
     {/each}
 </div>
+
+<style lang="scss">
+    h1 {
+        cursor: pointer;
+    }
+    </style>

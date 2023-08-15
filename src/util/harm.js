@@ -40,9 +40,12 @@ Hooks.on("getSceneControlButtons", (controls) => {
  * 
  * @property {number} original_hp The original hp value
  * @property {number} final_hp The hp value post harm/heal
+ * @property {boolean} original_bloodied Were they bloodied before?
+ * @property {boolean} final_bloodied Are they bloodied after?
  * 
  * @property {number} original_vigor The original vigor value
  * @property {number} final_vigor The vigor value post harm/heal
+ * 
  */
 
 /**
@@ -139,6 +142,7 @@ export function planHarm(actor, harm_instances) {
     // Get initial values
     let final_hp = actor.system.hp.value;
     let final_vigor = actor.system.vigor.value;
+    let bloodied_threshold = (actor.system.true_max_hp ?? actor.system.hp.max) / 2;
 
     for (let harm_instance of harm_instances) {
         let { amount, type } = harm_instance;
@@ -174,8 +178,10 @@ export function planHarm(actor, harm_instances) {
             actor: actor.uuid,
             original_hp: step_original_hp,
             original_vigor: step_original_vigor,
+            original_bloodied: step_original_hp <= bloodied_threshold,
             final_hp,
             final_vigor,
+            final_bloodied: final_hp <= bloodied_threshold,
         });
     }
     return result;
