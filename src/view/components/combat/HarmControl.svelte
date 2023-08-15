@@ -1,5 +1,7 @@
 <script>
+    import { createEventDispatcher } from "svelte";
     import { ICON } from "../../../consts";
+    import { quickDamage } from "../../../util/harm";
 
     // How much damage/vigor it grants
     /**
@@ -11,14 +13,20 @@
     let smalltext;
     $: smalltext = svalue.length > 1;
 
+    // Dispatch harm
     function hurt(type) {
-        console.log(`${type} ${value}`);
+        dispatch("harm", {
+            type,
+            value: svalue
+        });
     }
 
     function edit(evt) {
         evt.stopPropagation();
         evt.preventDefault();
     }
+
+    const dispatch = createEventDispatcher();
 </script>
 
 <div class="root" {...$$restProps}>
@@ -26,7 +34,7 @@
         <span class:smalltext>{value}</span>
     </div>
     <div class="overlay">
-        {#each ["damage", "pierce", "divine", "vigor"] as type}
+        {#each ["damage", "piercing", "divine", "vigor"] as type}
             <i
                 style="grid-area: {type}"
                 class="{ICON.css[type]} fa-lg"
@@ -86,12 +94,16 @@
         }
 
         grid-template:
-            "damage pierce" 28px
+            "damage piercing" 28px
             "divine vigor" 28px / 28px 28px;
 
         i {
             color: rgb(18, 35, 57);
             cursor: pointer;
+            &:hover {
+                opacity: 1.0;
+                color: rgb(133, 228, 255);
+            }
         }
     }
 </style>

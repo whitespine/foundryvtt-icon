@@ -3,6 +3,7 @@
     import { setContext } from "svelte";
     import * as harm from "../../util/harm";
     import HarmManifestEntry from "../components/combat/HarmManifestEntry.svelte";
+    import { simpleUnslugifyObject } from "../actions/util";
 
     /** @type {ChatMessage} */
     // svelte-ignore unused-export-let
@@ -15,11 +16,15 @@
      * @type {harm.HarmManifest}
      */
     export let harm_manifest;
+
+    // Un-Slugify it
+    let fixed_manifest;
+    $: fixed_manifest = simpleUnslugifyObject(harm_manifest);
 </script>
 
 <div class="icon flexcol">
     <h1>Damage</h1>
-    {#each Object.entries(harm_manifest) as [actor_uuid, records]}
+    {#each Object.entries(fixed_manifest) as [actor_uuid, records]}
         <HarmManifestEntry actor_uuid={actor_uuid} records={records} />
     {/each}
 </div>

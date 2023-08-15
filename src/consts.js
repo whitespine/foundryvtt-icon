@@ -11,7 +11,7 @@ export const ICON = {
     css: {
         hp: "fas fa-heart",
         damage: "fas fa-burst",
-        pierce: "fas fa-shield-slash",
+        piercing: "fas fa-shield-slash",
         divine: "fas fa-stars",
         vigor: "fas fa-shield-plus"
     },

@@ -55,3 +55,13 @@ export function easyActionBuilder(listeners, options_validator=null) {
     }
     return action;
 }
+
+
+// Used for when we need uuids in a dic
+export function simpleSlugifyObject(obj) {
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll(".", "_"), v]));
+}
+
+export function simpleUnslugifyObject(obj) {
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll("_", "."), v]));
+}

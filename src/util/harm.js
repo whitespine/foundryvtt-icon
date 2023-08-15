@@ -1,5 +1,7 @@
 import { IconActor } from "../documents/actor";
+import { simpleSlugifyObject, simpleUnslugifyObject } from "../view/actions/util";
 import HarmApplication from "../view/apps/HarmApplication";
+import { adminUpdateMessage } from "./socket";
 
 Hooks.on("getSceneControlButtons", (controls) => {
     let tokenControls = controls.find(control => control.name === "token")
@@ -62,7 +64,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
 export function computeHarm(actor, type, amount, mod) {
     if (!(actor instanceof IconActor)) throw new TypeError("First argument must be an actor");
     const valid_types = ["damage", "piercing", "divine", "vigor"];
-    if (valid_types.includes(type)) throw new TypeError(`Second argument must be one of ${valid_types.join('|')}`);
+    if (!valid_types.includes(type)) throw new TypeError(`Second argument must be one of ${valid_types.join('|')}, not ${type}`);
 
     // First parse the amount
     if (typeof amount === "string") {
@@ -90,7 +92,6 @@ export function computeHarm(actor, type, amount, mod) {
     // Then handle the type/mods/armor
     let original_amount = amount;
     let armor_reduction = 0;
-    let rounded = false;
     switch (type) {
         case "damage":
             // Reduced by armor
@@ -105,7 +106,6 @@ export function computeHarm(actor, type, amount, mod) {
             if (mod === "ignore") {
                 amount = 0;
             } else if (mod === "half") {
-                rounded = !!(amount % 2);
                 amount = Math.ceil(amount / 2);
             }
             break;
@@ -170,7 +170,7 @@ export function planHarm(actor, harm_instances) {
 
         // Return our record
         result.push({
-            harm,
+            harm: harm_instance,
             actor: actor.uuid,
             original_hp: step_original_hp,
             original_vigor: step_original_vigor,
@@ -180,73 +180,6 @@ export function planHarm(actor, harm_instances) {
     }
     return result;
 }
-
-
-
-/**
- * Alters a harm instance to have a specific modifier
- * 
- * WIP - doesn't work, might not be needed.
- * 
- * @param {HarmInstance} harm_instance The record to modify
- * @param {HarmInstance["mod"]} new_mod Its new mod value
- * @returns {HarmInstance} A new instance
- */
-export function changeMod(harm_instance, new_mod) {
-    if (harm_instance.mod === "half") {
-        if (new_mod === "half") {
-            // No change! Already frozen, so just return
-            return harm_instance;
-        } else if (new_mod === "ignore") {
-            // Need to heal by the inflicted amount
-            return Object.freeze({
-                ...harm_instance,
-                amount: 0
-            });
-        } else {
-            // Need to heal by the inflicted amount
-            return Object.freeze({
-                ...harm_instance,
-                amount: 0
-            });
-        }
-    } else if (harm_instance.mod === "ignore") {
-
-        if (new_mod === "half") {
-
-        } else if (new_mod === "ignore") {
-            // No change! Shallow copy
-            return { ...harm_record };
-        } else {
-            // We need to essentiaally fully apply it, since it was previously ignored
-        }
-    } else {
-        // Assumed to be null
-        if (new_mod === "half") {
-
-        } else if (new_mod === "ignore") {
-
-        } else {
-            // No change! Shallow copy
-            return { ...harm_record };
-        }
-    }
-}
-
-/**
- * Replace the given harm record with another.
- * This, in effect
- * 
- * @param {HarmRecord} harm_record The original harm, which is assumed to have bee
- * @param {HarmRecord | null} replacing_record The record being replaced, if applicable
- */
-export async function inflictReplacedHarm(harm_record, replacing_record = null) {
-    // Check values are the same
-    if (replacing_record && replacing_record.harm.actor != harm_record.harm.actor) {
-        throw new Error("When replacing harm, both instances must target the same actor!");
-    }
-}
-
 
 /**
  * Apply the given harm manifest, in a vacuum. Basically just does damage to a unit!
@@ -288,16 +221,17 @@ export function replayManifest(manifest) {
         }
         new_manifest[uuid] = planHarm(actor, records.map(r => r.harm));
     }
+    return new_manifest;
 }
 
 /**
  * Get or create the most recent HarmManifest chat message.
- * @returns {ChatMessage} message
+ * @returns {Promise<ChatMessage>} message
  */
 export async function getCurrentHarmManifestMessage() {
     // Only look at the most recent message
-    let mrm = game.messages.contents[game.message.contents.length - 1];
-    if(mrm.getFlag(game.system.id, "data")?.type === "harm") {
+    let mrm = game.messages.contents[game.messages.contents.length - 1];
+    if(mrm && mrm.getFlag(game.system.id, "data")?.type === "harm") {
         return mrm;
     } else {
         return ChatMessage.create({
@@ -310,14 +244,41 @@ export async function getCurrentHarmManifestMessage() {
 }
 
 /**
- * Does quite a bit of work. 
+ * Performs the following
  * 1. Gets the most recent harm manifest message
  * 2. Modifies it to include the provided harm instance
- * 3. Applies the damage to the actor
+ * Does not actually modify the actor.
  * 
- * @param {*} actor 
- * @param {*} harm_instance 
+ * @param {Array<[IconActor, HarmInstance]>} harms 
  */
-export async function quickDamage(actor, harm_instance) {
+export async function quickDamage(harms) {
+    let message = await getCurrentHarmManifestMessage();
+    
+    /** @type {HarmManifest} */
+    let manifest = message.getFlag(game.system.id, "data")?.harm_manifest;
+    manifest = simpleUnslugifyObject(manifest);
 
+    // Create a temporary new manifest entry
+    for(let [actor, harm_instance] of harms) {
+        if(!manifest[actor.uuid]) manifest[actor.uuid] = [];
+        manifest[actor.uuid].push({
+            harm: harm_instance,
+            actor: actor.uuid,
+            final_hp: -1,
+            final_vigor: -1,
+            original_hp: -1,
+            original_vigor: -1
+        });
+    }
+
+    // Replay the manifest
+    manifest = replayManifest(manifest);
+
+    // Slugify it
+    manifest = simpleSlugifyObject(manifest);
+
+    console.log(manifest);
+    await adminUpdateMessage(message, {
+        [`flags.${game.system.id}.data.harm_manifest`]: manifest
+    });
 }

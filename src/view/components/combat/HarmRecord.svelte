@@ -8,7 +8,7 @@
     // Let the tooltip show how the damage was computed
     let tooltip;
     $: {
-        tooltip = `${record.harm.original_amount}`;
+        tooltip = `${record.harm.original_amount} damage`;
         if(record.harm.armor_reduction) {
             tooltip += ` → ${record.harm.original_amount - record.harm.armor_reduction} (armor)`;
         }
@@ -18,8 +18,8 @@
     }
 </script>
 
-<div class="flexrow">
-    <i class="{ICON.css[record.harm.type]}" />
+<div>
+    <i class="{ICON.css[record.harm.type]}" data-tooltip={record.harm.type} />
     <span data-tooltip={tooltip}>
         {record.harm.amount}
         |
@@ -34,5 +34,7 @@
 </div>
 
 <style lang="scss">
-
+    div {
+        padding: 2px
+    }
 </style>

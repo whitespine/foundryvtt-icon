@@ -40,5 +40,19 @@ class KeyStoreLookup {
 // We use this for tokens
 export const TOKEN_STORES = new KeyStoreLookup();
 
-// TODO remove
-window.tokenstores = TOKEN_STORES;
+// Currently selected tokens
+export const SELECTED_TOKENS = writable(new Set());
+
+Hooks.on("controlToken", (token, controlled) => {
+    if(controlled) {
+        SELECTED_TOKENS.update(s => {
+            s.add(token);
+            return s;
+        });
+    } else {
+        SELECTED_TOKENS.update(s => {
+            s.delete(token);
+            return s;
+        });
+    }
+});
