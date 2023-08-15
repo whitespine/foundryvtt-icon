@@ -11,6 +11,7 @@
 
     export let elementRoot;
 
+    /** @type {number} Our editable damage field*/
     let custom = 0;
 
     function emitHarm(evt) {
