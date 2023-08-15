@@ -17,6 +17,7 @@ export default class HarmApplication extends SvelteApplication {
          width: 64 * 8,
          height: 128+30,
          classes: ["icon"],
+         zIndex: null,
 
          svelte: {
             class: HarmShell,

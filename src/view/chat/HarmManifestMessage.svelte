@@ -1,10 +1,11 @@
 <!-- Super simple Svelte component that takes in a prop and outputs it. -->
 <script>
+harm.
+
     import { setContext } from "svelte";
     import * as harm from "../../util/harm";
     import HarmManifestEntry from "../components/combat/HarmManifestEntry.svelte";
     import { simpleUnslugifyObject } from "../actions/util";
-    import HarmApplication from "../apps/HarmApplication";
 
     /** @type {ChatMessage} */
     // svelte-ignore unused-export-let
@@ -24,7 +25,7 @@
 </script>
 
 <div class="icon flexcol">
-    <h1 on:click={() => new HarmApplication().render(true, {focus: true})}>
+    <h1 on:click={showHarmApplication}>
         Damage Planner
         <i class="fas fa-spider" />
     </h1>

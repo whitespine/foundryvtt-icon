@@ -10,11 +10,27 @@ Hooks.on("getSceneControlButtons", (controls) => {
         title: "ICON.Harm.Title",
         icon: "fas fa-spider",
         onClick: async (away) => {
-            new HarmApplication().render(true, { focus: true })
+            showHarmApplication();
         },
         button: true
     });
 });
+
+let harmAppId = null;
+
+/**
+ * Shows the harm application singleton
+ */
+export async function showHarmApplication() {
+    let app;
+    if(harmAppId && ui.windows[harmAppId]) {
+        app = ui.windows[harmAppId];
+    } else {
+        app = new HarmApplication();
+    }
+    await app.render(true, { focus: true })
+    harmAppId = app.appId;
+}
 
 /**
  * @typedef {object} HarmInstance Records an instance of computed harm. 

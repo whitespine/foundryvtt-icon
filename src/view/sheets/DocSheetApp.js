@@ -36,6 +36,7 @@ export default class TJSDocSheet extends SvelteApplication {
       height: 800,
       positionOrtho: false,
       title: "Document Sheet",
+      zIndex: null,
       svelte: {
         class: DocSheetAppShell,
         target: document.body,
