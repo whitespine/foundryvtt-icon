@@ -11,6 +11,8 @@
 
     export let elementRoot;
 
+    let custom = 0;
+
     function emitHarm(evt) {
         let { type, value } = evt.detail;
         let items = [];
@@ -35,11 +37,13 @@
             {/if}
         </div>
         <div class="standard">
-            {#each [1, 2, 3, 4, 999, "25%"] as value}
+            {#each [1, 2, 3, 4, 999, "25%", custom] as value}
                 <HarmControl {value} on:harm={emitHarm} />
             {/each}
         </div>
-        <div class="customs" />
+        <div class="customs" data-tooltip="Custom damage">
+            <input type="number" bind:value={custom} />
+        </div>
     </main>
 </ApplicationShell>
 
@@ -76,6 +80,12 @@
 
     .customs {
         grid-area: custom;
+        input {
+            height: 100%;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px;
+        }
     }
 
     .standard,
