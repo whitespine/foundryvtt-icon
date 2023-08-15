@@ -2,7 +2,6 @@
     import * as harm from "../../../util/harm";
     import HarmRecord from "./HarmRecord.svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-    import { slide } from "svelte/transition";
 
     /** @type {string} */
     export let actor_uuid;
@@ -18,8 +17,8 @@
 
     /** @type {boolean} */
     let can_apply;
-    $: can_apply =
-        last_record.final_hp != $actor.system.hp.value || last_record.final_vigor != $actor.system.vigor.value;
+    $: can_apply = last_record && (
+        last_record.final_hp != $actor.system.hp.value || last_record.final_vigor != $actor.system.vigor.value);
 
     /** @type {boolean} */
     let can_see;
@@ -32,10 +31,6 @@
             "system.vigor.value": last_record.final_vigor,
         });
     }
-
-    setTimeout(() => {
-        records = records.push()
-    })
 </script>
 
 <div class="flexcol">
@@ -48,8 +43,8 @@
         {/if}
     </div>
 
-    {#each records as rec}
-        <div transition:slide={{ axis: "y", duration: 200 }}>
+    {#each records as rec, i (i)}
+        <div>
             <HarmRecord record={rec} obscure={!can_see} />
         </div>
     {/each}

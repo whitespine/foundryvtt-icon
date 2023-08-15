@@ -237,7 +237,7 @@ export function replayManifest(manifest) {
 export async function getCurrentHarmManifestMessage() {
     // Only look at the most recent message
     let mrm = game.messages.contents[game.messages.contents.length - 1];
-    if(mrm && mrm.getFlag(game.system.id, "data")?.type === "harm") {
+    if (mrm && mrm.getFlag(game.system.id, "data")?.type === "harm") {
         return mrm;
     } else {
         return ChatMessage.create({
@@ -259,22 +259,23 @@ export async function getCurrentHarmManifestMessage() {
  */
 export async function quickDamage(harms) {
     let message = await getCurrentHarmManifestMessage();
-    
+
     /** @type {HarmManifest} */
     let manifest = message.getFlag(game.system.id, "data")?.harm_manifest;
     manifest = simpleUnslugifyObject(manifest);
 
     // Create a temporary new manifest entry
-    for(let [actor, harm_instance] of harms) {
-        if(!manifest[actor.uuid]) manifest[actor.uuid] = [];
-        manifest[actor.uuid].push({
+    for (let [actor, harm_instance] of harms) {
+        if (!manifest[actor.uuid]) manifest[actor.uuid] = [];
+        manifest[actor.uuid] = [...manifest[actor.uuid],
+        {
             harm: harm_instance,
             actor: actor.uuid,
             final_hp: -1,
             final_vigor: -1,
             original_hp: -1,
             original_vigor: -1
-        });
+        }];
     }
 
     // Replay the manifest
@@ -283,7 +284,6 @@ export async function quickDamage(harms) {
     // Slugify it
     manifest = simpleSlugifyObject(manifest);
 
-    console.log(manifest);
     await adminUpdateMessage(message, {
         [`flags.${game.system.id}.data.harm_manifest`]: manifest
     });
