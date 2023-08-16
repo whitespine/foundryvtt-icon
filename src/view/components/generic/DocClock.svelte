@@ -17,7 +17,7 @@
     export let inline = false;
 
     /** @type {boolean} Show title at all */
-    export let title = false;
+    export let title = true;
 
     let actor = getContext("tjs_actor");
 

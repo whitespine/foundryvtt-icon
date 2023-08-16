@@ -3,6 +3,7 @@
     import { localize } from "../../../util/misc";
     import DocClock from "../../components/generic/DocClock.svelte";
     import BoundedNumberDisplay from "../../components/generic/BoundedNumberDisplay.svelte";
+    import { TJSDialog } from "#runtime/svelte/application";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -36,6 +37,13 @@
     }
     let can_level;
     $: can_level = $actor.system.level < 12 && $actor.system.xp >= 15;
+
+    // Show all build warnings
+    function showWarnings() {
+        TJSDialog.prompt({
+            content: $actor.system.progression.warnings.join("<br>"),
+        });
+    }
 </script>
 
 <section>
@@ -55,6 +63,12 @@
             </div>
         {/each}
         <button on:click={commitXP}>End Session - {total_xp} XP</button>
+        {#if can_level}
+            <button on:click={levelUp}>Level Up!</button>
+        {/if}
+        {#if $actor.system.progression.warnings.length}
+            <button on:click={showWarnings}>{$actor.system.progression.warnings.length} Warnings</button>
+        {/if}
     </div>
     <div class="relics">
         <h2>Relics</h2>
