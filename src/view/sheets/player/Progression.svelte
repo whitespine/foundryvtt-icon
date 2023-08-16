@@ -31,12 +31,12 @@
     // Reduce xp back to modulo 15 and increment level
     function levelUp() {
         $actor.update({
-            "system.xp": $actor.system.xp - 15,
+            "system.xp": $actor.system.xp.value - 15,
             "system.level": $actor.system.level + 1,
         });
     }
     let can_level;
-    $: can_level = $actor.system.level < 12 && $actor.system.xp >= 15;
+    $: can_level = $actor.system.level < 12 && $actor.system.xp.value >= 15;
 
     // Show all build warnings
     function showWarnings() {
@@ -50,16 +50,11 @@
     <div class="xp">
         <h2>XP Tracking</h2>
         <BoundedNumberDisplay name={localize("ICON.XP")} path="system.xp" />
-        {#each [
-            ["ICON.XPTracking.Ideal", "system.xp_tracker.ideals"],
-            ["ICON.XPTracking.Challenge", "system.xp_tracker.challenges"],
-            ["ICON.XPTracking.Ambition", "system.xp_tracker.ambitions"],
-            ["ICON.XPTracking.Burdens", "system.xp_tracker.burdens"],
-        ] as [text, path]}
+        {#each [["ICON.XPTracking.Ideal", "system.xp_tracker.ideals"], ["ICON.XPTracking.Challenge", "system.xp_tracker.challenges"], ["ICON.XPTracking.Ambition", "system.xp_tracker.ambitions"], ["ICON.XPTracking.Burdens", "system.xp_tracker.burdens"]] as [text, path]}
             <div class="opportunity">
                 <i class="fas fa-chevron-right" />
                 <span>{localize(text)}</span>
-                <DocClock clock_width="30px" path={path} title={false} />
+                <DocClock clock_width="30px" {path} title={false} />
             </div>
         {/each}
         <button on:click={commitXP}>End Session - {total_xp} XP</button>
@@ -95,7 +90,7 @@
 
         max-height: calc(100% - 126px);
         display: grid;
-        grid-template: 1fr / repeat(4, 1fr);
+        grid-template: 1fr / repeat(6, 1fr);
         height: 100%;
 
         h2 {
@@ -104,6 +99,7 @@
 
         .xp {
             border-right: var(--primary-border);
+            grid-column: 1 /3;
 
             .opportunity {
                 display: flex;
@@ -112,13 +108,13 @@
                 padding: 5px 0px;
 
                 span {
-                    margin-left: 5px
+                    margin-left: 5px;
                 }
-
             }
         }
         .relics {
             border-right: var(--primary-border);
+            grid-column: 3 /5;
         }
         .burdens {
             border-right: var(--primary-border);

@@ -205,19 +205,19 @@ export class PlayerModel extends ActorModel {
         // Adjust by prior and current half-level ap increments
         if(this.level >= 1) {
             budget.ap += this.level - 1; // All previous half increments
-            if(this.xp >= 7) {
+            if(this.xp.value >= 7) {
                 budget.ap += 1; // This level half increment
             }
         }
 
         // Compute spending
-        let jobs = this.parent.items.filter(i => i.type === "job");
+        let jobs = this.parent.items.filter(i => i.type === "job" && !i.system.trait);
         let bond_powers = this.parent.items.filter(i => i.type === "bond_power");
         let abilities = this.parent.items.filter(i => i.type === "ability");
         let relics = this.parent.items.filter(i => i.type === "relic");
         let talent_count = 0;
         let mastery_count = 0;
-        let narrative_action_count = 0;
+        let narrative_action_count = Object.values(this.actions).reduce((a, b) => a + b, 0);
 
         // First bespoke
         if(abilities.length < budget.sap) {
@@ -225,7 +225,7 @@ export class PlayerModel extends ActorModel {
         }
 
         const adjudicate = (expected, actual, name) => {
-            this.progression.warnings.push(`Invalid number of ${name}. Expected ${expected}, found ${actual}`);
+            if(expected != actual) this.progression.warnings.push(`Invalid number of ${name}. Expected ${expected}, found ${actual}`);
         }
         adjudicate(budget.ap + budget.sap, abilities.length + talent_count, "Abilities + Talents unlocked");
         adjudicate(budget.mp, mastery_count, "Masteries");
