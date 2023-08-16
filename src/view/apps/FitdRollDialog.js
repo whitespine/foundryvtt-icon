@@ -2,7 +2,7 @@ import { SvelteApplication } from '#runtime/svelte/application';
 
 import FitdRollShell from './FitdRollShell.svelte';
 
-let singleton = null;
+let singletonId = null;
 export default class ForgedRollApplication extends SvelteApplication {
    /**
     * Default Application options
@@ -26,15 +26,19 @@ export default class ForgedRollApplication extends SvelteApplication {
          classes: ["icon", "app", "fitd-roll"],
          resizable: false,
          minimizable: false,
-         popOut: false,
          positionOrtho: false,
          zIndex: null,
       });
    }
 
    static async show({ x, y, initial_dice, initial_purpose } = {}) {
-      if (!singleton?.svelte.applicationShell) {
-         singleton = new ForgedRollApplication({
+      let app;
+      if (singletonId && ui.windows[singletonId]) {
+         app = ui.windows[singletonId];
+         app.svelte.applicationShell.dice = initial_dice ?? 1;
+         app.svelte.applicationShell.purpose = initial_purpose ?? "";
+      } else {
+         app = new ForgedRollApplication({
             svelte: {
                props: {
                   dice: initial_dice ?? 1,
@@ -42,15 +46,13 @@ export default class ForgedRollApplication extends SvelteApplication {
                }
             }
          });
-      } else {
-         singleton.svelte.applicationShell.dice = initial_dice ?? 1;
-         singleton.svelte.applicationShell.purpose = initial_purpose ?? "";
-      }
+      } 
 
-      singleton.position.set({
+      app.position.set({
          top: y,
          left: x
       });
-      return singleton.render(true, { focus: true });
+      await app.render(true, { focus: true });
+      singletonId = app.appId;
    }
 }

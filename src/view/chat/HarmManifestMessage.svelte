@@ -1,11 +1,9 @@
-<!-- Super simple Svelte component that takes in a prop and outputs it. -->
 <script>
-harm.
-
     import { setContext } from "svelte";
     import * as harm from "../../util/harm";
     import HarmManifestEntry from "../components/combat/HarmManifestEntry.svelte";
     import { simpleUnslugifyObject } from "../actions/util";
+    import { showHarmApplication } from "../../util/harm";
 
     /** @type {ChatMessage} */
     // svelte-ignore unused-export-let

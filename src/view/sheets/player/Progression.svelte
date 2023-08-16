@@ -6,12 +6,55 @@
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
+
+    // Total pending xp
+    let total_xp;
+    $: {
+        let xp = $actor.system.xp_tracker;
+        total_xp = xp.ideals.value + xp.challenges.value + xp.ambitions.value + xp.burdens.value;
+    }
+
+    // Commit all xp and clear all clocks
+    function commitXP() {
+        $actor.update({
+            "system.xp_tracker": {
+                "ideal.value": 0,
+                "challenges.value": 0,
+                "ambitions.value": 0,
+                "burdens.value": 0,
+            },
+            "system.xp": $actor.system.xp.value + total_xp,
+        });
+    }
+
+    // Reduce xp back to modulo 15 and increment level
+    function levelUp() {
+        $actor.update({
+            "system.xp": $actor.system.xp - 15,
+            "system.level": $actor.system.level + 1,
+        });
+    }
+    let can_level;
+    $: can_level = $actor.system.level < 12 && $actor.system.xp >= 15;
 </script>
 
 <section>
     <div class="xp">
         <h2>XP Tracking</h2>
         <BoundedNumberDisplay name={localize("ICON.XP")} path="system.xp" />
+        {#each [
+            ["ICON.XPTracking.Ideal", "system.xp_tracker.ideals"],
+            ["ICON.XPTracking.Challenge", "system.xp_tracker.challenges"],
+            ["ICON.XPTracking.Ambition", "system.xp_tracker.ambitions"],
+            ["ICON.XPTracking.Burdens", "system.xp_tracker.burdens"],
+        ] as [text, path]}
+            <div class="opportunity">
+                <i class="fas fa-chevron-right" />
+                <span>{localize(text)}</span>
+                <DocClock clock_width="30px" path={path} title={false} />
+            </div>
+        {/each}
+        <button on:click={commitXP}>End Session - {total_xp} XP</button>
     </div>
     <div class="relics">
         <h2>Relics</h2>
@@ -47,6 +90,18 @@
 
         .xp {
             border-right: var(--primary-border);
+
+            .opportunity {
+                display: flex;
+                align-items: center;
+                border-bottom: var(--primary-border);
+                padding: 5px 0px;
+
+                span {
+                    margin-left: 5px
+                }
+
+            }
         }
         .relics {
             border-right: var(--primary-border);

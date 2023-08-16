@@ -247,7 +247,7 @@
       "EndSession": "End of Session",
       "Ideal": "Did you fulfill at least one of your Ideals? 1 xp. Two or more? 2 xp.",
       "Challenge": "Was your character challenged or tested, through combat or otherwise? 1 xp. Multiple times? 2 xp.",
-      "Ambition": "3. Accomplished an ambition (group or personal) - 1-3 xp",
+      "Ambition": "Accomplished an ambition (group or personal) - 1-3 xp",
       "Burdens": "Invoked Burdens at least once - 1 xp",
       "HalfMark": "You have earned enough xp to earn a reward!"
     },

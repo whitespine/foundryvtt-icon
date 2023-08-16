@@ -16,25 +16,28 @@
     /** @type {string} Whether to display horizontally */
     export let inline = false;
 
-    let actor = getContext("tjs_actor");
+    /** @type {boolean} Show title at all */
+    export let title = false;
 
+    let actor = getContext("tjs_actor");
 
     let clock;
     $: clock = resolveDotpath($actor, path);
 
     function handleChange(event) {
-        $actor.update({[`${path}.value`]: event.detail});
+        $actor.update({ [`${path}.value`]: event.detail });
     }
 </script>
 
 <div class:flexrow={inline} class:flexcol={!inline}>
-    {#if title_editable}
-        <input type="text" use:updateDoc={{doc: actor, path: `${path}.name`}} />
-    {:else}
-        <span>{clock.name}</span>
+    {#if title}
+        {#if title_editable}
+            <input type="text" use:updateDoc={{ doc: actor, path: `${path}.name` }} />
+        {:else}
+            <span>{clock.name}</span>
+        {/if}
     {/if}
-    <Clock value={clock.value} size={clock.size} width={clock_width} on:change={handleChange} >
-    </Clock>
+    <Clock value={clock.value} size={clock.size} width={clock_width} on:change={handleChange} />
 </div>
 
 <style lang="scss">
@@ -42,5 +45,3 @@
         align-items: center;
     }
 </style>
-
-
