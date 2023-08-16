@@ -12,11 +12,13 @@
     /** @type {boolean} Can we edit the max val? */
     export let edit_max = false;
 
+    let percent;
+    $: percent = Math.round(resolveDotpath($doc, `${path}.value`) / resolveDotpath($doc, `${path}.max`) * 100);
 
     let doc = getContext("tjs_actor");
 </script>
 
-<div>
+<div style="background: linear-gradient(to right, var(--secondary-background) {percent}%, #00000000 {percent}%)">
     <span>{name}</span>
     <input type="number" use:updateDoc={{ doc, path: `${path}.value` }} />
     <span> / </span>
