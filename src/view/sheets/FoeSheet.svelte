@@ -10,6 +10,7 @@
     import { FOE_COLORS, GENERIC_COLORS } from "../../models/items/job";
     import StatsDisplay from "../components/combat/StatsDisplay.svelte";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
+    import { TAB_STORES } from "../../util/stores";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -19,7 +20,7 @@
         label: localize(s),
         key: s,
     }));
-    let selected_tab = "ICON.Foe.Abilities";
+    let selected_tab = TAB_STORES.get($actor.uuid, "ICON.Foe.Abilities");
 
     // Handle dropped documents
     function handleDrop(drop) {
@@ -49,7 +50,7 @@
         </select>
         <StatsDisplay style="grid-area: stats" />
         <div style="grid-area: tabs">
-            <Tabs horizontal={false} {tabs} bind:selected={selected_tab} />
+            <Tabs horizontal={false} {tabs} bind:selected={$selected_tab} />
         </div>
     </header>
 
@@ -57,16 +58,16 @@
 
     <!-- Sheet Body -->
     <section class="sheet-body">
-        {#if selected_tab == "ICON.Foe.Abilities"}
+        {#if $selected_tab == "ICON.Foe.Abilities"}
             <CombatHud />
-        {:else if selected_tab === "ICON.Foe.Description"}
+        {:else if $selected_tab === "ICON.Foe.Description"}
             <div class="flexcol">
                 <h2>{localize("ICON.Description")}</h2>
                 <ProseMirrorEditor doc={$doc} path={"system.description" } />
                 <h2>{localize("ICON.Foe.Setup")}</h2>
                 <ProseMirrorEditor doc={$doc} path={"system.setup" } />
             </div>
-        {:else if selected_tab === "ICON.Foe.Stats"}
+        {:else if $selected_tab === "ICON.Foe.Stats"}
             <div class="flexcol">
                 {#each ["defense", "damage_die", "fray_damage", "speed", "dash"] as stat}
                     <label for={stat}>{stat}:</label>

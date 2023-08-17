@@ -56,3 +56,6 @@ Hooks.on("controlToken", (token, controlled) => {
         });
     }
 });
+
+// Use this for tab selection
+export const TAB_STORES = new KeyStoreLookup();

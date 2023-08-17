@@ -6,6 +6,7 @@
     import EditableDocArray from "../components/generic/EditableDocArray.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
+    import { TAB_STORES } from "../../util/stores";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -17,9 +18,11 @@
         label: s.name ?? `${i + 1}`,
         key: i,
     }));
-    let selected_tab = 0;
+    let selected_tab = TAB_STORES.get($doc.uuid, 0);
+
+    // Fetch selected choice - fix if tab is too high
     let selected_choice = {};
-    $: selected_choice = $item.system.choices[selected_tab];
+    $: selected_choice = $item.system.choices[$selected_tab];
 
     function addChoice() {
         $doc.update({
@@ -66,7 +69,7 @@
         </div>
         <div class="option-select" style="grid-area: tabs">
             <div>
-                <Tabs horizontal={true} tabs={tab_choices} bind:selected={selected_tab} />
+                <Tabs horizontal={true} tabs={tab_choices} bind:selected={$selected_tab} />
             </div>
             <i class="add-choice fas fa-plus" on:click={() => addChoice()} />
         </div>
@@ -75,75 +78,82 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         <div class="flexcol">
-            <label for="name">Name:</label>
-            <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.name` }} />
+            {#if selected_choice}
+                <label for="name">Name:</label>
+                <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.name` }} />
 
-            <span>Description:</span>
-            <ProseMirrorEditor doc={$doc} path={`system.choices.${selected_tab}.description`} />
+                <span>Description:</span>
+                <ProseMirrorEditor doc={$doc} path={`system.choices.${$selected_tab}.description`} />
 
-            <label for="actions">Actions:</label>
-            <input
-                name="actions"
-                type="number"
-                use:updateDoc={{ doc, path: `system.choices.${selected_tab}.actions` }}
-            />
+                <label for="actions">Actions:</label>
+                <input
+                    name="actions"
+                    type="number"
+                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.actions` }}
+                />
 
-            <label for="trigger">Interrupt Trigger:</label>
-            <input name="trigger" type="text" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.trigger` }} />
+                <label for="trigger">Interrupt Trigger:</label>
+                <input
+                    name="trigger"
+                    type="text"
+                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.trigger` }}
+                />
 
-            <label for="round_action">Round Action:</label>
-            <input
-                name="round_action"
-                type="checkbox"
-                use:updateDoc={{ doc, path: `system.choices.${selected_tab}.round_action` }}
-            />
+                <label for="round_action">Round Action:</label>
+                <input
+                    name="round_action"
+                    type="checkbox"
+                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.round_action` }}
+                />
 
-            <label for="combo">Combo:</label>
-            <select name="combo" use:updateDoc={{ doc, path: `system.choices.${selected_tab}.combo` }}>
-                {#each [["None", 0], ["Start", 1], ["Finisher", -1]] as c}
-                    <option value={c[1]}>{c[0]}</option>
-                {/each}
-            </select>
-            <label for="resolve">Resolve:</label>
-            <input
-                name="resolve"
-                type="number"
-                use:updateDoc={{ doc, path: `system.choices.${selected_tab}.resolve` }}
-            />
+                <label for="combo">Combo:</label>
+                <select name="combo" use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.combo` }}>
+                    {#each [["None", 0], ["Start", 1], ["Finisher", -1]] as c}
+                        <option value={c[1]}>{c[0]}</option>
+                    {/each}
+                </select>
+                <label for="resolve">Resolve:</label>
+                <input
+                    name="resolve"
+                    type="number"
+                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.resolve` }}
+                />
 
-            <EditableDocArray title="Ranges" path={`system.choices.${selected_tab}.ranges`} />
+                <EditableDocArray title="Ranges" path={`system.choices.${$selected_tab}.ranges`} />
 
-            <EditableDocArray title="Tags" path={`system.choices.${selected_tab}.tags`} />
+                <EditableDocArray title="Tags" path={`system.choices.${$selected_tab}.tags`} />
 
-            <EditableDocArray title="Effects" path={`system.choices.${selected_tab}.effects`} />
+                <EditableDocArray title="Effects" path={`system.choices.${$selected_tab}.effects`} />
 
-            <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
+                <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
 
-            <div class="flexcol">
-                <h3>Summons <em> - Drag onto this sheet to add! </em></h3>
-                {#each selected_choice.summons as uuid, index}
-                    <div class="flexrow">
-                        <input
-                            type="text"
-                            use:updateDoc={{ doc, path: `system.choices.${selected_tab}.summons.${index}` }}
-                        />
-                        <span>
-                            {#await fromUuid(uuid)}
-                                Loading...
-                            {:then actor}
-                                {#if actor}
-                                    {actor.name}
-                                {:else}
-                                    NOT FOUND
-                                {/if}
-                            {:catch}
-                                INVALID
-                            {/await}
-                        </span>
-                        <i class="fas fa-trash" on:click={() => deleteSummon(index)} />
-                    </div>
-                {/each}
-            </div>
+                <div class="flexcol">
+                    <h3>Summons <em> - Drag onto this sheet to add! </em></h3>
+                    {#each selected_choice.summons as uuid, index}
+                        <div class="flexrow">
+                            <input
+                                type="text"
+                                use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.summons.${index}` }}
+                            />
+                            <span>
+                                <!-- svelte-ignore missing-declaration -->
+                                {#await fromUuid(uuid)}
+                                    Loading...
+                                {:then actor}
+                                    {#if actor}
+                                        {actor.name}
+                                    {:else}
+                                        NOT FOUND
+                                    {/if}
+                                {:catch}
+                                    INVALID
+                                {/await}
+                            </span>
+                            <i class="fas fa-trash" on:click={() => deleteSummon(index)} />
+                        </div>
+                    {/each}
+                </div>
+            {/if}
         </div>
     </section>
 </main>

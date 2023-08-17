@@ -10,6 +10,7 @@
     import { dragAsDoc } from "../actions/drag";
     import Progression from "./player/Progression.svelte";
     import Narrative from "./player/Narrative.svelte";
+    import { TAB_STORES } from "../../util/stores";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -18,7 +19,7 @@
         label: localize(s),
         key: s,
     }));
-    let selected_tab = "ICON.Narrative";
+    let selected_tab = TAB_STORES.get($actor.uuid, "ICON.Narrative");
 
     /**
      * Add dropped items to this actor
@@ -86,19 +87,19 @@
 
         <div style="grid-area: tabs">
             <!-- Sheet Tab Navigation -->
-            <Tabs {tabs} horizontal={false} bind:selected={selected_tab} />
+            <Tabs {tabs} horizontal={false} bind:selected={$selected_tab} />
         </div>
     </header>
 
     <!-- Sheet Body -->
-    {#if selected_tab == "ICON.Narrative"}
+    {#if $selected_tab == "ICON.Narrative"}
         <Narrative />
-    {:else if selected_tab === "ICON.Combat"}
+    {:else if $selected_tab === "ICON.Combat"}
         <section class="sheet-body combat">
             <StatsDisplay style="grid-area: stats" />
             <CombatHud />
         </section>
-    {:else if selected_tab == "ICON.Progression"}
+    {:else if $selected_tab == "ICON.Progression"}
         <Progression />
     {:else}
         <span>Tab does not exist</span>
