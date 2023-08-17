@@ -6,7 +6,7 @@
     /** @type {string} */
     export let actor_uuid;
 
-    let actor = new TJSDocument(fromUuidSync(actor_uuid));
+    let actor = new TJSDocument(fromUuidSync(actor_uuid) ?? undefined);
 
     /** @type {harm.HarmRecord[]} */
     export let records;
@@ -18,11 +18,11 @@
     /** @type {boolean} */
     let can_apply;
     $: can_apply = last_record && (
-        last_record.final_hp != $actor.system.hp.value || last_record.final_vigor != $actor.system.vigor.value);
+        last_record.final_hp != $actor?.system.hp.value || last_record.final_vigor != $actor?.system.vigor.value);
 
     /** @type {boolean} */
     let can_see;
-    $: can_see = $actor.testUserPermission(game.user, "OBSERVER");
+    $: can_see = $actor?.testUserPermission(game.user, "OBSERVER");
 
     // Sets the actors hp/vigor to match the end of the record
     function apply() {

@@ -51,6 +51,16 @@
             [`system.choices.${selected_tab}.summons`]: summons,
         });
     }
+
+    // Delete the currently selected choice
+    function deleteCurrentOption() {
+        $doc.update({
+            [`system.choices`]: [
+                ...$doc.system.choices.slice(0, $selected_tab),
+                ...$doc.system.choices.slice($selected_tab + 1),
+            ],
+        });
+    }
 </script>
 
 <main use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
@@ -79,8 +89,14 @@
     <section class="sheet-body">
         <div class="flexcol">
             {#if selected_choice}
-                <label for="name">Name:</label>
-                <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.name` }} />
+                <div class="block">
+                    <h3><label for="name">Name:</label></h3>
+                    <input
+                        name="name"
+                        type="text"
+                        use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.name` }}
+                    />
+                </div>
 
                 <div class="block">
                     <h3>Narrative Description:</h3>
@@ -180,6 +196,10 @@
                 <div class="block">
                     <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
                 </div>
+
+                {#if $item.system.choices.length > 1}
+                    <button on:click={deleteCurrentOption}>Delete Option</button>
+                {/if}
             {/if}
         </div>
     </section>

@@ -351,7 +351,7 @@ class ActorProcessor:
         }
 
         # Dump to appropriate file
-        filename = f"{self.name}_{self.id}.json".replace(" ", "_")
+        filename = f"{self.name}_{self.id[:3]}.json".replace(" ", "_")
         with open(pack_root / "better-foes" / "_source" / filename, "w") as f:
             f.write(json.dumps(actor, indent=4))
 
@@ -498,7 +498,7 @@ class ItemProcessor:
             "flags": {},
             "_key": f"!actors.items!{self.parent.id}.{self.id}",
         }
-        item_filename = f"{self.name}_{self.id}.json".replace(" ", "_")
+        item_filename = f"{self.parent.name}_{self.name}_{self.id[:3]}.json".replace(" ", "_")
         with open(pack_root / "better-foes" / "_source" / item_filename, "w") as f:
             f.write(json.dumps(item, indent=4))
 
