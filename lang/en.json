@@ -297,7 +297,7 @@
       "Teleport": "Special movement that allows you to instantly move to unoccupied space within range X.",
       "TerrainEffect": "Something that creates or modifies the terrain spaces on the battlefield.",
       "TriggeredEffect": "An effect that actives under a certain condition. Common effects are critical hit, slay, collide, finishing blow, and charge.  Each unique effect can only trigger once per ability, and once per trigger.",
-      "Effect": "A part of an ability that simply happens and is applied to all targets, no roll or save required.",
+      "Effect": "A part of an ability that simply happens and is applied to all targets, no roll or save required."
     },
     "Statuses": {
       "Slashed": "Take 4 damage after you or an ally uses an ability that moves you, but no more than once a turn.",

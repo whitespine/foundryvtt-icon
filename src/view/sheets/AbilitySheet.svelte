@@ -35,7 +35,7 @@
         let summons = selected_choice.summons;
         summons = [...summons, drop.document.uuid];
         $doc.update({
-            [`system.choices.${selected_tab}.summons`]: summons,
+            [`system.choices.${$selected_tab}.summons`]: summons,
         });
     }
 
@@ -82,76 +82,103 @@
                 <label for="name">Name:</label>
                 <input name="name" type="text" use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.name` }} />
 
-                <span>Description:</span>
-                <ProseMirrorEditor doc={$doc} path={`system.choices.${$selected_tab}.description`} />
+                <div class="block">
+                    <h3>Narrative Description:</h3>
+                    <ProseMirrorEditor doc={$doc} path={`system.choices.${$selected_tab}.description`} />
+                </div>
 
-                <label for="actions">Actions:</label>
-                <input
-                    name="actions"
-                    type="number"
-                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.actions` }}
-                />
+                <div class="flexrow">
+                    <div class="block">
+                        <h3><label for="actions">Actions:</label></h3>
+                        <input
+                            name="actions"
+                            type="number"
+                            use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.actions` }}
+                        />
+                    </div>
 
-                <label for="trigger">Interrupt Trigger:</label>
-                <input
-                    name="trigger"
-                    type="text"
-                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.trigger` }}
-                />
-
-                <label for="round_action">Round Action:</label>
-                <input
-                    name="round_action"
-                    type="checkbox"
-                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.round_action` }}
-                />
-
-                <label for="combo">Combo:</label>
-                <select name="combo" use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.combo` }}>
-                    {#each [["None", 0], ["Start", 1], ["Finisher", -1]] as c}
-                        <option value={c[1]}>{c[0]}</option>
-                    {/each}
-                </select>
-                <label for="resolve">Resolve:</label>
-                <input
-                    name="resolve"
-                    type="number"
-                    use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.resolve` }}
-                />
-
-                <EditableDocArray title="Ranges" path={`system.choices.${$selected_tab}.ranges`} />
-
-                <EditableDocArray title="Tags" path={`system.choices.${$selected_tab}.tags`} />
-
-                <EditableDocArray title="Effects" path={`system.choices.${$selected_tab}.effects`} />
-
-                <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
-
-                <div class="flexcol">
-                    <h3>Summons <em> - Drag onto this sheet to add! </em></h3>
-                    {#each selected_choice.summons as uuid, index}
+                    <div class="block">
+                        <h3><label for="round_action">Round Action:</label></h3>
                         <div class="flexrow">
                             <input
-                                type="text"
-                                use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.summons.${index}` }}
+                                name="round_action"
+                                type="checkbox"
+                                use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.round_action` }}
                             />
-                            <span>
-                                <!-- svelte-ignore missing-declaration -->
-                                {#await fromUuid(uuid)}
-                                    Loading...
-                                {:then actor}
-                                    {#if actor}
-                                        {actor.name}
-                                    {:else}
-                                        NOT FOUND
-                                    {/if}
-                                {:catch}
-                                    INVALID
-                                {/await}
-                            </span>
-                            <i class="fas fa-trash" on:click={() => deleteSummon(index)} />
+                            {#if selected_choice.round_action}
+                                Yes
+                            {:else}
+                                No
+                            {/if}
                         </div>
-                    {/each}
+                    </div>
+
+                    <div class="block">
+                        <h3><label for="combo">Combo:</label></h3>
+                        <select name="combo" use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.combo` }}>
+                            {#each [["None", 0], ["Start", 1], ["Finisher", -1]] as c}
+                                <option value={c[1]}>{c[0]}</option>
+                            {/each}
+                        </select>
+                    </div>
+
+                    <div class="block">
+                        <h3><label for="resolve">Resolve:</label></h3>
+                        <input
+                            name="resolve"
+                            type="number"
+                            use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.resolve` }}
+                        />
+                    </div>
+                </div>
+
+                <div class="block">
+                    <h3><label for="trigger">Interrupt Trigger:</label></h3>
+                    <input
+                        name="trigger"
+                        type="text"
+                        use:updateDoc={{ doc, path: `system.choices.${$selected_tab}.trigger` }}
+                    />
+                </div>
+
+                <div class="flexrow">
+                    <div class="block">
+                        <EditableDocArray title="Ranges" path={`system.choices.${$selected_tab}.ranges`} />
+                    </div>
+
+                    <div class="block">
+                        <EditableDocArray title="Tags" path={`system.choices.${$selected_tab}.tags`} />
+                    </div>
+                    <div class="block">
+                        <h3>Summons <em> - Drag to add! </em></h3>
+                        {#each selected_choice.summons as uuid, index}
+                            <div class="flexrow">
+                                <span>
+                                    <!-- svelte-ignore missing-declaration -->
+                                    {#await fromUuid(uuid)}
+                                        Loading...
+                                    {:then actor}
+                                        {#if actor}
+                                            {actor.name}
+                                        {:else}
+                                            NOT FOUND
+                                        {/if}
+                                    {:catch}
+                                        INVALID
+                                    {/await}
+                                </span>
+                                <i class="fas fa-trash" style="max-width: 32px;" on:click={() => deleteSummon(index)} />
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+
+                <div class="block">
+                    <EditableDocArray title="Effects" path={`system.choices.${$selected_tab}.effects`} />
+                </div>
+
+                <div class="block">
+                    <EditableDocArray title="Special Requirements" path={"system.special_requirements"} />
                 </div>
             {/if}
         </div>
@@ -160,10 +187,17 @@
 
 <style lang="scss">
     main {
+        padding: 5px;
         height: 100%;
         overflow: auto;
         display: flex;
         flex-direction: column;
+    }
+
+    .block {
+        border: var(--primary-border);
+        padding: 5px;
+        margin: -1px;
     }
 
     header {
