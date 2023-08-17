@@ -53,7 +53,7 @@ export class PlayerModel extends ActorModel {
                 smash: actionPenaltyField(),
                 endure: actionPenaltyField(),
             }),
-            xp: new FakeBoundedNumberField({ max: 15 }),
+            xp: new FakeBoundedNumberField({ max: 15, no_upper_bound: true }),
             dust: new FakeBoundedNumberField({ max: 8 }),
             xp_tracker: new fields.SchemaField({
                 ideals: new ClockField({ size: 2 }),
@@ -74,7 +74,7 @@ export class PlayerModel extends ActorModel {
 
             // Combat
             hp: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0 }),
-            vigor: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0 }),
+            vigor: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0, no_upper_bound: true }),
             wounds: new FakeBoundedNumberField({ nullable: false, initial: 0, min: 0, max: 4 }),
             aether: new fields.NumberField({ nullable: false, initial: 0, min: 0, max: 999 }),
             resolve: new fields.NumberField({ nullable: false, initial: 0, min: 0, max: 999 }), // Personal resolve
@@ -197,15 +197,15 @@ export class PlayerModel extends ActorModel {
                 budget.bp++;
                 budget.nap++;
             case 1:
-                budget.ap+=2;
+                budget.ap += 2;
                 budget.bp++;
                 budget.nap++;
         }
 
         // Adjust by prior and current half-level ap increments
-        if(this.level >= 1) {
+        if (this.level >= 1) {
             budget.ap += this.level - 1; // All previous half increments
-            if(this.xp.value >= 7) {
+            if (this.xp.value >= 7) {
                 budget.ap += 1; // This level half increment
             }
         }
@@ -220,12 +220,12 @@ export class PlayerModel extends ActorModel {
         let narrative_action_count = Object.values(this.actions).reduce((a, b) => a + b, 0);
 
         // First bespoke
-        if(abilities.length < budget.sap) {
+        if (abilities.length < budget.sap) {
             this.progression.warnings.push("You have too few abilities unlocked!");
         }
 
         const adjudicate = (expected, actual, name) => {
-            if(expected != actual) this.progression.warnings.push(`Invalid number of ${name}. Expected ${expected}, found ${actual}`);
+            if (expected != actual) this.progression.warnings.push(`Invalid number of ${name}. Expected ${expected}, found ${actual}`);
         }
         adjudicate(budget.ap + budget.sap, abilities.length + talent_count, "Abilities + Talents unlocked");
         adjudicate(budget.mp, mastery_count, "Masteries");

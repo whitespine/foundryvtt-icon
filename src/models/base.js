@@ -107,13 +107,23 @@ export function fancyMerge(target, source) {
 
 // Use this to represent a field that is effectively just a number, but should present as a min/max/value field in expanded `system` data
 // This is 10% so we can show them with bars, and 90% because usually the max is computed and we don't want to confuse anyone
+// If options.no_upper_bound is true, then doesn't set a maximum 
 export class FakeBoundedNumberField extends foundry.data.fields.NumberField {
+  constructor(options = {}) {
+    // Handle no upper bound case
+    if(options.no_upper_bound) {
+      options = foundry.utils.duplicate(options);
+      options.fake_max = options.max
+      delete options.max;
+    }
+    super(options);
+  }
   /** @override */
   initialize(value, model) {
     // Expand to a somewhat reasonable range. `prepareData` functions should handle the rest
     return {
       min: this.options.min ?? 0,
-      max: this.options.max ?? 0,
+      max: this.options.max ?? this.options.fake_max ?? 0,
       value: value ?? 0,
     };
   }
