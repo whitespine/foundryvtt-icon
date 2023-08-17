@@ -10,7 +10,7 @@ $document-types: join($item-types, $actor-types);
     // Principalis
     --primary-background: #202739;
     --primary-color: #ddedf8;
-    --secondary-background: #044e48;
+    --secondary-background: #354da6;
     --secondary-color: #b2e7bf;
     --tertiary-background: rgb(146, 228, 38);
     --tertiary-color: rgb(50, 11, 46);
@@ -18,15 +18,15 @@ $document-types: join($item-types, $actor-types);
     --secondary-border: 1px solid rgb(27, 10, 55);
 
     // Tabs
-    --tab-inactive-background: #344538;
-    --tab-active-background: #d2b760;
+    --tab-inactive-background: #504e45;
+    --tab-active-background: #d9ac15;
     --tab-inactive-text: #fff1dd;
     --tab-active-text: #290808;
 
     // Clocks
-    --clock-fill: rgb(164, 135, 6);
+    --clock-fill:  #d9ac15;
     --clock-alt-fill: rgb(158, 20, 18);
-    --clock-empty: rgb(39, 240, 240);
+    --clock-empty: rgb(222, 228, 228);
     --clock-border: #0c1638;
 
     // TJS overrides
@@ -66,6 +66,10 @@ li.chat-message {
 
     h3 {
         border-bottom: none;
+    }
+
+    h1,h2,h3,h4 {
+        color: var(--clock-fill);
     }
 
     a.content-link {
