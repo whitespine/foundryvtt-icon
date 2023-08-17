@@ -161,7 +161,7 @@ export class AbilityModel extends ItemModel {
         // Establish some values. SWB values code abilities one at a time
         let description = removeAllUUIDRefs(data.system.description);
         let effects = description.replaceAll("<p>", "").split("</p>");
-        effects = effects.map(p => p.replaceAll(/<\/? ?(strong|em)>/g, ""));
+        effects = effects.map(p => p.replaceAll(/<\/? *(strong|em|br) *>/g, ""));
         let dc = {
             ranges: [],
             tags: [],

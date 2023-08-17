@@ -150,7 +150,6 @@
 
 <style lang="scss">
     main {
-        background-color: #99d9ea;
         height: 100%;
         overflow: auto;
         display: flex;

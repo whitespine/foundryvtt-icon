@@ -91,9 +91,12 @@
             display: flex;
             flex-direction: row-reverse;
             i {
-                cursor: pointer;
                 padding-right: 5px;
             }
         }
+    }
+
+    i {
+        cursor: pointer;
     }
 </style>

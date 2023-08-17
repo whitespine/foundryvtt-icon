@@ -272,7 +272,6 @@
       "Dash": "Special movement that ignores engagement.",
       "Delay": "Slow but powerful effect that typically ends your turn. When you use a delay effect, your next turn must be slow. The effect occurs at the start of that turn, before anything else happens.",
       "EndTurn": "This ability ends your turn. If multiple abilities or effects would end your turn at the same time, you can only choose one.",
-      "Effect": "A part of an ability that simply happens and is applied to all targets, no roll or save required.",
       "Engagement": "A character must spend +1 space of movement to exit a space adjacent to a foe.",
       "Exceed": "A triggered effect that takes place on a total attack roll of 15+.",
       "FinishingBlow": "Vagabond only. Vagabond only. Triggered effect that triggers if this ability targets a bloodied foe.",
@@ -297,7 +296,8 @@
       "Summon": "A character controlled by its Summoner. Summons are intangible, and cannot be marked, and do not count as allies or foes for the purposes of abilities. Summons do not take turns. Instead, they have a summon action that they use on their summoner’s turn, or a summon effect that is always active, and otherwise don’t take actions or move on their own. Summons are removed from the battlefield when their summoner is defeated.",
       "Teleport": "Special movement that allows you to instantly move to unoccupied space within range X.",
       "TerrainEffect": "Something that creates or modifies the terrain spaces on the battlefield.",
-      "TriggeredEffect": "An effect that actives under a certain condition. Common effects are critical hit, slay, collide, finishing blow, and charge.  Each unique effect can only trigger once per ability, and once per trigger."
+      "TriggeredEffect": "An effect that actives under a certain condition. Common effects are critical hit, slay, collide, finishing blow, and charge.  Each unique effect can only trigger once per ability, and once per trigger.",
+      "Effect": "A part of an ability that simply happens and is applied to all targets, no roll or save required.",
     },
     "Statuses": {
       "Slashed": "Take 4 damage after you or an ally uses an ability that moves you, but no more than once a turn.",
