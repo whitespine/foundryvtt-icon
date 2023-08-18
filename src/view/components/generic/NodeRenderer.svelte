@@ -24,7 +24,7 @@
         let roll = new Roll(node.formula);
         await roll.roll();
         let volume = game.settings.get("core", "globalInterfaceVolume");
-        game.audio.play(CONFIG.sounds.dice, {volume});
+        game.audio.play(CONFIG.sounds.dice, { volume });
         addChild({
             roll: roll.toJSON(),
         });
@@ -51,30 +51,17 @@
     $: clickable = !!(node.tooltip || node.formula);
 </script>
 
-<span
-    class:inline-container={node.children}
-    class:clickable
-    on:click={click}
-    data-tooltip={node.tooltip ?? null}
->
-    {#if node.roll}
-        <SmallRoll roll={node.roll} />
-    {:else if node.text}
-        {node.text}
-    {:else if node.formula}
-        {node.formula}
-    {:else}
-        ERR
-    {/if}
-
-    <!-- Then add children -->
-    {#if node.children}
-        <!-- Nothing special for children-->
-        {#each node.children as child}
+{#if node.roll}
+    <SmallRoll roll={node.roll} />
+{:else if node.tag}
+    <svelte:element this={node.tag} on:click={click} class:clickable data-tooltip={node.tooltip ?? null}>
+        {#each node.children || [] as child}
             <svelte:self node={child} on:addsibling={handleAddSibling} on:savenodes />
         {/each}
-    {/if}
-</span>
+    </svelte:element>
+{:else}
+    {node.text}
+{/if}
 
 <style lang="scss">
     .clickable {

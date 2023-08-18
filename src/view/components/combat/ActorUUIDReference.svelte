@@ -20,15 +20,19 @@
 {#await fromUuid(uuid)}
     <span>...</span>
 {:then refActor}
-    <span
-        class="inline-container"
-        data-uuid={uuid}
-        draggable="true"
-        on:click={() => openSheet(refActor)}
-        on:dragstart={(e) => setDragData(refActor, e)}
-    >
-        {refActor.name}
-    </span>
+    {#if refActor}
+        <span
+            class="inline-container"
+            data-uuid={uuid}
+            draggable="true"
+            on:click={() => openSheet(refActor)}
+            on:dragstart={(e) => setDragData(refActor, e)}
+        >
+            {refActor.name}
+        </span>
+    {:else}
+        <span class="inline-container"> ERR </span>
+    {/if}
 {/await}
 
 <style lang="scss">

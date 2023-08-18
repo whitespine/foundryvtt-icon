@@ -48,7 +48,7 @@
         let summons = selected_choice.summons;
         summons = [...summons.slice(0, index), ...summons.slice(index + 1)];
         $doc.update({
-            [`system.choices.${selected_tab}.summons`]: summons,
+            [`system.choices.${$selected_tab}.summons`]: summons,
         });
     }
 

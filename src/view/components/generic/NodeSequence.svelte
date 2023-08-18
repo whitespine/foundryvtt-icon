@@ -36,8 +36,8 @@
      * @param evt Event to handle
      */
     function saveNodes() {
-        if (!key) return console.log("Not persisting change to keyless NodeSequence");
-        if (!msg) return console.log("Not persisting change to messageless NodeSequence");
+        if (!key) return console.debug("Not persisting change to keyless NodeSequence");
+        if (!msg) return console.debug("Not persisting change to messageless NodeSequence");
 
         let node_data = nodes.map((t) => t.toObject());
         msg.update({ [`flags.${game.system.id}.data.nodes.${key}`]: node_data });

@@ -11,12 +11,12 @@ class Transformer {
     /**
      * 
      * @param {TransformContext} context  Meta information
-     * @param {Node} item Tagged/Text node to transform
+     * @param {Node} node Tagged/Text node to transform
      * @returns {Array<Node>} [] to consume, [identity] to not change, or any new value
      */
     apply(context, node) {
         let result = this.apply_inner(context, node);
-        return result.filter(r => r).map(t => t instanceof Node ? t : new Node({text: t}));
+        return result.filter(r => r).map(t => t instanceof Node ? t : new Node({ text: t }));
     }
 
     apply_inner(context, node) {
@@ -33,6 +33,7 @@ class RegexTransformer extends Transformer {
      * @param {((ctx: TransformContext, groups: string[]) => Array<Node | string>)} splitter Our split-handler
      */
     constructor(regex, splitter) {
+        super();
         this.regex = regex;
         this.num_groups = (new RegExp(regex.toString() + '|')).exec('').length - 1;
         if (this.num_groups < 1) {
@@ -44,11 +45,11 @@ class RegexTransformer extends Transformer {
     apply_inner(context, node) {
         if (node.tag) return [node];
 
-        let split = node.split(this.regex);
+        let split = node.text.split(this.regex);
         let result = [];
         for (let base = 0; base < split.length; base += this.num_groups + 1) {
             // Add the normal split result
-            if (split[base] || keep_empty) result.push(split[base]);
+            result.push(split[base]);
             // If there is more to grab, then apply func and splat that into the array
             if (base + this.num_groups < split.length) {
                 let s = split.slice(base + 1, base + this.num_groups + 1);
@@ -122,7 +123,7 @@ export class Node {
          */
         this.formula = options.formula;
 
-        if(!this.text && !this.tag) {
+        if (!this.text && !this.tag) {
             console.warn("EMPTY NODE");
         }
     }
@@ -168,11 +169,11 @@ export function setupTransformers() {
     };
 
     // Build a transformer for each definition
-    for (let [k, v] of definitions) {
+    for (let [k, v] of Object.entries(definitions)) {
         StaticTransformers.push(new RegexTransformer(
             new RegExp(`(${k})`, "i"),
             (_c, [text]) => [new Node({
-                tag: span,
+                tag: "span",
                 tooltip: v,
                 children: [
                     new Node({
@@ -288,27 +289,36 @@ export function fullProcess(text, context, transformers = StaticTransformers) {
      * @returns {Array<Node>}
      */
     function processArray(arr) {
+        // Subprocess children first!
+        for (let item of arr) {
+            if (item.children?.length) {
+                item.children = processArray(item.children);
+            }
+        }
+
+        // Then process all current level elements with all transformers
         for (let transformer of transformers) {
             let result = [];
 
             // Process the individual elements
             for (let item of arr) {
-                // Subprocess children
-                item.children = processArray(item.children);
-                result.push(...transformer.apply(item));
+                let transformed = transformer.apply(context, item);
+                result.push(...transformed);
             }
 
             // Cleanup and combine consecutive text elements
             let final_result = [];
             for (let r of result) {
                 if (r.text === "") continue; // Skip empty
-                if (r.text && final_result[final_result.length - 1].text) {
+                if (r.text && final_result[final_result.length - 1]?.text) {
                     final_result[final_result.length - 1].text += r.text;
                 } else {
                     final_result.push(r);
                 }
             }
+            arr = final_result;
         }
+        return arr;
     }
 
     as_nodes = processArray(as_nodes);
