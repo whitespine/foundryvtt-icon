@@ -67,14 +67,6 @@
     "systems": [],
     "requires": [
       {
-        "id": "icon_data",
-        "type": "module",
-        "manifest": "https://raw.githubusercontent.com/Exocist/ICON-1.45-WIP/main/module.json",
-        "compatibility": {
-          "verified": "1.7.16"
-        }
-      },
-      {
         "id": "statuscounter",
         "type": "module",
         "manifest": "https://gitlab.com/woodentavern/status-icon-counters/-/raw/master/src/module.json",
@@ -102,10 +94,10 @@
   },
   "packs": [
     {
-      "label": "Better Foes",
+      "label": "Foes",
       "type": "Actor",
-      "name": "better-foes",
-      "path": "packs/better-foes",
+      "name": "foes",
+      "path": "packs/foes",
       "system": "icon",
       "private": false,
       "flags": {}
