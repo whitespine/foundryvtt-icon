@@ -7,13 +7,30 @@
 import { localize } from "./misc";
 
 
-
 class Transformer {
+    /**
+     * 
+     * @param {TransformContext} context  Meta information
+     * @param {Node} item Tagged/Text node to transform
+     * @returns {Array<Node>} [] to consume, [identity] to not change, or any new value
+     */
+    apply(context, node) {
+        let result = this.apply_inner(context, node);
+        return result.filter(r => r).map(t => t instanceof Node ? t : new Node({text: t}));
+    }
+
+    apply_inner(context, node) {
+        return [];
+    }
+}
+
+
+class RegexTransformer extends Transformer {
     /** A utility for transforming possibly many instances of a regular expression
      * in a body of text into an arbitrary other sequence of data.
      * 
      * @param {RegExp} regex 
-     * @param {((ctx: TransformContext, groups: string[]) => Array<string | Token>)} splitter Our split-handler
+     * @param {((ctx: TransformContext, groups: string[]) => Array<Node | string>)} splitter Our split-handler
      */
     constructor(regex, splitter) {
         this.regex = regex;
@@ -24,17 +41,10 @@ class Transformer {
         this.splitter = splitter;
     }
 
-    /**
-     * Splits the array using regex. Every set of matches from the split is fed into
-     * our "func", and the result is splatted back into the array. 
-     * @param {TransformContext} context Meta information
-     * @param {IconActor} context.actor The actor we're populating this in the context of
-     * @param {string} text Text to target
-     * @param {boolean} keep_empty Whether to keep empty strings
-     * @returns {Array<string | any>} Result
-     */
-    splitApply(context, text, keep_empty) {
-        let split = text.split(this.regex);
+    apply_inner(context, node) {
+        if (node.tag) return [node];
+
+        let split = node.split(this.regex);
         let result = [];
         for (let base = 0; base < split.length; base += this.num_groups + 1) {
             // Add the normal split result
@@ -57,20 +67,64 @@ class Transformer {
  * @property {string} [options.tooltip] What shows on hover
  * @property {object} [options.dragdata] What should be dragged, if anything
  * @property {object} [options.roll] A JSON serialized roll
- * @property {object[]} [options.children] Child tokens to create
+ * @property {object[]} [options.children] Child nodes to create
  */
 
-export class Token {
+
+/**
+ * A pseudo-html node
+ */
+export class Node {
     /**
      * @param {TransformContext} options 
      */
     constructor(options = {}) {
+        /**
+         * HTML tag if applicable
+         * @type {string | undefined}
+         */
+        this.tag = options.tag;
+        /**
+         * Text if applicable. Lower priority than tag
+         * @type {string | undefined}
+         */
         this.text = options.text;
+        /**
+         * HTML Element attributes if applicable. Only valid if tag exists
+         * @type {Record<string, string> | undefined}
+         */
+        this.attributes = options.attributes; // Can be undefined. Only used if tag present
+        /**
+         * Child nodes if applicable. Only valid if tag exists
+         * @type {Node[] | undefined}
+         */
+        this.children = options.children?.map(t => new Node(t)); // Only used if tag present
+
+        // Misc attributes
+        /**
+         * Tooltip to add to a tag, if this is a tag
+         * @type {string | undefined}
+         */
         this.tooltip = options.tooltip;
+        /**
+         * What this item should be dragged as
+         * @type {any | undefined}
+         */
         this.dragdata = options.dragdata;
-        this.children = options.children?.map(t => new Token(t));
+        /**
+         * An embedded roll
+         * @type {any | undefined}
+         */
         this.roll = options.roll ? Roll.fromData(options.roll) : undefined;
+        /**
+         * A roll formula
+         * @type {any | undefined}
+         */
         this.formula = options.formula;
+
+        if(!this.text && !this.tag) {
+            console.warn("EMPTY NODE");
+        }
     }
 
     /** 
@@ -89,15 +143,6 @@ export class Token {
         }
     }
 
-    /** 
-     * Tokenizes everything matching keyword with a fixed slice of data
-     */
-    static simpleTransformer(keyword, data) {
-        return new Transformer(
-            new RegExp(`(${keyword})`, "i"),
-            (_c, [text]) => [new Token({ text, ...data })]
-        );
-    }
 }
 
 /**
@@ -105,24 +150,42 @@ export class Token {
  */
 export function setupTransformers() {
     // Do some stuff generic from our localizations
-    let generic = [
+    let definitions = {};
+    for (let [k, v] of [
         ...Object.entries(game.i18n.translations.ICON.Glossary),
         ...Object.entries(game.i18n.translations.ICON.Statuses),
         ...Object.entries(game.i18n.translations.ICON.Effects),
-    ];
-    for (let [k, v] of generic) {
-        // Separate camel case for the keys
-        let pattern = k.replaceAll(/([a-z])([A-Z])/g, "$1 $2")
-        let t = Token.simpleTransformer(pattern, { tooltip: v })
-        const exclusions = ["Fray", "Gamble"];
-        if (!exclusions.includes(k)) {
-            StaticTransformers.push(t);
-        }
+    ]) {
+        // Un-camel-case it
+        let name = k.replaceAll(/([a-z])([A-Z])/g, "$1 $2")
+
+        // Exclude ones that have bespoke logic
+        const exclusions = ["fray", "gamble"];
+        if (exclusions.includes(name.toLowerCase())) continue;
+
+        // Assign to definitions
+        definitions[name] = v;
+    };
+
+    // Build a transformer for each definition
+    for (let [k, v] of definitions) {
+        StaticTransformers.push(new RegexTransformer(
+            new RegExp(`(${k})`, "i"),
+            (_c, [text]) => [new Node({
+                tag: span,
+                tooltip: v,
+                children: [
+                    new Node({
+                        text
+                    })
+                ]
+            })]
+        ));
     }
 
     // And some more specific ones
     // Substitute fray damage
-    StaticTransformers.push(new Transformer(
+    StaticTransformers.push(new RegexTransformer(
         /(\[?fray\]?)/ig,
         (ctx) => {
             if (ctx.actor.system.class?.fray_damage) {
@@ -134,7 +197,7 @@ export function setupTransformers() {
     ));
 
     // Substitute damage die
-    StaticTransformers.push(new Transformer(
+    StaticTransformers.push(new RegexTransformer(
         /(\[D\])/g,
         (ctx) => {
             if (ctx.actor.system.class?.damage_die) {
@@ -146,10 +209,10 @@ export function setupTransformers() {
     ));
 
     // Make dice formulae in angle brackets rollable
-    StaticTransformers.push(new Transformer(
+    StaticTransformers.push(new RegexTransformer(
         /\[\[(\S+)\]\]/g,
         (ctx, m) => [
-            new Token({
+            new Node({
                 formula: m[0],
                 text: m[0]
             })
@@ -157,54 +220,97 @@ export function setupTransformers() {
     ));
 
     // Make gamble rollable
-    StaticTransformers.push(new Transformer(
+    StaticTransformers.push(new RegexTransformer(
         /(Gamble)/ig,
-        (ctx) => [new Token({
+        (ctx) => [new Node({
             text: "Gamble",
             tooltip: localize("ICON.Glossary.Gamble"),
             formula: "1d6"
         })]
     ));
 
-    StaticTransformers.push(new Transformer(
+    StaticTransformers.push(new RegexTransformer(
         /(\[name\])/ig,
         (ctx) => [ctx.actor?.name ?? "[name]"]
     ));
 }
 export const StaticTransformers = [];
 
+/**
+ * 
+ * @param {HTMLElement} node 
+ * @returns {Node | null} A node if we deem this node worthy of having one
+ */
+function htmlToNode(node) {
+    if (node.tagName === undefined) {
+        // Text node
+        if (node.textContent) {
+            return new Node({
+                text: node.textContent
+            });
+        } else {
+            return null;
+        }
+    } else {
+        // An otherwise normal node
+        let tag = node.tagName;
+        let attrs = node.attributes;
+        let children = [];
+        for (let child of node.childNodes) {
+            child = htmlToNode(child);
+            if (child) children.push(child);
+        }
+        return new Node({
+            tag,
+            attrs,
+            children
+        });
+    }
+}
 
 /**
  * 
  * @param {string} text Full text
  * @param {TransformContext} context Meta info some transformers care about
- * @returns {Array<string | Token>}
+ * @param {Transformer[]} [transformers] Which transformers to use
+ * @returns {Array<string | Node>} Fully processed text. Wrap in a div if you need to
  */
-export function fullProcess(text, context) {
-    let arr = [text];
-    for (let transformer of StaticTransformers) {
-        let new_arr = [];
-        for (let item of arr) {
-            if (typeof item === "string") {
-                // Transform any strings
-                let processed = transformer.splitApply(context, item, false);
+export function fullProcess(text, context, transformers = StaticTransformers) {
+    // First parse to HTML
+    const parser = new DOMParser();
+    const html = parser.parseFromString(text, 'text/html');
+    const body = html.body;
+    let as_nodes = htmlToNode(body)?.children ?? [];
 
-                // Push each of them, or just concat to existing string if both strings
-                for(let new_item of processed) {
-                    let tail = new_arr[new_arr.length - 1];
-                    if(typeof new_item == "string" && typeof tail == "string") {
-                        new_arr[new_arr.length - 1] = tail + new_item;
-                    } else {
-                        new_arr.push(new_item);
-                    }
+    /**
+     * Recursively process an array of nodes. Processed bottom-up
+     * @param {Array<Node>} arr 
+     * @returns {Array<Node>}
+     */
+    function processArray(arr) {
+        for (let transformer of transformers) {
+            let result = [];
+
+            // Process the individual elements
+            for (let item of arr) {
+                // Subprocess children
+                item.children = processArray(item.children);
+                result.push(...transformer.apply(item));
+            }
+
+            // Cleanup and combine consecutive text elements
+            let final_result = [];
+            for (let r of result) {
+                if (r.text === "") continue; // Skip empty
+                if (r.text && final_result[final_result.length - 1].text) {
+                    final_result[final_result.length - 1].text += r.text;
+                } else {
+                    final_result.push(r);
                 }
-            } else {
-                // Keep other items as is
-                new_arr.push(item);
             }
         }
-        arr = new_arr;
     }
-    arr = arr.map(text => typeof text === "string" ? new Token({ text }) : text);
-    return arr;
+
+    as_nodes = processArray(as_nodes);
+    return as_nodes;
 }

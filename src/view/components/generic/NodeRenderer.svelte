@@ -1,77 +1,77 @@
 <script>
-    import { Token } from "../../../util/nlp";
+    import { Node } from "../../../util/nlp";
     import SmallRoll from "./dice/SmallRoll.svelte";
     import { createEventDispatcher } from "svelte";
     import { TJSDialog } from "#runtime/svelte/application";
 
-    /** @type {Token} Our specific token */
-    export let token;
+    /** @type {Node} Our specific node */
+    export let node;
 
     /** Our handler for when children ask for siblings. */
     function handleAddSibling(evt) {
-        token.children = [...token.children, new Token(evt.detail)];
+        node.children = [...node.children, new Node(evt.detail)];
     }
 
     const dispatch = createEventDispatcher();
 
-    /** Add a child token to this node */
+    /** Add a child node to this node */
     function addChild(t) {
-        token.children = [...(token.children || []), new Token(t)];
+        node.children = [...(node.children || []), new Node(t)];
     }
 
-    /** If configured with a formula, request a roll and add it as a token. */
+    /** If configured with a formula, request a roll and add it as a node. */
     async function requestRoll() {
-        let roll = new Roll(token.formula);
+        let roll = new Roll(node.formula);
         await roll.roll();
         let volume = game.settings.get("core", "globalInterfaceVolume");
         game.audio.play(CONFIG.sounds.dice, {volume});
         addChild({
             roll: roll.toJSON(),
         });
-        dispatch("savetokens");
+        dispatch("savenodes");
     }
 
     /** Post the tooltip */
     function postDescription() {
         ChatMessage.create({
-            content: `<strong>${token.text}</strong>: ${token.tooltip}`,
+            content: `<strong>${node.text}</strong>: ${node.tooltip}`,
         });
     }
 
     /** Generic click handler, multiplexes to more specific options */
     function click() {
-        if (token.formula) {
+        if (node.formula) {
             requestRoll();
-        } else if (token.tooltip) {
+        } else if (node.tooltip) {
             postDescription();
         }
     }
 
     let clickable;
-    $: clickable = !!(token.tooltip || token.formula);
+    $: clickable = !!(node.tooltip || node.formula);
 </script>
 
 <span
-    class:inline-container={token.children}
+    class:inline-container={node.children}
     class:clickable
     on:click={click}
-    data-tooltip={token.tooltip ?? null}
+    data-tooltip={node.tooltip ?? null}
 >
-    {#if token.roll}
-        <SmallRoll roll={token.roll} />
-    {:else if token.text}
-        {token.text}
-    {:else if token.formula}
-        {token.formula}
+    {#if node.roll}
+        <SmallRoll roll={node.roll} />
+    {:else if node.text}
+        {node.text}
+    {:else if node.formula}
+        {node.formula}
     {:else}
         ERR
     {/if}
 
     <!-- Then add children -->
-    {#if token.children}
+    {#if node.children}
         <!-- Nothing special for children-->
-        {#each token.children as child}
-            <svelte:self token={child} on:addsibling={handleAddSibling} on:savetokens />
+        {#each node.children as child}
+            <svelte:self node={child} on:addsibling={handleAddSibling} on:savenodes />
         {/each}
     {/if}
 </span>

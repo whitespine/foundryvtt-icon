@@ -1,6 +1,6 @@
 // Sets up our svelte messages
 
-import { TOKEN_STORES } from "../util/stores";
+import { NODE_STORES } from "../util/stores";
 import AbilityRollMessage from "../view/chat/AbilityRollMessage.svelte";
 import HarmManifestMessage from "../view/chat/HarmManifestMessage.svelte";
 import NarrativeRollMessage from "../view/chat/NarrativeRollMessage.svelte";
@@ -13,12 +13,12 @@ export class SvelteChatLog extends ChatLog {
             let flagData = msg.getFlag(game.system.id, 'data');
             flagData = foundry.utils.duplicate(flagData);
             delete flagData["type"];
-            const tokens = flagData.tokens;
-            delete flagData["tokens"];
+            const nodes = flagData.nodes;
+            delete flagData["nodes"];
             msg._svelteComponent.$$set(flagData);
 
-            // Update token stores
-            TOKEN_STORES.get(msg.id).set(tokens ?? {});
+            // Update node stores
+            NODE_STORES.get(msg.id).set(nodes ?? {});
         } else {
             super.updateMessage(msg, notify);
         }
@@ -39,9 +39,9 @@ export function setupMessages() {
             // Fixup flag data
             flagData = foundry.utils.duplicate(flagData);
             const type = flagData.type;
-            const tokens = flagData.tokens;
+            const nodes = flagData.nodes;
             delete flagData["type"];
-            delete flagData["tokens"];
+            delete flagData["nodes"];
 
             // Form props and target
             const props = { msg, ...flagData };
@@ -56,8 +56,8 @@ export function setupMessages() {
                 msg._svelteComponent = new HarmManifestMessage({ target, props })
             }
 
-            // Update token stores
-            TOKEN_STORES.get(msg.id).set(tokens ?? {});
+            // Update node stores
+            NODE_STORES.get(msg.id).set(nodes ?? {});
 
             // Scroll chat log to bottom.
             setTimeout(() => ui.chat.scrollBottom(), 20);

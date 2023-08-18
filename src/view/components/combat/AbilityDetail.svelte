@@ -5,7 +5,7 @@
     // An ability choice
     export let choice;
 
-    // For token persistence
+    // For node persistence
     export let key;
 </script>
 

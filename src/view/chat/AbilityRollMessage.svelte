@@ -2,8 +2,8 @@
 <script>
     import { setContext } from "svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-    import { Token } from "../../util/nlp";
-    import TokenSequence from "../components/generic/TokenSequence.svelte";
+    import { Node } from "../../util/nlp";
+    import NodeSequence from "../components/generic/NodeSequence.svelte";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
 
     // import { fly, fade } from "svelte/transition";
@@ -48,16 +48,16 @@
 
     let choice = item?.system.choices[choice_index] ?? null;
 
-    // Defaults for our tokens etc
-    let attack_roll_tokens;
-    $: attack_roll_tokens = [new Token({ text: "Attack: " }), new Token({ formula: attack_roll_formula })];
+    // Defaults for our nodes etc
+    let attack_roll_nodes;
+    $: attack_roll_nodes = [new Node({ text: "Attack: " }), new Node({ formula: attack_roll_formula })];
 </script>
 
 <div class="icon flexcol">
     {#if item}
         <h3>{item.name}</h3>
         {#if choice?.is_attack}
-            <TokenSequence initial_tokens={attack_roll_tokens} key={`${msg.id}_to_hit`} />
+            <NodeSequence initial_nodes={attack_roll_nodes} key={`${msg.id}_to_hit`} />
         {/if}
 
         {#if choice}
@@ -68,5 +68,4 @@
     {:else}
         Item deleted
     {/if}
-    <!--<TokenSequence tokens={tokens.body || item.} unique_id="body" />-->
 </div>

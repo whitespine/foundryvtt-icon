@@ -4,7 +4,7 @@
     import { TJSDialog } from "#runtime/svelte/application";
     import { BoonBaneApplication } from "../../apps/BoonBaneApplication";
 
-    // Needed for token elements
+    // Needed for node elements
     export let key;
 
     // An ability

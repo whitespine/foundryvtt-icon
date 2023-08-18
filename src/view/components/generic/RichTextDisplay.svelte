@@ -1,7 +1,7 @@
 <script>
     import { getContext } from "svelte";
     import { fullProcess } from "../../../util/nlp";
-    import TokenRenderer from "./TokenSequence.svelte";
+    import NodeSequence from "./NodeSequence.svelte";
 
     /** @type {string} Raw text to show */
     export let body;
@@ -16,4 +16,4 @@
     $: init = fullProcess(body, { actor: $actor });
 </script>
 
-<TokenRenderer initial_tokens={init} key={key} />
+<NodeSequence initial_nodes={init} key={key} />
