@@ -5,7 +5,7 @@ import subprocess
 import json
 from utils.util import *
 
-PACKS = ["abilities", "jobs", "relics"]
+PACKS = ["abilities", "jobs", "job-traits", "relics", "bond-powers"]
 
 # Clean and generate folders
 for p in PACKS:
@@ -36,7 +36,6 @@ class Processor:
         self.pack = pack
         for path in walk_files(icon_data_pack(pack)):
             with open(path) as f:
-                print(f"Loading {path}")
                 self.items.append(json.load(f))
 
     def clear(self):
@@ -141,7 +140,6 @@ class Processor:
             # Remove empty parens from the name & re-assign
             name = re.sub(r"\([ ,]*\)", "", name)
             name = name.strip()
-            print(name)
             data["name"] = name
 
             # Extract talents
@@ -170,19 +168,30 @@ class Processor:
             self.emit(a)
         self.clear()
 
+    def emit_bond_powers(self):
+        self.preprocess()
+        for data in self.items:
+            # Do processing
+            data["type"] = "bond_power"
+
+            self.emit(data)
+        self.clear()
+
 
 
 proc = Processor()
 proc.ingest_all_raw("abilities")
 proc.emit_abilities(False)
+proc.ingest_all_raw("job-traits")
 proc.ingest_all_raw("jobs")
 proc.emit_abilities(True)
 proc.ingest_all_raw("relics")
 proc.emit_relics()
+proc.ingest_all_raw("bond-powers")
+proc.emit_bond_powers()
 
 # Fvtt cli
 subprocess.run(["fvtt", "package", "workon", "--type", "System", "icon"])
-subprocess.run(["fvtt", "package", "pack", "-n", "abilities"])
-subprocess.run(["fvtt", "package", "pack", "-n", "jobs"])
-subprocess.run(["fvtt", "package", "pack", "-n", "relics"])
+for p in PACKS:
+    subprocess.run(["fvtt", "package", "pack", "-n", p])
 subprocess.run(["fvtt", "package", "clear"])

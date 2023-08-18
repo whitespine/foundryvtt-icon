@@ -2,7 +2,7 @@ import { CastingStringField, FakeBoundedNumberField } from "../base";
 import { ItemModel } from "./item";
 
 
-export class JobModel extends ItemModel {
+export class RelicModel extends ItemModel {
     static defineSchema() {
         return {
             ...super.defineSchema(),

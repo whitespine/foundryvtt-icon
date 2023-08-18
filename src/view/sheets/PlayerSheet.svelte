@@ -40,7 +40,7 @@
      * @param {import("../../util/dragdrop").ResolvedDrop} drop Resolved drop data
      */
     function allowDrop(drop) {
-        return drop.type == "Item" && ["bond_power", "bond", "job", "ability"].includes(drop.document.type);
+        return drop.type == "Item" && ["bond-power", "bond", "job", "ability"].includes(drop.document.type);
     }
     /**
      * Open the current job for editing

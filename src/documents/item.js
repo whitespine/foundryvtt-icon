@@ -1,7 +1,3 @@
-import { ICON } from "../consts";
-import { AbilityModel } from "../models/items/ability";
-import { BondPowerModel } from "../models/items/bond_power";
-
 /**
  * Our custom class for Icon Items
  */

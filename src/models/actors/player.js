@@ -212,7 +212,7 @@ export class PlayerModel extends ActorModel {
 
         // Compute spending
         let jobs = this.parent.items.filter(i => i.type === "job" && !i.system.trait);
-        let bond_powers = this.parent.items.filter(i => i.type === "bond_power");
+        let bond_powers = this.parent.items.filter(i => i.type === "bond-power");
         let abilities = this.parent.items.filter(i => i.type === "ability");
         let relics = this.parent.items.filter(i => i.type === "relic");
         let talent_count = 0;

@@ -36,7 +36,7 @@
         <AbilitySheet />
     {:else if $tjs_doc.type == "bond"}
         <BondSheet />
-    {:else if $tjs_doc.type == "bond_power"}
+    {:else if $tjs_doc.type == "bond-power"}
         <BondPowerSheet />
     {:else if $tjs_doc.type == "job"}
         <JobSheet />

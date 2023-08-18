@@ -11,8 +11,8 @@
     // Initialize our embedded categories
     const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
     const bond_powers = actor.embedded.create(Item, {
-        name: "bond_powers",
-        filters: [(i) => i.type === "bond_power"],
+        name: "bond-powers",
+        filters: [(i) => i.type === "bond-power"],
         sort: name_alphabetical,
     });
 
