@@ -123,7 +123,7 @@ export class Node {
          */
         this.formula = options.formula;
 
-        if (!this.text && !this.tag) {
+        if (!this.text && !this.tag && !this.roll) {
             console.warn("EMPTY NODE");
         }
     }
@@ -214,8 +214,9 @@ export function setupTransformers() {
         /\[\[(\S+)\]\]/g,
         (ctx, m) => [
             new Node({
+                tag: "span",
                 formula: m[0],
-                text: m[0]
+                children: [new Node({ text: m[0] })]
             })
         ]
     ));
@@ -224,9 +225,12 @@ export function setupTransformers() {
     StaticTransformers.push(new RegexTransformer(
         /(Gamble)/ig,
         (ctx) => [new Node({
-            text: "Gamble",
+            tag: "span",
             tooltip: localize("ICON.Glossary.Gamble"),
-            formula: "1d6"
+            formula: "1d6",
+            children: [
+                new Node({ text: "Gamble" })
+            ]
         })]
     ));
 
