@@ -3,11 +3,19 @@ import random
 import os
 import string
 import re
+import sys
 
 # Useful path
 proj_root = pathlib.Path(__file__).parent.parent.parent
 foe_root = proj_root / "IconFoeJson" / "data"
 pack_root = proj_root / "packs"
+
+def icon_data_pack(pack):
+    if not os.environ.get("VTT_DATA"):
+        print("Must provide VTT_DATA in environment")
+        sys.exit(1)
+
+    return pathlib.Path(f"{os.environ['VTT_DATA']}/modules/icon_data/packs/{pack}/_source")
 
 random.seed(1)
 
