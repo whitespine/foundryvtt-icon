@@ -101,6 +101,42 @@
       "system": "icon",
       "private": false,
       "flags": {}
+    },
+    {
+      "label": "Abilities",
+      "type": "Item",
+      "name": "abilities",
+      "path": "packs/abilities",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "label": "Traits",
+      "type": "Item",
+      "name": "traits",
+      "path": "packs/traits",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "label": "Jobs",
+      "type": "Item",
+      "name": "jobs",
+      "path": "packs/jobs",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
+    {
+      "label": "Relics",
+      "type": "Item",
+      "name": "relics",
+      "path": "packs/relics",
+      "system": "icon",
+      "private": false,
+      "flags": {}
     }
   ],
   "socket": true,
