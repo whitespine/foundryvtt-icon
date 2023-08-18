@@ -5,7 +5,7 @@ import subprocess
 import json
 from utils.util import *
 
-PACKS = ["abilities", "traits", "jobs", "relics"]
+PACKS = ["abilities", "jobs", "relics"]
 
 # Clean and generate folders
 for p in PACKS:
@@ -177,8 +177,6 @@ proc.ingest_all_raw("abilities")
 proc.emit_abilities(False)
 proc.ingest_all_raw("jobs")
 proc.emit_abilities(True)
-proc.ingest_all_raw("traits")
-proc.emit_abilities(True)
 proc.ingest_all_raw("relics")
 proc.emit_relics()
 
@@ -186,6 +184,5 @@ proc.emit_relics()
 subprocess.run(["fvtt", "package", "workon", "--type", "System", "icon"])
 subprocess.run(["fvtt", "package", "pack", "-n", "abilities"])
 subprocess.run(["fvtt", "package", "pack", "-n", "jobs"])
-subprocess.run(["fvtt", "package", "pack", "-n", "traits"])
 subprocess.run(["fvtt", "package", "pack", "-n", "relics"])
 subprocess.run(["fvtt", "package", "clear"])

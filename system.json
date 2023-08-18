@@ -112,16 +112,7 @@
       "flags": {}
     },
     {
-      "label": "Traits",
-      "type": "Item",
-      "name": "traits",
-      "path": "packs/traits",
-      "system": "icon",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "label": "Jobs",
+      "label": "Jobs & Traits",
       "type": "Item",
       "name": "jobs",
       "path": "packs/jobs",
