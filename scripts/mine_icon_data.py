@@ -181,3 +181,11 @@ proc.ingest_all_raw("traits")
 proc.emit_abilities(True)
 proc.ingest_all_raw("relics")
 proc.emit_relics()
+
+# Fvtt cli
+subprocess.run(["fvtt", "package", "workon", "--type", "System", "icon"])
+subprocess.run(["fvtt", "package", "pack", "-n", "abilities"])
+subprocess.run(["fvtt", "package", "pack", "-n", "jobs"])
+subprocess.run(["fvtt", "package", "pack", "-n", "traits"])
+subprocess.run(["fvtt", "package", "pack", "-n", "relics"])
+subprocess.run(["fvtt", "package", "clear"])
