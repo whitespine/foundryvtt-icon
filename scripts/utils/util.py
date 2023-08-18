@@ -4,6 +4,9 @@ import os
 import string
 import re
 import sys
+from html.parser import HTMLParser
+from dataclasses import dataclass
+from typing import Optional, List, Union, Dict
 
 # Useful path
 proj_root = pathlib.Path(__file__).parent.parent.parent
@@ -56,3 +59,40 @@ def recursive_downcase(input):
     else:
         return input
 
+@dataclass
+class SimpleHTMLTree:
+    parent: Optional["SimpleHTMLTree"]
+    tag: str
+    attrs: Dict[str, str]
+    children: List[Union[str, "SimpleHTMLTree"]]
+
+
+# Very rudimentary parses to a SimpleHTMLTree
+class MyHTMLParser(HTMLParser):
+    def __init__(self, *, convert_charrefs: bool = True) -> None:
+        super().__init__(convert_charrefs=convert_charrefs)
+        self.current_node = None
+        self.roots = []
+    
+    def handle_starttag(self, tag, attrs):
+        if self.current_node:
+            oc = self.current_node
+            self.current_node = SimpleHTMLTree(self.current_node, tag, attrs, [])
+            oc.children.appennd(self.current_node)
+        else:
+            self.current_node = SimpleHTMLTree(None, tag, attrs, [])
+
+    def handle_endtag(self, tag):
+        if self.current_node:
+            if self.current_node.parent is None:
+                self.roots.append(self.current_node)
+            self.current_node = self.current_node.parent
+
+    def handle_data(self, data):
+        self.current_node.children.append(data)
+    
+
+def parse_html(text: str) -> SimpleHTMLTree:
+    parser = MyHTMLParser()
+    parser.feed(text)
+    return parser.roots[0]
