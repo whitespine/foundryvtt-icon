@@ -3,6 +3,7 @@
     import AbilityDetail from "./AbilityDetail.svelte";
     import { TJSDialog } from "#runtime/svelte/application";
     import { BoonBaneApplication } from "../../apps/BoonBaneApplication";
+    import { dragAsMark } from "../../actions/drag";
 
     // Needed for node elements
     export let key;
@@ -63,6 +64,7 @@
     {/if}
     {#if ability}
         <div class="bottom-controls">
+            <i class="fas fa-bullseye" draggable=true use:dragAsMark={{doc: ability}} data-tooltip="Drag To Mark" />
             <i class="fas fa-edit" on:click={editSelected} data-tooltip="Edit" />
             <i class="fas fa-trash" on:click={deleteSelected} data-tooltip="Delete" />
         </div>

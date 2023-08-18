@@ -12,3 +12,20 @@ export function enhanceStatuses() {
         }
     });
 }
+
+Hooks.on("dropCanvasData", (canvas, data) => {
+    if(data.type !== "Effect") return;
+    console.log(canvas, data);
+    // Find a target
+    const targets = canvas.tokens.placeables.filter(token => {
+        if (!token.visible) return false;
+        return Number.between(data.x, token.bounds.x, token.bounds.x + token.bounds.width)
+            && Number.between(data.y, token.bounds.y, token.bounds.y + token.bounds.height);
+    });
+
+    if(targets.length) {
+        let target = targets[0];
+        console.log(data);
+        target.actor.createEmbeddedDocuments("ActiveEffect", [data]);
+    }
+});
