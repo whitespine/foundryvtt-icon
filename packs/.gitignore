@@ -4,4 +4,5 @@
 **/CURRENT
 **/LOCK
 **/MANIFEST*
+**/*.ldb
 **/_source
