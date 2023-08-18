@@ -41,4 +41,7 @@
 </div>
 
 <style lang="scss">
+    :global(.prosemirror .editor-container .editor-content) {
+        position: relative;
+    }
 </style>

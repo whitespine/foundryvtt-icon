@@ -15,11 +15,11 @@
         <Portrait style="grid-area: pic" />
 
         <div style="grid-area: options">
-            <label for="object">Object?:</label>
+            <label for="object"><h3>Object?:</h3></label>
             <input name="object" type="checkbox" use:updateDoc={{ doc, path: `system.is_object` }} />
         </div>
         <div style="grid-area: summon_name">
-            <label for="name">Name:</label>
+            <label for="name"><h3>Name:</h3></label>
             <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
         </div>
     </header>
@@ -29,10 +29,10 @@
     <!-- Sheet Body -->
     <section class="sheet-body">
         <div class="flexcol">
-            <span>Summon Effects:</span>
+            <h3>Summon Effects:</h3>
             <ProseMirrorEditor doc={$doc} path={"system.summon_effects"} />
 
-            <span>Summon Actions:</span>
+            <h3>Summon Actions:</h3>
             <ProseMirrorEditor doc={$doc} path={"system.summon_actions"} />
 
             <EditableDocArray title="Tags" path={"system.tags"} />

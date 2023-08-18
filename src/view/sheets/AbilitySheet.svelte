@@ -7,6 +7,7 @@
     import Tabs from "../components/generic/Tabs.svelte";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
     import { TAB_STORES } from "../../util/stores";
+    import ActorUuidReference from "../components/combat/ActorUUIDReference.svelte";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -169,20 +170,7 @@
                         <h3>Summons <em> - Drag to add! </em></h3>
                         {#each selected_choice.summons as uuid, index}
                             <div class="flexrow">
-                                <span>
-                                    <!-- svelte-ignore missing-declaration -->
-                                    {#await fromUuid(uuid)}
-                                        Loading...
-                                    {:then actor}
-                                        {#if actor}
-                                            {actor.name}
-                                        {:else}
-                                            NOT FOUND
-                                        {/if}
-                                    {:catch}
-                                        INVALID
-                                    {/await}
-                                </span>
+                                <ActorUuidReference uuid={uuid} />
                                 <i class="fas fa-trash" style="max-width: 32px;" on:click={() => deleteSummon(index)} />
                             </div>
                         {/each}

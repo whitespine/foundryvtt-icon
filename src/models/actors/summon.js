@@ -14,9 +14,4 @@ export class SummonModel extends ActorModel {
             summon_actions: new foundry.data.fields.HTMLField(),
         };
     }
-
-
-    static convertSWB(data) {
-        data.type = "summon";
-    }
 }
