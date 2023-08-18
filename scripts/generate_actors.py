@@ -360,7 +360,7 @@ class ItemProcessor:
         # Subprocess combos
         if action_data.get("combo"):
             combo = action_data["combo"]
-            combo["name"] += f"[COMBO] {combo['name'] or action_data['name']}"  # Add a unique prefix
+            combo["name"] += f"[COMBO]"  # Add a unique prefix
             choices = choices + self.action_to_choices(action_data["combo"])
 
         # Subprocess summons
