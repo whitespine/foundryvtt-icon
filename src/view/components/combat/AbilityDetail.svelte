@@ -10,15 +10,15 @@
 </script>
 
 <div {...$$restProps}>
-    <span class="title">
-        {choice.name}
-
+    <div class="title">
+    <h3>{choice.name}</h3>
+    <span>
         {#if choice.actions == 0}
-            | Free Action
+            - Free Action
         {:else if choice.actions == 1}
-            | 1 Action
+            - 1 Action
         {:else if choice.actions == 2}
-            | 2 Actions
+            - 2 Actions
         {/if}
 
         {#if choice.resolve}
@@ -37,6 +37,7 @@
             | Chapter Ⅲ
         {/if}
     </span>
+    </div>
     <span>
         <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} key={`${key}_tags`} />
     </span>
@@ -50,6 +51,13 @@
 
 <style lang="scss">
     .title {
+        display: flex;
+        align-items: center;
         font-weight: bold;
+        h3 {
+            margin-bottom: 0px;
+            margin-right: 5px;
+        }
+        margin-bottom: 5px;
     }
 </style>

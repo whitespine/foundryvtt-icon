@@ -55,7 +55,6 @@
 
 <div class="icon flexcol">
     {#if item}
-        <h3>{item.name}</h3>
         {#if choice?.is_attack}
             <NodeSequence initial_nodes={attack_roll_nodes} key={`${msg.id}_to_hit`} />
         {/if}
