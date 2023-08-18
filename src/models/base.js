@@ -17,20 +17,6 @@ export class IconDataModel extends foundry.abstract.DataModel {
     const system = foundry.utils.duplicate(this._source);
     return fancyMerge({ system }, update_data);
   }
-
-  /**
-   * Migrates the provided SWB object in-place to conform to this model.
-   * Override 
-   * 
-   * @param {object} data The raw SWB system data we start with
-   *
-   * @param {string} data.type The original type - must be overridden
-   *
-   * @param {object} data.system The original SWB system data
-   * 
-   * @param {object[]} [data.items] The original SWB actor's items, if original doc is an actor
-   */
-  static convertSWB(data) { }
 }
 
 /**

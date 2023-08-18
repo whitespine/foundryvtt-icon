@@ -30,8 +30,4 @@ export class BondModel extends ItemModel {
             powers: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField()),
         };
     }
-
-    static convertSWB(data) {
-        data.type = "bond";
-    }
 }

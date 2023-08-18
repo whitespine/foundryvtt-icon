@@ -62,8 +62,4 @@ export class FoeModel extends ActorModel {
         this.vigor.max = this.class.vitality;
         this.bloodied = this.hp.value <= this.hp.max / 2;
     }
-
-    static convertSWB(data) {
-        data.type = "foe";
-    }
 }

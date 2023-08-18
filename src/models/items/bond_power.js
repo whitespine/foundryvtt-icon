@@ -7,8 +7,4 @@ export class BondPowerModel extends ItemModel {
             description: new foundry.data.fields.HTMLField()
         };
     }
-
-    static convertSWB(data) {
-        data.type = "bond_power";
-    }
 }
