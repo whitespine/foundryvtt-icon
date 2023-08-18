@@ -124,6 +124,7 @@ export class AbilityChoiceField extends fields.SchemaField {
 export class AbilityAugmentationField extends fields.SchemaField {
     constructor(options = {}) {
         super({
+            name: new fields.StringField({nullable: true, initial: null}),
             text: new fields.HTMLField()
         }, options);
     }
@@ -150,87 +151,5 @@ export class AbilityModel extends ItemModel {
             talents: new fields.ArrayField(new AbilityAugmentationField()),
             mastery: new AbilityAugmentationField({ nullable: true })
         };
-    }
-
-
-    static convertSWB(data) {
-        data.type = "ability";
-        /** @type {string} */
-        let name = data.name;
-
-        // Establish some values. SWB values code abilities one at a time
-        let description = removeAllUUIDRefs(data.system.description);
-        let effects = description.replaceAll("<p>", "").split("</p>");
-        effects = effects.map(p => p.replaceAll(/<\/? *(strong|em|br) *>/g, ""));
-        let dc = {
-            ranges: [],
-            tags: [],
-            description: description,
-            effects: effects
-        }; // Short for default choice
-        data.system.choices = [dc];
-
-        // Extract the subcomponents from the name
-        let parenthetical_regex = /\((.*?)\)/;
-        let parts = name.match(parenthetical_regex)?.[1]?.split(",") ?? [];
-        name = name.replace(parenthetical_regex, "");
-        for (let part of parts) {
-            const action_match = part.match(/(\d)\s+actions?/i);
-            if (action_match) {
-                dc.actions = Number.parseInt(action_match[1]);
-                continue;
-            }
-
-            const resolve_match = part.match(/(\d)\s+resolve?/i);
-            if (resolve_match) {
-                dc.resolve = Number.parseInt(resolve_match[1]);
-                continue;
-            }
-
-            let range_match = part.match(/(Range|Arc|Line) (\d)+/);
-            if (range_match) {
-                dc.ranges.push(range_match[0]);
-                continue;
-            }
-
-            const interrupt_match = part.match(/(\d)\s+interrupt?/i);
-            if (interrupt_match) {
-                dc.interrupt = Number.parseInt(interrupt_match[1]);
-                continue;
-            }
-
-            let combo_match = part.match(/combo (\d)/i);
-            if (combo_match) {
-                dc.combo = combo_match[1] == "1" ? 1 : -1;
-                continue;
-            }
-
-            // Otherwise generic tag
-            dc.tags.push(part);
-        }
-
-        // Deduce if it's a trait
-        data.system.trait = data.flags.icon_data?.isTrait ?? false;
-
-        // Remove empty parens from the name & re-assign
-        name = name.replaceAll(/\([ ,]*\)/g, "");
-        name = name.trim();
-        data.name = name;
-
-        // Extract talents
-        data.system.talents = [];
-        data.system.mastery = null;
-        for (let talent_val of Object.values(data.system.attributes?.Talents ?? {})) {
-            // talent_key tends to be something akin to Talent1
-            if (talent_val.value?.includes("Mastery")) {
-                data.system.mastery = {
-                    text: talent_val.value
-                };
-            } else if (talent_val.value?.trim()) {
-                data.system.talents.push({
-                    text: talent_val.value
-                });
-            }
-        }
     }
 }

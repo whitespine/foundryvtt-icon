@@ -65,6 +65,8 @@ class Processor:
             item.get("flags", {}).pop("worldbuilding", None)
             item.get("flags", {}).pop("core", None)
             item.get("flags", {}).pop("icon-145-data-wip", None)
+            for x in [1,2,3,4,5,6]:
+                item.get("flags", {}).get("icon_data", {}).pop(f"Talent{x}", None)
             item.get("system", {}).pop("quantity", None)
             item.get("system", {}).pop("weight", None)
             item.get("system", {}).pop("groups", None)
@@ -74,7 +76,7 @@ class Processor:
             self.items.append(item)
 
     def remove_all_uuid_refs(self, text):
-        return re.sub(r"@UUID\[.*?\]\{(.*?)\}", "", text)
+        return re.sub(r"@UUID\[.*?\]\{(.*?)\}", r"\1", text)
 
     def emit_abilities(self, trait):
         self.preprocess()
@@ -82,9 +84,12 @@ class Processor:
             # Do processing
             data["type"] = "ability"
             name = data["name"]
+            datasys = data.get("system", {})
+            data["system"] = {}
+            data["osys"] = datasys
 
             # Establish some values. SWB values code abilities one at a time
-            description = self.remove_all_uuid_refs(data["system"]["description"]);
+            description = self.remove_all_uuid_refs(datasys.get("description", ""));
             effects = description.replace("<p>", "").split("</p>");
             effects = [re.sub(r"<\/? *(strong|em|br) *>", "", p) for p in effects]
             dc = {
@@ -142,8 +147,9 @@ class Processor:
             # Extract talents
             data["system"]["talents"] = []
             data["system"]["mastery"] = None
-            for talent_val in data["system"]["attributes"].get("Talents", {}).values():
+            for talent_val in datasys["attributes"].get("Talents", {}).values():
                 # talent_key tends to be something akin to Talent1
+                if isinstance(talent_val, str): continue
                 if "Mastery" in talent_val.get("value", ""):
                     data["system"]["mastery"] = {
                         "text": talent_val["value"]
