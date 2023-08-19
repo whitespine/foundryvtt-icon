@@ -150,7 +150,7 @@ export class AbilityModel extends ItemModel {
 
             // Upgrades for player abilities
             talents: new ControlledLengthArrayField(new AbilityAugmentationField(), { length: 2 }),
-            mastery: new AbilityAugmentationField({ nullable: true })
+            mastery: new AbilityAugmentationField()
         };
     }
 }

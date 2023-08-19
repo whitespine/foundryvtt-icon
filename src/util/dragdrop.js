@@ -78,6 +78,7 @@ export async function resolveNativeDrop(drop) {
     if (typeof drop == "string") {
         parsed_drop = safeParseJSON(drop);
     }
+    if (parsed_drop.uuid) parsed_drop = parsed_drop.uuid;
     if (!parsed_drop && typeof drop == "string") {
         // Either wasn't an object, or failed to parse to be one from a stringAttempt uuid route
         let document = await fromUuid(drop);
@@ -105,45 +106,7 @@ export async function resolveNativeDrop(drop) {
                 document,
             };
         }
-    } else if (typeof drop == "object") {
-        // We presume it to be a normal dropData.
-        drop = parsed_drop;
-        if (drop.type == "Actor") {
-            let document = await Actor.fromUuid(drop.uuid);
-            return document ?
-                {
-                    type: "Actor",
-                    document,
-                } :
-                null;
-        } else if (drop.type == "Item") {
-            let document = await Item.fromUuid(drop.uuid);
-            return document ?
-                {
-                    type: "Item",
-                    document,
-                } :
-                null;
-        } else if (drop.type == "JournalEntry") {
-            // @ts-ignore
-            let document = await JournalEntry.fromDropData(drop);
-            return document ?
-                {
-                    type: "JournalEntry",
-                    document,
-                } :
-                null;
-        } else if (drop.type == "Macro") {
-            // @ts-ignore
-            let document = await Macro.fromDropData(drop);
-            return document ?
-                {
-                    type: "Macro",
-                    document,
-                } :
-                null;
-        }
-    }
+    } 
     return null;
 }
 

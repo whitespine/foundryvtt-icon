@@ -200,6 +200,7 @@ export class PlayerModel extends ActorModel {
                 budget.ap += 2;
                 budget.bp++;
                 budget.nap++;
+                budget.jp++;
         }
 
         // Adjust by prior and current half-level ap increments
@@ -211,12 +212,12 @@ export class PlayerModel extends ActorModel {
         }
 
         // Compute spending
-        let jobs = this.parent.items.filter(i => i.type === "job" && !i.system.trait);
+        let jobs = this.parent.items.filter(i => i.type === "job");
         let bond_powers = this.parent.items.filter(i => i.type === "bond-power");
-        let abilities = this.parent.items.filter(i => i.type === "ability");
+        let abilities = this.parent.items.filter(i => i.type === "ability" && !i.system.trait);
         let relics = this.parent.items.filter(i => i.type === "relic");
-        let talent_count = 0;
-        let mastery_count = 0;
+        let talent_count = abilities.reduce((x, a) => x + a.system.talents.filter(t => t.unlocked).length, 0);
+        let mastery_count = abilities.reduce((x, a) => x + a.system.mastery.unlocked ? 1 : 0, 0);
         let narrative_action_count = Object.values(this.actions).reduce((a, b) => a + b, 0);
 
         // First bespoke
