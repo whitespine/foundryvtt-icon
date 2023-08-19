@@ -1,8 +1,12 @@
 // A namespace thingy for storing ICON system specific constants
 export const ICON = {
     settings: {
+        // Internal state
         migration: "migration_version",
-        dsn_setup: "dice_so_nice_setup"
+        dsn_setup: "dice_so_nice_setup",
+
+        // Configurable
+        show_foe_hp: "show_foe_hp",
     },
     flags: {
         swb_needs_commit: "swb_needs_commit",

@@ -91,7 +91,7 @@
         height: 100%;
         display: grid;
         grid-template:
-            "abilities preview" 1fr
+            "abilities preview" 2fr
             "abilities statuses" 1fr / 1fr 2fr;
 
         h3 {

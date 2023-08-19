@@ -14,11 +14,11 @@
         <h3>{choice.name}</h3>
         <span>
             {#if choice.actions == 0}
-                - Free Action
+                Free Action
             {:else if choice.actions == 1}
-                - 1 Action
+                1 Action
             {:else if choice.actions == 2}
-                - 2 Actions
+                2 Actions
             {/if}
 
             {#if choice.resolve}
