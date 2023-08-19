@@ -5,7 +5,7 @@ import subprocess
 import json
 from utils.util import *
 
-PACKS = ["abilities", "jobs", "job-traits", "relics", "bond-powers"]
+PACKS = ["abilities", "job-traits", "relics", "bond-powers"]
 
 # Clean and generate folders
 for p in PACKS:
@@ -64,8 +64,10 @@ class Processor:
             item.get("flags", {}).pop("worldbuilding", None)
             item.get("flags", {}).pop("core", None)
             item.get("flags", {}).pop("icon-145-data-wip", None)
-            for x in [1,2,3,4,5,6]:
-                item.get("flags", {}).get("icon_data", {}).pop(f"Talent{x}", None)
+            item.get("flags", {}).pop("cf", None)
+            item.get("flags", {}).pop("icon_data", None)
+            # for x in [1,2,3,4,5,6]:
+            #     item.get("flags", {}).get("icon_data", {}).pop(f"Talent{x}", None)
             item.get("system", {}).pop("quantity", None)
             item.get("system", {}).pop("weight", None)
             item.get("system", {}).pop("groups", None)
@@ -90,10 +92,11 @@ class Processor:
             description = self.remove_all_uuid_refs(datasys.get("description", ""));
             effects = description.replace("<p>", "").split("</p>");
             effects = [re.sub(r"<\/? *(strong|em|br) *>", "", p) for p in effects]
+            effects = [e.strip() for e in effects if e.strip()]
             dc = {
                 "ranges": [],
                 "tags": [],
-                "description": description,
+                "description": "",
                 "effects": effects
             } # Short for default choice
             data["system"]["choices"] = [dc];
@@ -132,6 +135,11 @@ class Processor:
                 # Otherwise generic tag
                 dc["tags"].append(part)
 
+            for k, v in datasys.get("attributes", {}).get("Tags", {}).items():
+                if "Tag" in k:
+                    if v.get("label"):
+                        dc["tags"].append(v.get("label").strip())
+
             # Deduce if it's a trait
             # data["system"]["trait"] = data["flags"]["icon_data"].get("isTrait", False)
             data["system"]["trait"] = trait
@@ -156,7 +164,7 @@ class Processor:
                     if len(trees) > 0:
                         for child in trees[0].iter_children():
                             if isinstance(child, str) and "Mastery" in child:
-                                found_name = child
+                                found_name= child.replace("Mastery: ", "") 
                                 break
                     if len(trees) > 1:
                         found_body = str(trees[1])
@@ -211,6 +219,9 @@ class Processor:
         for data in self.items:
             # Do processing
             data["type"] = "bond_power"
+            datasys = data.get("system", {})
+            data["system"] = {}
+            data["system"]["description"] = datasys["description"]
 
             self.emit(data)
         self.clear()
@@ -221,7 +232,6 @@ proc = Processor()
 proc.ingest_all_raw("abilities")
 proc.emit_abilities(False)
 proc.ingest_all_raw("job-traits")
-proc.ingest_all_raw("jobs")
 proc.emit_abilities(True)
 proc.ingest_all_raw("relics")
 proc.emit_relics()
