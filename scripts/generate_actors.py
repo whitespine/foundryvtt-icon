@@ -368,10 +368,6 @@ class ItemProcessor:
         # Subprocess summons
         summons = []
         for summon in mandate_list(action_data.get("summons")):
-            if "Soul Spark" in summon.get("name"):
-                print("\n\n")
-                print(summon)
-                print(action_data)
             summon["name"] += " " + CHPT[action_data.get("chapter", 1)]
             summon = self.parent.parent.process_summon(summon)
             uuid = f"Compendium.icon.foes.Actor.{summon.id}"
