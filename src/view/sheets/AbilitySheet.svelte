@@ -186,7 +186,7 @@
                         <h3>Talents</h3>
                         {#each $doc.system.talents as talent, index}
                             <div class="flexrow">
-                                <span>{"I".repeat(index + 1)}.</span>
+                                <span style="flex: 0">{"I".repeat(index + 1)}.</span>
                                 <input type="text" use:updateDoc={{ doc, path: `system.talents.${index}.text` }} />
                                 <input type="checkbox" use:updateDoc={{ doc, path: `system.talents.${index}.unlocked` }} />
                             </div>
