@@ -67,6 +67,7 @@ class Processor:
         _sub_inherit_list("conditional_abilities")
 
         # Inherit stats
+        _sub_inherit_attr("faction")
         _sub_inherit_attr("class")
         _sub_inherit_attr("vitality")
         _sub_inherit_attr("speed")

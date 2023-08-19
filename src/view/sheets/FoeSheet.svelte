@@ -36,13 +36,19 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <input style="grid-area: foe_name" type="text" use:updateDoc={{ doc, path: "name" }} />
+        <div style="grid-area: foe_name" class="iflexrow">
+            <label for="foe_name">Name:</label>
+            <input type="text" name="foe_name" use:updateDoc={{ doc, path: "name" }} />
+        </div>
         <select style="grid-area: foe_template" use:updateDoc={{ doc, path: "system.template" }}>
             {#each ["Normal", "Elite", "Mob", "Legend"] as t}
                 <option value={t}>{t}</option>
             {/each}
         </select>
-        <input style="grid-area: foe_faction" type="text" use:updateDoc={{ doc, path: "system.faction" }} />
+        <div style="grid-area: foe_faction" class="iflexrow">
+            <label for="foe_faction">Faction:</label>
+            <input name="foe_faction" type="text" use:updateDoc={{ doc, path: "system.faction" }} />
+        </div>
         <select style="grid-area: foe_class" use:updateDoc={{ doc, path: "system.class.color" }}>
             {#each FOE_COLORS as c, i}
                 <option value={GENERIC_COLORS[i]}>{c}</option>
@@ -98,7 +104,9 @@
         gap: 5px;
         padding: 10px;
         align-items: center;
-        text-align: center;
+        label {
+            width: 80px;
+        }
     }
 
     .sheet-body {

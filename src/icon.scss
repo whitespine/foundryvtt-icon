@@ -106,3 +106,14 @@ div.icon section.window-content {
     padding: 2px;
     border: var(--primary-border);
 }
+
+.iflexrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.iflexcol {
+    display: flex;
+    flex-direction: column;
+}
