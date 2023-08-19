@@ -112,10 +112,10 @@
       "flags": {}
     },
     {
-      "label": "Jobs & Traits",
+      "label": "Jobs Traits",
       "type": "Item",
-      "name": "jobs",
-      "path": "packs/jobs",
+      "name": "job-traits",
+      "path": "packs/job-traits",
       "system": "icon",
       "private": false,
       "flags": {}
