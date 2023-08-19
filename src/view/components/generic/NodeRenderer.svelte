@@ -34,7 +34,7 @@
     /** Post the tooltip */
     function postDescription() {
         ChatMessage.create({
-            content: `<strong>${node.text}</strong>: ${node.tooltip}`,
+            content: `<strong>${node.innerText()}</strong>: ${node.tooltip}`,
         });
     }
 

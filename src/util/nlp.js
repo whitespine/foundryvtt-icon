@@ -144,6 +144,17 @@ export class Node {
         }
     }
 
+    /**
+     * Gets the string content of this node
+     * @returns {string}
+     */
+    innerText() {
+        let result = this.text ?? "";
+        for(let child of this.children || []) {
+            result += child.innerText();
+        }
+        return result;
+    }
 }
 
 /**
