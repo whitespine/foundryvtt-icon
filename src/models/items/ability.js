@@ -17,16 +17,16 @@ export class AbilityChoiceField extends fields.SchemaField {
             // Is it a round action?
             round_action: new fields.BooleanField({ initial: false }),
             // What is/are its listed range(s)?
-            ranges: new fields.ArrayField(new CastingStringField({cast: titleCaseString})),
-                // validate: (val) => {
-                    // return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
-                // }
+            ranges: new fields.ArrayField(new CastingStringField({ cast: titleCaseString })),
+            // validate: (val) => {
+            // return !!val.match(/(Range \d+|Line \d+|Arc \d+|Small Blast|Medium Blast|Large Blast)/i)
+            // }
             // UUIDs of any summons it might have
             summons: new fields.ArrayField(new fields.StringField()),
 
 
             // ------- TAGS ---------------
-            tags: new fields.ArrayField(new CastingStringField({cast: titleCaseString})),
+            tags: new fields.ArrayField(new CastingStringField({ cast: titleCaseString })),
 
             // As an interrupt, what's its trigger?
             trigger: new fields.StringField(),
@@ -65,7 +65,7 @@ export class AbilityChoiceField extends fields.SchemaField {
      */
     actionPips(data) {
         // Traits have nothing
-        if(data.actions === null) return "";
+        if (data.actions === null) return "";
 
         // Interrupts look special
         if (data.interrupt) {
@@ -105,17 +105,17 @@ export class AbilityChoiceField extends fields.SchemaField {
         data.terrain_effect = false;
         // Does it have a delay effect
         data.delay = false;
-        for(let tag of data.tags) {
+        for (let tag of data.tags) {
             let m;
-            if(m = tag.match(/attack/i)) data.is_attack = true;
-            if(m = tag.match(/true strike/i)) data.is_true_strike = true;
-            if(m = tag.match(/unerring/i)) data.is_unerring = true;
-            if(m = tag.match(/interrupt (\d)/i)) data.is_interrupt = parseInt(m[1]);
-            if(m = tag.match(/end turn/i)) data.is_end_turn = true;
-            if(m = tag.match(/mark/i)) data.is_mark = true;
-            if(m = tag.match(/stance/i)) data.is_stance = true;
-            if(m = tag.match(/terrain effect/i)) data.is_terrain_effect = true;
-            if(m = tag.match(/delay/i)) data.is_delay = true;
+            if (m = tag.match(/attack/i)) data.is_attack = true;
+            if (m = tag.match(/true strike/i)) data.is_true_strike = true;
+            if (m = tag.match(/unerring/i)) data.is_unerring = true;
+            if (m = tag.match(/interrupt (\d)/i)) data.is_interrupt = parseInt(m[1]);
+            if (m = tag.match(/end turn/i)) data.is_end_turn = true;
+            if (m = tag.match(/mark/i)) data.is_mark = true;
+            if (m = tag.match(/stance/i)) data.is_stance = true;
+            if (m = tag.match(/terrain effect/i)) data.is_terrain_effect = true;
+            if (m = tag.match(/delay/i)) data.is_delay = true;
         }
     }
 }
@@ -124,8 +124,9 @@ export class AbilityChoiceField extends fields.SchemaField {
 export class AbilityAugmentationField extends fields.SchemaField {
     constructor(options = {}) {
         super({
-            name: new fields.StringField({nullable: true, initial: null}),
-            text: new fields.HTMLField()
+            name: new fields.StringField({ nullable: true, initial: null }),
+            text: new fields.HTMLField(),
+            unlocked: new fields.BooleanField({ initial: false })
         }, options);
     }
 }
@@ -138,17 +139,17 @@ export class AbilityModel extends ItemModel {
             choices: new ControlledLengthArrayField(new AbilityChoiceField(), { length: 1, overflow: true }),
 
             // Minimum chapter it is allowed in
-            chapter: new fields.NumberField({ nullable: false, initial: 1, integer: true, min: 1, max: 3}),
+            chapter: new fields.NumberField({ nullable: false, initial: 1, integer: true, min: 1, max: 3 }),
 
             // Special rules for it
             special_requirements: new fields.ArrayField(new fields.StringField()),
 
             // Is it actually a trait? 
             // This really doesn't end up meaning much considering some traits are abilities, etc
-            trait: new fields.BooleanField({initial: false}),
+            trait: new fields.BooleanField({ initial: false }),
 
             // Upgrades for player abilities
-            talents: new fields.ArrayField(new AbilityAugmentationField()),
+            talents: new ControlledLengthArrayField(new AbilityAugmentationField(), { length: 2 }),
             mastery: new AbilityAugmentationField({ nullable: true })
         };
     }

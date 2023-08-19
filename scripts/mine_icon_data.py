@@ -85,7 +85,6 @@ class Processor:
             name = data["name"]
             datasys = data.get("system", {})
             data["system"] = {}
-            data["osys"] = datasys
 
             # Establish some values. SWB values code abilities one at a time
             description = self.remove_all_uuid_refs(datasys.get("description", ""));
@@ -149,12 +148,28 @@ class Processor:
                 # talent_key tends to be something akin to Talent1
                 if isinstance(talent_val, str): continue
                 if "Mastery" in talent_val.get("value", ""):
+                    # Time to go data mining
+                    value = self.remove_all_uuid_refs(talent_val["value"])
+                    trees = parse_html(value)
+                    found_name = "Unnamed Mastery"
+                    found_body = ""
+                    if len(trees) > 0:
+                        for child in trees[0].iter_children():
+                            if isinstance(child, str) and "Mastery" in child:
+                                found_name = child
+                                break
+                    if len(trees) > 1:
+                        found_body = str(trees[1])
+
+                    # Set the mastery
                     data["system"]["mastery"] = {
-                        "text": talent_val["value"]
+                        "name": found_name,
+                        "text": found_body,
                     }
+
                 elif talent_val.get("value", "").strip():
                     data["system"]["talents"].append({
-                        "text": talent_val["value"]
+                        "text": self.remove_all_uuid_refs(talent_val["value"])
                     })
                 
             
@@ -163,9 +178,32 @@ class Processor:
 
     def emit_relics(self):
         self.preprocess()
-        for a in self.items:
+        for data in self.items:
             # Do processing
-            self.emit(a)
+            data["type"] = "relic"
+            datasys = data.get("system", {})
+            data["system"] = {}
+
+            # Get meta information
+            tags = datasys.get("system", {}).get("attributes", {}).get("Tags", {})
+            invoke = tags.get("Invoke", {}).get("value", None)
+
+            # Get those ranks
+            talents = datasys.get("attributes", {}).get("Talents", {})
+            raw_ranks = [
+                datasys.get("description"),
+                talents.get("Talent1", {}).get("value"),
+                talents.get("Talent2", {}).get("value"),
+                talents.get("Talent3", {}).get("value")
+            ]
+            real_ranks = []
+            for rank in raw_ranks:
+                if rank:
+                    rank = self.remove_all_uuid_refs(rank)
+                    real_ranks.append(rank)
+            data["system"]["ranks"] = real_ranks
+
+            self.emit(data)
         self.clear()
 
     def emit_bond_powers(self):

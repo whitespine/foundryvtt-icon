@@ -66,6 +66,28 @@ class SimpleHTMLTree:
     attrs: Dict[str, str]
     children: List[Union[str, "SimpleHTMLTree"]]
 
+    def iter_children(self):
+        yield self
+        for child in self.children:
+            if isinstance(child, str):
+                yield child
+            else:
+                yield from child.iter_children()
+
+    def __str__(self) -> str:
+        attrs = ""
+        for k, v in self.attrs:
+            attrs += f"{k}=\"{v}\""
+        body = f"<{self.tag}{' ' if attrs else ''}{attrs}>"
+        for child in self.children:
+            if isinstance(child, str):
+                body += child
+            else:
+                body += str(child)
+        body += f"</{self.tag}>"
+        return body
+        
+
 
 # Very rudimentary parses to a SimpleHTMLTree
 class MyHTMLParser(HTMLParser):
@@ -78,7 +100,7 @@ class MyHTMLParser(HTMLParser):
         if self.current_node:
             oc = self.current_node
             self.current_node = SimpleHTMLTree(self.current_node, tag, attrs, [])
-            oc.children.appennd(self.current_node)
+            oc.children.append(self.current_node)
         else:
             self.current_node = SimpleHTMLTree(None, tag, attrs, [])
 
@@ -92,7 +114,7 @@ class MyHTMLParser(HTMLParser):
         self.current_node.children.append(data)
     
 
-def parse_html(text: str) -> SimpleHTMLTree:
+def parse_html(text: str) -> List[SimpleHTMLTree]:
     parser = MyHTMLParser()
     parser.feed(text)
-    return parser.roots[0]
+    return parser.roots

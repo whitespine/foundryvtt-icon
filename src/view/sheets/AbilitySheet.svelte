@@ -170,7 +170,7 @@
                         <h3>Summons <em> - Drag to add! </em></h3>
                         {#each selected_choice.summons as uuid, index}
                             <div class="flexrow">
-                                <ActorUuidReference uuid={uuid} />
+                                <ActorUuidReference {uuid} />
                                 <i class="fas fa-trash" style="max-width: 32px;" on:click={() => deleteSummon(index)} />
                             </div>
                         {/each}
@@ -179,6 +179,30 @@
 
                 <div class="block">
                     <EditableDocArray title="Effects" path={`system.choices.${$selected_tab}.effects`} />
+                </div>
+
+                <div class="flexrow">
+                    <div class="block">
+                        <h3>Talents</h3>
+                        {#each $doc.system.talents as talent, index}
+                            <div class="flexrow">
+                                <span>{"I".repeat(index + 1)}.</span>
+                                <input type="text" use:updateDoc={{ doc, path: `system.talents.${index}.text` }} />
+                                <input type="checkbox" use:updateDoc={{ doc, path: `system.talents.${index}.unlocked` }} />
+                            </div>
+                        {/each}
+                    </div>
+
+                    <div class="block">
+                        <h3>
+                            Mastery:
+                            <input type="text" use:updateDoc={{ doc, path: `system.mastery.name` }} />
+                        </h3>
+                        <div class="flexrow">
+                            <input type="text" use:updateDoc={{ doc, path: `system.mastery.text` }} />
+                            <input type="checkbox" use:updateDoc={{ doc, path: `system.mastery.unlocked` }} />
+                        </div>
+                    </div>
                 </div>
 
                 <div class="block">
