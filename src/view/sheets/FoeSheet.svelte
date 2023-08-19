@@ -69,7 +69,7 @@
             </div>
         {:else if $selected_tab === "ICON.Foe.Stats"}
             <div class="flexcol">
-                {#each ["defense", "damage_die", "fray_damage", "speed", "dash"] as stat}
+                {#each ["defense", "damage_die", "fray_damage", "speed", "dash", "vitality"] as stat}
                     <label for={stat}>{stat}:</label>
                     <input name={stat} type="number" use:updateDoc={{ doc, path: `system.class.${stat}` }} />
                 {/each}
