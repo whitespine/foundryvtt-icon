@@ -6,6 +6,7 @@
     import { TJSDialog } from "#runtime/svelte/application";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
     import { slide, blur } from "svelte/transition";
+    import { updateDoc } from "../../actions/update";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -79,8 +80,29 @@
         {#if can_level}
             <button on:click={levelUp}>Level Up!</button>
         {/if}
+
+        <!-- The two branching paths in character building -->
+        {#each [["four", 4], ["eight", 8]] as [key, threshold]}
+            {#if $doc.system.level >= threshold}
+                <div>
+                    <h4>At level {key} I chose:</h4>
+                    <div class="flexrow">
+                        <select use:updateDoc={{doc, path: `system.level_choices.${key}.combat`}}>
+                            <option value="job">+1 Job</option>
+                            <option value="mastery">+1 Mastery +2 Abilities</option>
+                        </select>
+                        <select use:updateDoc={{doc, path: `system.level_choices.${key}.narrative`}}>
+                            <option value="actions">+2 Action Pips</option>
+                            <option value="power">+1 Bond Power</option>
+                        </select>
+                    </div>
+                </div>
+            {/if}
+        {/each}
+
+
         {#if $actor.system.progression.warnings.length}
-            <button on:click={showWarnings}>{$actor.system.progression.warnings.length} Warnings</button>
+            <button on:click={showWarnings}>{$actor.system.progression.warnings.length} Build Warnings</button>
         {/if}
     </div>
     <div class="relics">
