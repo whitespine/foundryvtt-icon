@@ -202,22 +202,22 @@ class ActorProcessor:
             """
 
             # Add traits, mark similarly
-            for add_target in mandate_list(cond_ability.get("traits")):
-                if isinstance(add_target, str):
-                    add_target = self.parent.get_trait(add_target)
+            for add_trait in mandate_list(cond_ability.get("traits")):
+                if isinstance(add_trait, str):
+                    add_trait = self.parent.get_trait(add_trait)
                 if "chapter" in cond_ability:
                     chpt = cond_ability["chapter"]
-                    add_target["chapter"] = chpt
-                add_target["special_requirements"] = add_reqs
-                self.traits.append(add_target)
+                    add_trait["chapter"] = chpt
+                add_trait["special_requirements"] = add_reqs
+                self.traits.append(add_trait)
 
             # Add actions, mark similarly
-            for add_target in mandate_list(cond_ability.get("actions")):
+            for add_action in mandate_list(cond_ability.get("actions")):
                 if "chapter" in cond_ability:
                     chpt = cond_ability["chapter"]
-                    add_target["chapter"] = chpt
-                add_target["special_requirements"] = add_reqs
-                self.actions.append(add_target)
+                    add_action["chapter"] = chpt
+                add_action["special_requirements"] = add_reqs
+                self.actions.append(add_action)
 
     def process_as_summon(self):
         self.type = "summon"
@@ -361,11 +361,16 @@ class ItemProcessor:
         if action_data.get("combo"):
             combo = action_data["combo"]
             combo["name"] += f"[COMBO]"  # Add a unique prefix
+            combo["chapter"] = action_data.get("chapter", 1)  # Pass down chapter
             choices = choices + self.action_to_choices(action_data["combo"])
 
         # Subprocess summons
         summons = []
         for summon in mandate_list(action_data.get("summons")):
+            if "Soul Spark" in summon.get("name"):
+                print("\n\n")
+                print(summon)
+                print(action_data)
             summon["name"] += " " + CHPT[action_data.get("chapter", 1)]
             summon = self.parent.parent.process_summon(summon)
             uuid = f"Compendium.icon.foes.Actor.{summon.id}"

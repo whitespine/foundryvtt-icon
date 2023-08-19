@@ -218,7 +218,7 @@ class Processor:
         self.preprocess()
         for data in self.items:
             # Do processing
-            data["type"] = "bond_power"
+            data["type"] = "bond-power"
             datasys = data.get("system", {})
             data["system"] = {}
             data["system"]["description"] = datasys["description"]

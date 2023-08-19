@@ -236,7 +236,7 @@
         display: grid;
         grid-template:
             "pic ability_name options" 60px
-            "pic tabs tabs" 60px / 80px 1fr 1fr;
+            "pic tabs tabs" 60px / 120px 1fr 1fr;
     }
 
     .sheet-body {
