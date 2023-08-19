@@ -4,6 +4,8 @@
     import DocClock from "../../components/generic/DocClock.svelte";
     import BoundedNumberDisplay from "../../components/generic/BoundedNumberDisplay.svelte";
     import { TJSDialog } from "#runtime/svelte/application";
+    import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
+    import { slide, blur } from "svelte/transition";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -14,6 +16,14 @@
         let xp = $actor.system.xp_tracker;
         total_xp = xp.ideals.value + xp.challenges.value + xp.ambitions.value + xp.burdens.value;
     }
+
+    // Relics
+    const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
+    const relics = actor.embedded.create(Item, {
+        name: "relics",
+        filters: [(i) => i.type === "relic"],
+        sort: name_alphabetical,
+    });
 
     // Commit all xp and clear all clocks
     function commitXP() {
@@ -44,6 +54,14 @@
             content: $actor.system.progression.warnings.join("<br>"),
         });
     }
+
+    // Upgrade the specified relic
+    function upgradeRelic(relic) {
+        relic.update({
+            "system.rank": relic.system.rank.value + 1,
+            "system.infused_dust": relic.system.infused_dust.value - relic.system.infused_dust.max,
+        });
+    }
 </script>
 
 <section>
@@ -68,6 +86,28 @@
     <div class="relics">
         <h2>Relics</h2>
         <BoundedNumberDisplay name={localize("ICON.Dust")} path="system.dust" />
+        {#each [...$relics] as relic}
+            <div>
+                <h3 class="clickable" on:click={() => relic.sheet.render(true, { focus: true })}>{relic.name}</h3>
+                <div class="flexrow">
+                    {#if relic.system.rank.value < 4}
+                        <BoundedNumberDisplay
+                            name={localize(relic.system.rank.value < 3 ? "ICON.Upgrade" : "ICON.Aspect")}
+                            doc={new TJSDocument(relic)}
+                            path="system.infused_dust"
+                        />
+                        {#if relic.system.infused_dust.value >= relic.system.infused_dust.max}
+                            <button transition:blur on:click={() => upgradeRelic(relic)}>
+                                Upgrade
+                            </button>
+                        {/if}
+                    {/if}
+                </div>
+                {#each relic.system.ranks.slice(0, relic.system.rank.value) as rank}
+                    {@html rank}
+                {/each}
+            </div>
+        {/each}
     </div>
     <div class="burdens">
         <h2>Burdens</h2>
@@ -90,16 +130,23 @@
 
         max-height: calc(100% - 126px);
         display: grid;
-        grid-template: 1fr / repeat(6, 1fr);
+        grid-template:
+            "xp relics burdens" 1fr
+            "xp relics ambitions" 1fr / 1fr 1fr 1fr;
+
         height: 100%;
 
         h2 {
             text-align: center;
         }
 
+        > div {
+            padding: 0px 3px;
+        }
+
         .xp {
             border-right: var(--primary-border);
-            grid-column: 1 /3;
+            grid-area: xp;
 
             .opportunity {
                 display: flex;
@@ -114,10 +161,14 @@
         }
         .relics {
             border-right: var(--primary-border);
-            grid-column: 3 /5;
+            grid-area: relics;
         }
         .burdens {
-            border-right: var(--primary-border);
+            grid-area: burdens;
+            border-bottom: var(--primary-border);
+        }
+        .ambitions {
+            grid-area: ambitions;
         }
     }
 </style>

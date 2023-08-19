@@ -15,7 +15,7 @@
     let percent;
     $: percent = Math.round(resolveDotpath($doc, `${path}.value`) / resolveDotpath($doc, `${path}.max`) * 100);
 
-    let doc = getContext("tjs_actor");
+    export let doc = getContext("tjs_actor");
 </script>
 
 <div style="background: linear-gradient(to right, var(--secondary-background) {percent}%, #00000000 {percent}%)">
