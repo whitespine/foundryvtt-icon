@@ -39,12 +39,12 @@ export async function showHarmApplication() {
  * 
  * @property {number} original_amount The original amount of damage, pre any reductions
  * 
- * @property {number} armor_reduction The amount that was reduced by armor
+ * @property {Array<[string, value]>} deltas The changes to final damage by flags & armor, as key-value pairs. Ordered!
  * 
  * @property {number} amount The numeric change that is to be applied
  * 
- * @property {null | "half" | "ignore"} mod Was amount reduced by resistance? Or ignored entirely? 
- *                                          Tracked so we can cycle them and sanely track the value.
+ * @property {Array<"resistance" | "immune" | "vulnerable" | "weakened" | "pacified">} flags 
+ *           All auxilary effects on damage, tracked so we can cycle them and sanely track the value.
  */
 
 /**
@@ -71,16 +71,15 @@ export async function showHarmApplication() {
 /**
  * Compute an instance of harm against an actor
  * 
- * Note that mod is applied irrespectiv of normal rules surrounding divine
- * It is on the players to appropriately apply mods!
+ * It is on the players to appropriately apply flags!
  * 
  * @param {IconActor} actor The actor to target
  * @param {"damage" | "piercing" | "divine" | "vigor"} type The harm/heal type
  * @param {number | "25%" | "50%" | "75%" | "vit"} amount The amount to harm/heal
- * @param {HarmInstance["mod"]} mod The modifier to apply
+ * @param {HarmInstance["flags"]} flags The flags to apply
  * @returns {HarmInstance} A full harm instance
  */
-export function computeHarm(actor, type, amount, mod) {
+export function computeHarm(actor, type, amount, flags) {
     if (!(actor instanceof IconActor)) throw new TypeError("First argument must be an actor");
     const valid_types = ["damage", "piercing", "divine", "vigor"];
     if (!valid_types.includes(type)) throw new TypeError(`Second argument must be one of ${valid_types.join('|')}, not ${type}`);
@@ -108,25 +107,58 @@ export function computeHarm(actor, type, amount, mod) {
         }
     }
 
-    // Then handle the type/mods/armor
+    // Then handle the type/flags/armor
     let original_amount = amount;
-    let armor_reduction = 0;
+    let deltas = [];
+
+    // Attacker effects apply first
+    if (flags.includes("weakened") && amount > 1) {
+        amount--;
+        deltas.push(["weakened", -1]);
+    }
+    if (flags.includes("pacified")) {
+        let prior = amount;
+        amount = Math.ceil(amount / 2);
+        let delta = amount - prior;
+        if (delta) deltas.push(["pacified", delta]);
+    }
+
+    // All types except vigor are increased by vulnerable
+    if (flags.includes("vulnerable") && type !== "vigor") {
+        if (amount) {
+            deltas.push(["vulnerable", 1]);
+            amount++;
+        }
+    }
+
     switch (type) {
         case "damage":
             // Reduced by armor
-            armor_reduction = Math.min(actor.system.armor ?? 0, amount);
-            amount -= armor_reduction;
+            let prior_armor = amount;
+            amount = Math.max(0, amount - actor.system.armor);
+            let armor_delta = amount - prior_armor;
+            if (armor_delta) deltas.push(["armor", armor_delta])
         case "piercing":
-        // Reduced by resistance / ignore AFTER armor. 
+            // Reduced by resistance AFTER armor. 
+            if (flags.includes("resistance")) {
+                let prior_resist = amount;
+                amount = Math.ceil(amount / 2);
+                let resist_delta = amount - prior_resist;
+                if (resist_delta) deltas.push(["resistance", ])
+            }
         case "divine":
-        // Allow for reducing divine, but in svelte component show a warning on tooltip maybe
+            // No reductions target-side really applies to divines except immunity
+            if (flags.includes("immune")) {
+                if (amount) deltas.push(["immune", amount]);
+                amount = 0;
+            }
+            break;
         case "vigor":
             // Rarely will we really want to halve or ignore vigor, but it doesn't hurt to have it as an option
-            if (mod === "ignore") {
+            if (flags.includes("immune")) {
+                if (amount) deltas.push(["immune", amount]);
                 amount = 0;
-            } else if (mod === "half") {
-                amount = Math.ceil(amount / 2);
-            }
+            } 
             break;
     }
 
@@ -135,8 +167,8 @@ export function computeHarm(actor, type, amount, mod) {
         type,
         original_amount,
         amount,
-        armor_reduction: armor_reduction,
-        mod
+        deltas,
+        flags
     });
 }
 

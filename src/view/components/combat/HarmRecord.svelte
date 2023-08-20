@@ -12,11 +12,10 @@
     let tooltip;
     $: {
         tooltip = `${record.harm.original_amount} ${record.harm.type}`;
-        if (record.harm.armor_reduction) {
-            tooltip += ` → ${record.harm.original_amount - record.harm.armor_reduction} (armor)`;
-        }
-        if (record.harm.mod) {
-            tooltip += ` → ${amount} (${record.harm.mod})`;
+        let amount = record.harm.original_amount;
+        for(let [cause, delta] of record.harm.deltas) {
+            amount += delta;
+            tooltip += ` → ${amount} (${delta} ${cause})`;
         }
     }
 </script>

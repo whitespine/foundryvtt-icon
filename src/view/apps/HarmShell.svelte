@@ -18,7 +18,7 @@
         let { type, value } = evt.detail;
         let items = [];
         for(let v of $SELECTED_TOKENS.values()) {
-            items.push([v.actor, computeHarm(v.actor, type, value, null)]);
+            items.push([v.actor, computeHarm(v.actor, type, value, [])]);
         }
         quickDamage(items);
     }
