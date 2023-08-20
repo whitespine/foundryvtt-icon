@@ -13,11 +13,11 @@ export function setupDocuments() {
     CONFIG.Token.documentClass = IconTokenDocument;
 
     CONFIG.Actor.trackableAttributes["player"] = {
-        bar: ["hp", "vigor"],
+        bar: ["hp", "vigor", "activations"],
         value: ["resolve"]
     };
     CONFIG.Actor.trackableAttributes["foe"] = {
-        bar: ["hp", "vigor"],
+        bar: ["hp", "vigor", "activations"],
         value: []
     };
     // CONFIG.Token.objectClass = LancerToken;
