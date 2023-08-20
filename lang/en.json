@@ -245,6 +245,10 @@
       "Ideals": "Ideals",
       "SpecialAbility": "Special Ability"
     },
+    "Relics": {
+      "Description": "Description",
+      "Mechanics": "Mechanics"
+    },
     "XPTracking": {
       "EndSession": "End of Session",
       "Ideal": "Did you fulfill at least one of your Ideals? 1 xp. Two or more? 2 xp.",

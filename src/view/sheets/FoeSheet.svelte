@@ -2,7 +2,6 @@
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
     import { localize } from "../../util/misc";
-    import BoundedNumberDisplay from "../components/generic/BoundedNumberDisplay.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
     import Portrait from "../components/Portrait.svelte";
     import { dropDocs } from "../actions/drop";
@@ -36,20 +35,20 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <div style="grid-area: foe_name" class="iflexrow">
-            <label for="foe_name">Name:</label>
-            <input type="text" name="foe_name" use:updateDoc={{ doc, path: "name" }} />
+        <div style="grid-area: name" class="iflexrow">
+            <label for="name">Name:</label>
+            <input type="text" name="name" use:updateDoc={{ doc, path: "name" }} />
         </div>
-        <select style="grid-area: foe_template" use:updateDoc={{ doc, path: "system.template" }}>
+        <select style="grid-area: template" use:updateDoc={{ doc, path: "system.template" }}>
             {#each ["Normal", "Elite", "Mob", "Legend"] as t}
                 <option value={t}>{t}</option>
             {/each}
         </select>
-        <div style="grid-area: foe_faction" class="iflexrow">
-            <label for="foe_faction">Faction:</label>
-            <input name="foe_faction" type="text" use:updateDoc={{ doc, path: "system.faction" }} />
+        <div style="grid-area: faction" class="iflexrow">
+            <label for="faction">Faction:</label>
+            <input name="faction" type="text" use:updateDoc={{ doc, path: "system.faction" }} />
         </div>
-        <select style="grid-area: foe_class" use:updateDoc={{ doc, path: "system.class.color" }}>
+        <select style="grid-area: class" use:updateDoc={{ doc, path: "system.class.color" }}>
             {#each FOE_COLORS as c, i}
                 <option value={GENERIC_COLORS[i]}>{c}</option>
             {/each}
@@ -98,8 +97,8 @@
         flex: 0 1 auto;
         display: grid;
         grid-template:
-            "pic    foe_name    foe_template    tabs" 30px
-            "pic    foe_faction foe_class       tabs" 30px
+            "pic    name    template    tabs" 30px
+            "pic    faction class       tabs" 30px
             "pic    stats       stats           tabs" 30px / 120px 1fr 1fr 120px;
         gap: 5px;
         padding: 10px;

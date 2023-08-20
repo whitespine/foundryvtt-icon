@@ -13,7 +13,7 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <div style="grid-area: power_name">
+        <div style="grid-area: name">
             <label for="name">Name:</label>
             <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
         </div>

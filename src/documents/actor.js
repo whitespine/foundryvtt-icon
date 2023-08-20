@@ -52,7 +52,7 @@ export class IconActor extends Actor {
         }[this.type] ?? CONST.TOKEN_DISPOSITIONS.NEUTRAL;
 
         // Set default link status
-        let actorLink = data.prototypeToken?.disposition ?? (this.type === "player");
+        let actorLink = data.prototypeToken?.actorLink ?? (data.type === "player");
 
         // Set default bars
         let displayBars = data.prototypeToken?.displayBars;

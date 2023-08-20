@@ -18,7 +18,7 @@
             <label for="object"><h3>Object?:</h3></label>
             <input name="object" type="checkbox" use:updateDoc={{ doc, path: `system.is_object` }} />
         </div>
-        <div style="grid-area: summon_name">
+        <div style="grid-area: name">
             <label for="name"><h3>Name:</h3></label>
             <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
         </div>
@@ -50,7 +50,7 @@
 
     header {
         display: grid;
-        grid-template: "pic options summon_name" 90px / 90px 1fr 1fr;
+        grid-template: "pic options name" 90px / 90px 1fr 1fr;
     }
 
     .sheet-body {

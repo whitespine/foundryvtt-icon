@@ -54,7 +54,7 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <input style="grid-area: char_name" type="text" use:updateDoc={{ doc, path: "name" }} />
+        <input style="grid-area: name" type="text" use:updateDoc={{ doc, path: "name" }} />
         <input
             style="grid-area: player_name"
             type="text"
@@ -118,8 +118,8 @@
         flex: 0 1 auto;
         display: grid;
         grid-template:
-            "pic    char_name   player_name tabs" 20px
-            "pic    narr        comb        tabs" 80px / 110px 1fr 1fr 1fr;
+            "pic    name   player_name tabs" 20px
+            "pic    narr   comb        tabs" 80px / 110px 1fr 1fr 1fr;
         gap: 5px;
         padding: 10px;
 

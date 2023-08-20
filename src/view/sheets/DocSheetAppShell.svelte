@@ -12,6 +12,7 @@
     import BondSheet from "./BondSheet.svelte";
     import JobSheet from "./JobSheet.svelte";
     import BondPowerSheet from "./BondPowerSheet.svelte";
+    import RelicSheet from "./RelicSheet.svelte";
 
     export let elementRoot = void 0;
 
@@ -40,6 +41,8 @@
         <BondPowerSheet />
     {:else if $tjs_doc.type == "job"}
         <JobSheet />
+    {:else if $tjs_doc.type == "relic"}
+        <RelicSheet />
     {:else}
         <span>Unsupported doc</span>
     {/if}

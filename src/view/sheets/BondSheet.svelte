@@ -14,7 +14,7 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <div style="grid-area: bond_name">
+        <div style="grid-area: name">
             <label for="name">Name:</label>
             <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
         </div>
@@ -53,7 +53,7 @@
     header {
         display: grid;
         grid-template:
-            "pic bond_name" 120px / 120px 1fr;
+            "pic name" 120px / 120px 1fr;
     }
 
     .sheet-body {

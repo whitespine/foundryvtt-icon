@@ -68,7 +68,7 @@
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
-        <div style="grid-area: ability_name">
+        <div style="grid-area: name">
             <label for="name">Name:</label>
             <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
         </div>
@@ -235,7 +235,7 @@
     header {
         display: grid;
         grid-template:
-            "pic ability_name options" 60px
+            "pic name options" 60px
             "pic tabs tabs" 60px / 120px 1fr 1fr;
     }
 
