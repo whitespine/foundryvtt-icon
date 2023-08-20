@@ -23,7 +23,6 @@ export default class TJSDocSheet extends SvelteApplication {
   }
 
   _getHeaderButtons() {
-    console.log("HI");
     let buttons = [...super._getHeaderButtons()];
     if (this.doc instanceof Actor) {
       // Ripped from foundy
