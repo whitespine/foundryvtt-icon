@@ -4,15 +4,17 @@
     import { TJSDialog } from "#runtime/svelte/application";
     import { BoonBaneApplication } from "../../apps/BoonBaneApplication";
     import { dragAsMark } from "../../actions/drag";
+    import RichTextDisplay from "../generic/RichTextDisplay.svelte";
 
     // Needed for node elements
     export let key;
 
-    // An ability
-    export let ability;
+    // An ability (trait) or a relic. Can be null
+    export let item = null;
 
+    // Roll a specific ability
     async function rollChoice(index) {
-        let choice = ability.system.choices[index];
+        let choice = item.system.choices[index];
         let boon = 0;
         // Prompt boon if we are an attack
         if (choice.is_attack) {
@@ -23,16 +25,24 @@
         await ChatMessage.create({
             [`flags.${game.system.id}.data`]: {
                 type: "ability",
-                ability_uuid: ability.uuid,
+                ability_uuid: item.uuid,
                 choice_index: index,
                 boon,
             },
         });
     }
 
+    // Post a specific relic
+    async function postRank(index) {
+        let choice = item.system.ranks[index];
+        await ChatMessage.create({
+            content: `<h3>${item.name} Rank ${index + 1}:</h3>${item.system.ranks[index]}`,
+        });
+    }
+
     /** Opens the sheet for the selected item */
     function editSelected() {
-        ability.sheet.render(true, { focus: true });
+        item.sheet.render(true, { focus: true });
     }
 
     const dispatch = createEventDispatcher();
@@ -40,31 +50,38 @@
     /** Deletes the selected item. */
     function deleteSelected() {
         TJSDialog.confirm({
-            content: `Delete ${ability.name}?`,
+            content: `Delete ${item.name}?`,
             onYes: () => {
                 // Delete the item entirely
-                ability.delete();
-
-                dispatch("clear");
+                item.delete();
             },
         });
     }
 </script>
 
 <div class="preview">
-    {#if !ability}
+    {#if !item}
         <h3>Select an ability</h3>
-    {:else}
-        {#each ability.system.choices as choice, i}
-            <div class="choice" class:bottomed={i < ability.system.choices.length - 1}>
+    {:else if item.type === "ability"}
+        {#each item.system.choices as choice, i}
+            <div class="choice" class:bottomed={i < item.system.choices.length - 1}>
                 <AbilityDetail {choice} key={`${key}_ability_${i}`} style="flex: auto" />
                 <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} data-tooltip="Activate" />
             </div>
         {/each}
+    {:else if item.type === "relic"}
+        {#each item.system.ranks.slice(0, item.system.rank.value) as rank, i}
+            <div class="rank" class:bottomed={i < item.system.rank}>
+                <div>
+                    <RichTextDisplay body={rank} key={`${key}_relic_${i}`} />
+                </div>
+                <i class="fas fa-dice-d20" on:click={() => postRank(i)} data-tooltip="Activate" />
+            </div>
+        {/each}
     {/if}
-    {#if ability}
+    {#if item}
         <div class="bottom-controls">
-            <i class="fas fa-bullseye" draggable=true use:dragAsMark={{doc: ability}} data-tooltip="Drag To Mark" />
+            <i class="fas fa-bullseye" draggable="true" use:dragAsMark={{ doc: item }} data-tooltip="Drag To Mark" />
             <i class="fas fa-edit" on:click={editSelected} data-tooltip="Edit" />
             <i class="fas fa-trash" on:click={deleteSelected} data-tooltip="Delete" />
         </div>
@@ -78,7 +95,8 @@
         display: flex;
         flex-direction: column;
 
-        .choice {
+        .choice,
+        .rank {
             display: flex;
             flex-direction: row;
             align-items: center;

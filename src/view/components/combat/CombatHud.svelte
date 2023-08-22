@@ -1,7 +1,7 @@
 <script>
     import { getContext } from "svelte";
     import { IconItem } from "../../../documents/item";
-    import AbilityDisplay from "./AbilityDisplay.svelte";
+    import CombatDisplay from "./CombatDisplay.svelte";
     import StatusDisplay from "./StatusDisplay.svelte";
     import { chapterIcon } from "../../../util/misc";
     import { dragAsDoc } from "../../actions/drag";
@@ -20,6 +20,11 @@
     const traits = actor.embedded.create(Item, {
         name: "traits",
         filters: [(i) => i.type === "ability" && i.system.trait],
+        sort: name_alphabetical,
+    });
+    const relics = actor.embedded.create(Item, {
+        name: "relics",
+        filters: [(i) => i.type === "relic"],
         sort: name_alphabetical,
     });
 
@@ -42,7 +47,7 @@
 
 <div class="combat-grid">
     <div class="abilities">
-        <h3>Abilities</h3>
+        {#if [...$abilities].length}<h3>Abilities</h3>{/if}
         {#each [...$abilities] as ability (ability.id ?? "err")}
             <div
                 class="ability"
@@ -58,7 +63,7 @@
                 </span>
             </div>
         {/each}
-        <h3>Traits</h3>
+        {#if [...$traits].length}<h3>Traits</h3>{/if}
         {#each [...$traits] as trait (trait.id ?? "err")}
             <div
                 class="trait"
@@ -71,14 +76,26 @@
                 <span>{chapterIcon(trait.system.chapter)} {trait.name}</span>
             </div>
         {/each}
+        {#if [...$relics].length}<h3>Relics</h3>{/if}
+        {#each [...$relics] as relic (relic.id ?? "err")}
+            <div
+                class="relic"
+                on:click={() => selectItem(relic)}
+                class:selected={relic === selected}
+                draggable="true"
+                use:dragAsDoc={{ doc: relic }}
+            >
+                <img class="icon" src={relic.img} alt={relic.name} />
+                <span>{chapterIcon(relic.system.rank)} {relic.name}</span>
+            </div>
+        {/each}
     </div>
 
     <div class="preview">
-        <AbilityDisplay
-            on:clear={() => (selected = null)}
-            ability={selected}
-            key={`${unique_prefix}_${selected?.id}`}
-        />
+            <CombatDisplay
+                item={selected}
+                key={`${unique_prefix}_${selected?.id}`}
+            />
     </div>
 
     <div class="statuses">
@@ -108,7 +125,8 @@
             overflow: auto;
 
             .ability,
-            .trait {
+            .trait,
+            .relic {
                 width: calc(100% - 20px);
                 display: flex;
                 flex-direction: row;
