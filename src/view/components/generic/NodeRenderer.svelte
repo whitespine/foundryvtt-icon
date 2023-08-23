@@ -2,7 +2,6 @@
     import { Node } from "../../../util/nlp";
     import SmallRoll from "./dice/SmallRoll.svelte";
     import { createEventDispatcher } from "svelte";
-    import { TJSDialog } from "#runtime/svelte/application";
 
     /** @type {Node} Our specific node */
     export let node;
@@ -28,7 +27,12 @@
         addChild({
             roll: roll.toJSON(),
         });
-        dispatch("savenodes");
+        saveSelf();
+    }
+
+    // Request this node be persisted
+    function saveSelf() {
+        dispatch("savenode", this.node);
     }
 
     /** Post the tooltip */
@@ -56,7 +60,7 @@
 {:else if node.tag}
     <svelte:element this={node.tag} on:click={click} class:clickable data-tooltip={node.tooltip ?? null}>
         {#each node.children || [] as child}
-            <svelte:self node={child} on:addsibling={handleAddSibling} on:savenodes />
+            <svelte:self node={child} on:addsibling={handleAddSibling} on:savenode={saveSelf} />
         {/each}
     </svelte:element>
 {:else}

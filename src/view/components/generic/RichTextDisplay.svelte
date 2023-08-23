@@ -1,7 +1,9 @@
 <script>
     import { getContext } from "svelte";
-    import { fullProcess } from "../../../util/nlp";
-    import NodeSequence from "./NodeSequence.svelte";
+    import { fullProcessWrapped } from "../../../util/nlp";
+    import NodeRenderer from "./NodeRenderer.svelte";
+
+    // For when you don't really care about persistence and just want to blit some text
 
     /** @type {string} Raw text to show */
     export let body;
@@ -10,7 +12,7 @@
 
     // Our eventual value post processing
     let init;
-    $: init = fullProcess(body, { actor: $actor });
+    $: init = fullProcessWrapped("div", body, { actor: $actor });
 </script>
 
-<NodeSequence nodes={init} on:savenodes />
+<NodeRenderer node={init} />

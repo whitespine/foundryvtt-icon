@@ -3,8 +3,8 @@
     import { setContext } from "svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
     import { Node } from "../../util/nlp";
-    import NodeSequence from "../components/generic/NodeSequence.svelte";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
+    import NodeRenderer from "../components/generic/NodeRenderer.svelte";
 
     // import { fly, fade } from "svelte/transition";
 
@@ -37,14 +37,14 @@
     $: choice = $item?.system.choices[flags.choice_index] ?? null;
 
     // Defaults for our nodes etc
-    let attack_roll_nodes;
-    $: attack_roll_nodes = [new Node({ text: "Attack: " }), new Node({ formula: attack_roll_formula })];
+    let attack_roll_node;
+    $: attack_roll_node = new Node({ text: "Attack: " }), new Node({ formula: attack_roll_formula });
 </script>
 
 <div class="icon flexcol">
     {#if item}
         {#if choice?.is_attack}
-            <NodeSequence initial_nodes={attack_roll_nodes} key={`${$tjs_msg.id}_to_hit`} />
+            <NodeRenderer node={attack_roll_node} />
         {/if}
 
         {#if choice}

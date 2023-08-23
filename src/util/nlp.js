@@ -99,7 +99,7 @@ export class Node {
          * Child nodes if applicable. Only valid if tag exists
          * @type {Node[] | undefined}
          */
-        this.children = options.children?.map(t => new Node(t)); // Only used if tag present
+        this.children = options.children?.map(t => t instanceof Node ? t : new Node(t)); // Only used if tag present
 
         // Misc attributes
         /**
@@ -150,7 +150,7 @@ export class Node {
      */
     innerText() {
         let result = this.text ?? "";
-        for(let child of this.children || []) {
+        for (let child of this.children || []) {
             result += child.innerText();
         }
         return result;
@@ -289,9 +289,11 @@ function htmlToNode(node) {
  * @param {string} text Full text
  * @param {TransformContext} context Meta info some transformers care about
  * @param {Transformer[]} [transformers] Which transformers to use
- * @returns {Array<string | Node>} Fully processed text. Wrap in a div if you need to
+ * @returns {Array<Node>} Fully processed text. Wrap in a div if you need to
  */
-export function fullProcess(text, context, transformers = StaticTransformers) {
+export function fullProcess(text, context, options = {}) {
+    const transformers = options.transformers ?? StaticTransformers;
+
     // First parse to HTML
     const parser = new DOMParser();
     const html = parser.parseFromString(text, 'text/html');
@@ -338,4 +340,23 @@ export function fullProcess(text, context, transformers = StaticTransformers) {
 
     as_nodes = processArray(as_nodes);
     return as_nodes;
+}
+
+/** As fullprocess, but returns result as a single Node always (if necessary, wraps in a div.)
+ * 
+ * @param {string} tag The tag to wrap in
+ * @param {string} text Raw html
+ * @param {TransformContext} context 
+ * @param {object} options See fullProcess
+ */
+export function fullProcessWrapped(tag, text, context, options = {}) {
+    let result = fullProcess(text, context, options);
+    if (result.length == 1 && result[0].tag) {
+        return result[0];
+    } else {
+        return new Node({
+            tag: tag,
+            children: result
+        });
+    }
 }

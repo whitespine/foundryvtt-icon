@@ -4,8 +4,6 @@
 
 Easy terrain / terrain flagging somehow
 
-Relics in combat UI
-
 Status pane - done ish
 
 # Low:
@@ -14,3 +12,5 @@ Select color set attributes?
 Better handling of selected item being deleted out from under
 
 Wrapping ambition box
+
+Create ability / foe power on sheet
