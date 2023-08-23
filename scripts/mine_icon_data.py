@@ -221,7 +221,7 @@ class Processor:
             data["type"] = "bond-power"
             datasys = data.get("system", {})
             data["system"] = {}
-            data["system"]["description"] = datasys["description"]
+            data["system"]["description"] = self.remove_all_uuid_refs(datasys["description"] or "")
 
             self.emit(data)
         self.clear()
