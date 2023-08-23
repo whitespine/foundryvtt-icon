@@ -7,7 +7,7 @@
     export let body;
 
     /** Key if we are being persistent */
-    export let key;
+    export let key = null;
 
     export let actor = getContext("tjs_actor");
 

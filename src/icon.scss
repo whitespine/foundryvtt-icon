@@ -117,3 +117,8 @@ div.icon section.window-content {
     display: flex;
     flex-direction: column;
 }
+
+/** Fix prosemirror size */
+a.editor-edit {
+    font-size: 1em;
+}

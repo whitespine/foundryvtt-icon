@@ -24,7 +24,7 @@
         document: doc, // An item to edit description; note: replace w/ valid doc.
         fieldName: path, // Path to data in `a.b.c`; note: this is a v10 field name.
         collaborate: true, // Enables collaboration; requires document.
-        button: false, // Show edit button to launch editor when hovered; when false editor is open by default.
+        button: true, // Show edit button to launch editor when hovered; when false editor is open by default.
         // classes: ['foo', 'bar'],   // Adds additional classes to `.tjs-editor` element.
         // clickToEdit: false,  // Clicking editor content initializes the editor; hides the edit button.
         // DOMPurify,        // You can pass DOMPurify from `#runtime/dompurify though ProseMirror does
