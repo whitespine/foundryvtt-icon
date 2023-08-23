@@ -33,8 +33,8 @@
         let roll = new Roll(formula());
         await roll.roll();
         await ChatMessage.create({
-            [`flags.${game.system.id}.data`]: {
-                type: "narrative",
+            [`flags.${game.system.id}`]: {
+                svelte_msg_type: "narrative",
                 subtype,
                 position,
                 effect,

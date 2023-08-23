@@ -62,6 +62,8 @@ Hooks.once("ready", async () => {
     setupDSN();
     setupMessages();
     enhanceStatuses();
+
+    // new BasicApplication().render(true, {focus: true});
 });
 
 

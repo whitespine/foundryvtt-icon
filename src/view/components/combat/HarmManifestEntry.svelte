@@ -37,7 +37,7 @@
     <div class="header">
         {#if $actor}
             <img src={$actor.img} class="portrait" />
-            <span>{$actor.name}</span>
+            <span>{$actor.token ? $actor.token.name : $actor.name}</span>
         {:else}
             <span> UNKNOWN TARGET </span>
         {/if}

@@ -1,25 +1,13 @@
 // Sets up our svelte messages
 
-import { NODE_STORES } from "../util/stores";
 import AbilityRollMessage from "../view/chat/AbilityRollMessage.svelte";
 import HarmManifestMessage from "../view/chat/HarmManifestMessage.svelte";
 import NarrativeRollMessage from "../view/chat/NarrativeRollMessage.svelte";
 
 export class SvelteChatLog extends ChatLog {
     // Alter update behavior so it updates props instead
-    updateMessage(msg, notify=false) {
-        if(msg._svelteComponent) {
-            // Get probably updated flags, and send them to the message svelte component
-            let flagData = msg.getFlag(game.system.id, 'data');
-            flagData = foundry.utils.duplicate(flagData);
-            delete flagData["type"];
-            const nodes = flagData.nodes;
-            delete flagData["nodes"];
-            msg._svelteComponent.$$set(flagData);
-
-            // Update node stores
-            NODE_STORES.get(msg.id).set(nodes ?? {});
-        } else {
+    updateMessage(msg, notify = false) {
+        if (!msg._svelteComponent) {
             super.updateMessage(msg, notify);
         }
     }
@@ -33,31 +21,22 @@ export function setupMessages() {
     const sveltifyMessage = async (msg, html) => {
         // Find associated flag data scoped to your module ID. This is the easiest way to determine that this message is
         // associated with your module and has a Svelte component attached to the message content.
-        let flagData = msg.getFlag(game.system.id, 'data');
+        let svelte_msg_type = msg.getFlag(game.system.id, 'svelte_msg_type');
 
-        if (typeof flagData === 'object') {
-            // Fixup flag data
-            flagData = foundry.utils.duplicate(flagData);
-            const type = flagData.type;
-            const nodes = flagData.nodes;
-            delete flagData["type"];
-            delete flagData["nodes"];
-
+        if (svelte_msg_type) {
             // Form props and target
-            const props = { msg, ...flagData };
+            const props = { msg };
             const target = html[0];
 
             // Add the svelte component to the message instance loaded in client side memory.
-            if (type === "ability") {
+            if (svelte_msg_type === "ability") {
                 msg._svelteComponent = new AbilityRollMessage({ target, props });
-            } else if (type == "narrative") {
+            } else if (svelte_msg_type == "narrative") {
                 msg._svelteComponent = new NarrativeRollMessage({ target, props })
-            } else if (type == "harm") {
+            } else if (svelte_msg_type == "harm") {
                 msg._svelteComponent = new HarmManifestMessage({ target, props })
             }
 
-            // Update node stores
-            NODE_STORES.get(msg.id).set(nodes ?? {});
 
             // Scroll chat log to bottom.
             setTimeout(() => ui.chat.scrollBottom(), 20);
@@ -76,12 +55,9 @@ export function setupMessages() {
 
     // Clean up / destroy the mounted Svelte component to the message instance when the chat message is deleted.
     Hooks.on('preDeleteChatMessage', (message) => {
-        // Find associated flag data scoped to your module ID. This is the easiest way to determine that this message is
-        // associated with your module and has a Svelte component attached to the message content.
-        const flagData = message.getFlag(game.system.id, 'data');
-
+        // Use svelte_msg_type to determine if it likely has a svelte component
         // Also ensure that the Svelte component exists
-        if (typeof flagData === 'object' && typeof message?._svelteComponent?.$destroy === 'function') {
+        if (message.getFlag(game.system.id, 'svelte_msg_type') && typeof message?._svelteComponent?.$destroy === 'function') {
             // Manually destroy Svelte component when the chat message document is being deleted.
             message._svelteComponent.$destroy();
         }

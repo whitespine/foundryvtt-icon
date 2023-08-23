@@ -4,9 +4,6 @@
 
     // An ability choice
     export let choice;
-
-    // For node persistence
-    export let key;
 </script>
 
 <div {...$$restProps}>
@@ -39,18 +36,18 @@
         </span>
     </div>
     <span>
-        <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} key={`${key}_tags`} />
+        <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} />
     </span>
     {#each choice.effects as effect, i}
-        <RichTextDisplay body={effect} key={`${key}_body_${i}`} />
+        <RichTextDisplay body={effect} />
     {/each}
     {#each choice.ability.system.talents as talent, i}
         {#if talent.unlocked}
-            <RichTextDisplay body={talent.text} key={`${key}_talent_${i}`} />
+            <RichTextDisplay body={talent.text} />
         {/if}
     {/each}
     {#if choice.ability.system.mastery}
-        <RichTextDisplay body={choice.ability.system.mastery.text} key={`${key}_mastery`} />
+        <RichTextDisplay body={choice.ability.system.mastery.text} />
     {/if}
     {#each choice.summons as summon}
         <span>Summon: <ActorUUIDReference uuid={summon} /></span>

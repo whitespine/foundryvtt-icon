@@ -6,9 +6,6 @@
     /** @type {string} Raw text to show */
     export let body;
 
-    /** Key if we are being persistent */
-    export let key = null;
-
     export let actor = getContext("tjs_actor");
 
     // Our eventual value post processing
@@ -16,4 +13,4 @@
     $: init = fullProcess(body, { actor: $actor });
 </script>
 
-<NodeSequence initial_nodes={init} key={key} />
+<NodeSequence nodes={init} on:savenodes />

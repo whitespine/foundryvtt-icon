@@ -1,13 +1,9 @@
 <script>
-    import { createEventDispatcher, getContext } from "svelte";
     import AbilityDetail from "./AbilityDetail.svelte";
     import { TJSDialog } from "#runtime/svelte/application";
     import { BoonBaneApplication } from "../../apps/BoonBaneApplication";
     import { dragAsMark } from "../../actions/drag";
     import RichTextDisplay from "../generic/RichTextDisplay.svelte";
-
-    // Needed for node elements
-    export let key;
 
     // An ability (trait) or a relic. Can be null
     export let item = null;
@@ -23,8 +19,8 @@
             });
         }
         await ChatMessage.create({
-            [`flags.${game.system.id}.data`]: {
-                type: "ability",
+            [`flags.${game.system.id}`]: {
+                svelte_msg_type: "ability",
                 ability_uuid: item.uuid,
                 choice_index: index,
                 boon,
@@ -36,7 +32,7 @@
     async function postRank(index) {
         let choice = item.system.ranks[index];
         await ChatMessage.create({
-            content: `<h3>${item.name} Rank ${index + 1}:</h3>${item.system.ranks[index]}`,
+            content: `<h3>${item.name} Rank ${index + 1}:</h3>${choice}`,
         });
     }
 
@@ -44,8 +40,6 @@
     function editSelected() {
         item.sheet.render(true, { focus: true });
     }
-
-    const dispatch = createEventDispatcher();
 
     /** Deletes the selected item. */
     function deleteSelected() {
@@ -65,7 +59,7 @@
     {:else if item.type === "ability"}
         {#each item.system.choices as choice, i}
             <div class="choice" class:bottomed={i < item.system.choices.length - 1}>
-                <AbilityDetail {choice} key={`${key}_ability_${i}`} style="flex: auto" />
+                <AbilityDetail {choice} style="flex: auto" />
                 <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} data-tooltip="Activate" />
             </div>
         {/each}
@@ -73,7 +67,7 @@
         {#each item.system.ranks.slice(0, item.system.rank.value) as rank, i}
             <div class="rank" class:bottomed={i < item.system.rank}>
                 <div>
-                    <RichTextDisplay body={rank} key={`${key}_relic_${i}`} />
+                    <RichTextDisplay body={rank} />
                 </div>
                 <i class="fas fa-dice-d20" on:click={() => postRank(i)} data-tooltip="Activate" />
             </div>

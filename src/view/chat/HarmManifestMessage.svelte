@@ -4,22 +4,21 @@
     import HarmManifestEntry from "../components/combat/HarmManifestEntry.svelte";
     import { simpleUnslugifyObject } from "../actions/util";
     import { showHarmApplication } from "../../util/harm";
+    import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
 
     /** @type {ChatMessage} */
-    // svelte-ignore unused-export-let
     export let msg;
-
-    setContext("message", msg);
+    let tjs_msg;
+    $: tjs_msg = new TJSDocument(msg);
+    let flags;
+    $: flags = $tjs_msg.flags[game.system.id] ?? {};
 
     /**
-     * The displayed harm manifest
+     * The displayed harm manifest, un-slugified
      * @type {harm.HarmManifest}
      */
-    export let harm_manifest;
-
-    // Un-Slugify it
     let fixed_manifest;
-    $: fixed_manifest = simpleUnslugifyObject(harm_manifest);
+    $: fixed_manifest = simpleUnslugifyObject(flags.harm_manifest);
 </script>
 
 <div class="icon flexcol">

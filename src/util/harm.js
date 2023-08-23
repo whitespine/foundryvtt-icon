@@ -135,7 +135,7 @@ export function computeHarm(actor, type, amount, flags) {
         case "damage":
             // Reduced by armor
             let prior_armor = amount;
-            amount = Math.max(0, amount - actor.system.armor);
+            amount = Math.max(0, amount - (actor.system.armor ?? 0));
             let armor_delta = amount - prior_armor;
             if (armor_delta) deltas.push(["armor", armor_delta])
         case "piercing":
@@ -285,12 +285,12 @@ export function replayManifest(manifest) {
 export async function getCurrentHarmManifestMessage() {
     // Only look at the most recent message
     let mrm = game.messages.contents[game.messages.contents.length - 1];
-    if (mrm && mrm.getFlag(game.system.id, "data")?.type === "harm") {
+    if (mrm && mrm.getFlag(game.system.id, "svelte_msg_type") === "harm") {
         return mrm;
     } else {
         return ChatMessage.create({
-            [`flags.${game.system.id}.data`]: {
-                type: "harm",
+            [`flags.${game.system.id}`]: {
+                svelte_msg_type: "harm",
                 harm_manifest: {}
             }
         });
@@ -309,7 +309,7 @@ export async function quickDamage(harms) {
     let message = await getCurrentHarmManifestMessage();
 
     /** @type {HarmManifest} */
-    let manifest = message.getFlag(game.system.id, "data")?.harm_manifest;
+    let manifest = message.getFlag(game.system.id, "harm_manifest") ?? {};
     manifest = simpleUnslugifyObject(manifest);
 
     // Create a temporary new manifest entry
@@ -333,6 +333,6 @@ export async function quickDamage(harms) {
     manifest = simpleSlugifyObject(manifest);
 
     await adminUpdateMessage(message, {
-        [`flags.${game.system.id}.data.harm_manifest`]: manifest
+        [`flags.${game.system.id}.harm_manifest`]: manifest
     });
 }

@@ -37,9 +37,6 @@ class KeyStoreLookup {
     }
 }
 
-// We use this for synchronized node trees
-export const NODE_STORES = new KeyStoreLookup();
-
 // Currently selected tokens
 export const SELECTED_TOKENS = writable(new Set());
 

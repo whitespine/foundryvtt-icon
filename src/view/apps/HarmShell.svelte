@@ -17,10 +17,12 @@
     function emitHarm(evt) {
         let { type, value } = evt.detail;
         let items = [];
-        for(let v of $SELECTED_TOKENS.values()) {
-            items.push([v.actor, computeHarm(v.actor, type, value, [])]);
+        for (let v of $SELECTED_TOKENS.values()) {
+            if (v.actor) items.push([v.actor, computeHarm(v.actor, type, value, [])]);
         }
-        quickDamage(items);
+        if (items.length) {
+            quickDamage(items);
+        }
     }
 </script>
 
@@ -31,7 +33,11 @@
         <div class="targs">
             <span>Targets:</span>
             {#each $SELECTED_TOKENS as st (st.id)}
-                <img transition:slide={{ axis: "x", duration: 200 }} src={st.document.texture?.src} data-tooltip={st.actor.name} />
+                <img
+                    transition:slide={{ axis: "x", duration: 200 }}
+                    src={st.document.texture?.src}
+                    data-tooltip={st.name}
+                />
             {/each}
             {#if $SELECTED_TOKENS.size === 0}
                 <span>Select tokens to apply damage to</span>

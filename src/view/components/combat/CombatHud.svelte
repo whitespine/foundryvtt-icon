@@ -5,10 +5,9 @@
     import StatusDisplay from "./StatusDisplay.svelte";
     import { chapterIcon } from "../../../util/misc";
     import { dragAsDoc } from "../../actions/drag";
+    import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
 
     let actor = getContext("tjs_actor");
-
-    let unique_prefix = getContext("unique_prefix");
 
     // Props
     const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
@@ -31,16 +30,16 @@
     // State
 
     /**
-     * @type {IconItem | object | null}
+     * @type {TJSDocument<IconItem | undefined>}
      * Either the selected trait, or the selected choice of an ability
      */
-    let selected = null;
+    let selected = new TJSDocument(undefined);
 
     function selectItem(item) {
         if (selected === item) {
             selected = null;
         } else {
-            selected = item;
+            selected = new TJSDocument(item);
         }
     }
 </script>
@@ -52,7 +51,7 @@
             <div
                 class="ability"
                 on:click={() => selectItem(ability)}
-                class:selected={ability === selected}
+                class:selected={ability === $selected}
                 draggable="true"
                 use:dragAsDoc={{ doc: ability }}
             >
@@ -68,7 +67,7 @@
             <div
                 class="trait"
                 on:click={() => selectItem(trait)}
-                class:selected={trait === selected}
+                class:selected={trait === $selected}
                 draggable="true"
                 use:dragAsDoc={{ doc: trait }}
             >
@@ -81,7 +80,7 @@
             <div
                 class="relic"
                 on:click={() => selectItem(relic)}
-                class:selected={relic === selected}
+                class:selected={relic === $selected}
                 draggable="true"
                 use:dragAsDoc={{ doc: relic }}
             >
@@ -92,10 +91,7 @@
     </div>
 
     <div class="preview">
-            <CombatDisplay
-                item={selected}
-                key={`${unique_prefix}_${selected?.id}`}
-            />
+        <CombatDisplay item={$selected} />
     </div>
 
     <div class="statuses">

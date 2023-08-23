@@ -9,44 +9,32 @@
     // import { fly, fade } from "svelte/transition";
 
     /** @type {ChatMessage} */
-    // svelte-ignore unused-export-let
     export let msg;
-
-    setContext("message", msg);
+    let tjs_msg;
+    $: tjs_msg = new TJSDocument(msg);
+    let flags;
+    $: flags = $tjs_msg.flags[game.system.id] ?? {};
 
     /**
-     * The ability's UUID
+     * Attack roll formula, which may or may not be used
      * @type {string}
      */
-    export let ability_uuid;
-
-    /**
-     * The ability's choice index, or 0
-     * @type {number}
-     */
-    export let choice_index;
-
-    /**
-     * Boons on attack rolll
-     * @type {number}
-     */
-    export let boon;
     let attack_roll_formula;
-    $: attack_roll_formula = boon === 0 ? "1d20" : boon > 0 ? `1d20 + ${boon}d6kh1` : `1d20 - ${-boon}d6kh1`;
+    $: attack_roll_formula = flags.boon === 0 ? "1d20" : boon > 0 ? `1d20 + ${boon}d6kh1` : `1d20 - ${-boon}d6kh1`;
 
     // Deduce the item
-    let item = fromUuidSync(ability_uuid);
+    let item = new TJSDocument(fromUuidSync(flags.ability_uuid) ?? undefined);
 
     // Setup context
-    let doc = null;
-    if (item) {
-        doc = new TJSDocument(item.actor);
-        setContext("tjs_doc", doc);
-        setContext("tjs_item", doc);
-    }
-    if (item?.actor) setContext("tjs_actor", new TJSDocument(item.actor));
+    let actor = new TJSDocument($item?.actor ?? undefined);
 
-    let choice = item?.system.choices[choice_index] ?? null;
+    setContext("tjs_doc", item);
+    setContext("tjs_item", item);
+    setContext("tjs_actor", actor);
+
+    // Shorthand for the selected choice
+    let choice;
+    $: choice = $item?.system.choices[flags.choice_index] ?? null;
 
     // Defaults for our nodes etc
     let attack_roll_nodes;
@@ -56,11 +44,11 @@
 <div class="icon flexcol">
     {#if item}
         {#if choice?.is_attack}
-            <NodeSequence initial_nodes={attack_roll_nodes} key={`${msg.id}_to_hit`} />
+            <NodeSequence initial_nodes={attack_roll_nodes} key={`${$tjs_msg.id}_to_hit`} />
         {/if}
 
         {#if choice}
-            <AbilityDetail {choice} key={`${msg.id}_body`} />
+            <AbilityDetail {choice} key={`${$tjs_msg.id}_body`} />
         {:else}
             <span>Error: Ability choice could not be resolved</span>
         {/if}
