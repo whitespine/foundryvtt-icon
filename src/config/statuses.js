@@ -15,7 +15,6 @@ export function enhanceStatuses() {
 
 Hooks.on("dropCanvasData", (canvas, data) => {
     if(data.type !== "Effect") return;
-    console.log(canvas, data);
     // Find a target
     const targets = canvas.tokens.placeables.filter(token => {
         if (!token.visible) return false;
@@ -25,7 +24,6 @@ Hooks.on("dropCanvasData", (canvas, data) => {
 
     if(targets.length) {
         let target = targets[0];
-        console.log(data);
         target.actor.createEmbeddedDocuments("ActiveEffect", [data]);
     }
 });

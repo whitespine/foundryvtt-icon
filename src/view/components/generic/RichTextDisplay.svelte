@@ -13,6 +13,9 @@
     // Our eventual value post processing
     let init;
     $: init = fullProcessWrapped("div", body, { actor: $actor });
+
+    // If provided, override with this node
+    export let node_override = null;
 </script>
 
-<NodeRenderer node={init} />
+<NodeRenderer node={node_override ?? init} on:savenode />

@@ -39,8 +39,6 @@ export class IconActor extends Actor {
     async _preCreate(...[data, options, user]) {
         await super._preCreate(data, options, user);
 
-        console.log(data);
-
         // Give a decent default icon
         let img = data.img ?? defaultImage({ type: data.type, name: data.name });
 

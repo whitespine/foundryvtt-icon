@@ -1,9 +1,20 @@
 <script>
+    import { createEventDispatcher } from "svelte";
     import RichTextDisplay from "../generic/RichTextDisplay.svelte";
     import ActorUUIDReference from "./ActorUUIDReference.svelte";
 
     // An ability choice
     export let choice;
+
+    /** An optional object store */
+    export let overrides = {};
+
+    const dispatch = createEventDispatcher();
+
+    // Tag a savenode with a key
+    function requestPersist(key, node) {
+        dispatch("savenode", [key, node]);
+    }
 </script>
 
 <div {...$$restProps}>
@@ -36,18 +47,34 @@
         </span>
     </div>
     <span>
-        <RichTextDisplay body={[...choice.ranges, ...choice.tags].join(", ")} />
+        <RichTextDisplay
+            body={[...choice.ranges, ...choice.tags].join(", ")}
+            node_override={overrides["tags"] ?? null}
+            on:savenode={(e) => requestPersist("tags", e.detail)}
+        />
     </span>
     {#each choice.effects as effect, i}
-        <RichTextDisplay body={effect} />
+        <RichTextDisplay
+            body={effect}
+            node_override={overrides[`effect_${i}`] ?? null}
+            on:savenode={(e) => requestPersist(`effect_${i}`, e.detail)}
+        />
     {/each}
     {#each choice.ability.system.talents as talent, i}
         {#if talent.unlocked}
-            <RichTextDisplay body={talent.text} />
+            <RichTextDisplay
+                body={talent.text}
+                node_override={overrides[`talent_${i}`] ?? null}
+                on:savenode={(e) => requestPersist(`talent_${i}`, e.detail)}
+            />
         {/if}
     {/each}
     {#if choice.ability.system.mastery}
-        <RichTextDisplay body={choice.ability.system.mastery.text} />
+        <RichTextDisplay
+            body={choice.ability.system.mastery.text}
+            node_override={overrides["mastery"] ?? null}
+            on:savenode={(e) => requestPersist("mastery", e.detail)}
+        />
     {/if}
     {#each choice.summons as summon}
         <span>Summon: <ActorUUIDReference uuid={summon} /></span>

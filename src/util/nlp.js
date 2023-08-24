@@ -63,7 +63,7 @@ class RegexTransformer extends Transformer {
 
 
 /**
- * @typedef {object} TransformContext
+ * @typedef {object} NodeData
  * @property {string} [options.text] The base text
  * @property {string} [options.tooltip] What shows on hover
  * @property {object} [options.dragdata] What should be dragged, if anything
@@ -77,7 +77,7 @@ class RegexTransformer extends Transformer {
  */
 export class Node {
     /**
-     * @param {TransformContext} options 
+     * @param {NodeData} options 
      */
     constructor(options = {}) {
         /**
@@ -135,10 +135,13 @@ export class Node {
      **/
     toObject() {
         return {
+            tag: this.tag,
             text: this.text,
+            attributes: this.attributes,
+            children: this.children?.map(t => t.toObject()),
+
             tooltip: this.tooltip,
             dragdata: this.dragdata,
-            children: this.children?.map(t => t.toObject()),
             roll: this.roll?.toJSON(),
             formula: this.formula,
         }

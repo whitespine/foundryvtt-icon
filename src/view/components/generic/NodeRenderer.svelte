@@ -32,7 +32,7 @@
 
     // Request this node be persisted
     function saveSelf() {
-        dispatch("savenode", this.node);
+        dispatch("savenode", node);
     }
 
     /** Post the tooltip */
@@ -55,7 +55,9 @@
     $: clickable = !!(node.tooltip || node.formula);
 </script>
 
-{#if node.roll}
+{#if !node}
+    Err
+{:else if node.roll}
     <SmallRoll roll={node.roll} />
 {:else if node.tag}
     <svelte:element this={node.tag} on:click={click} class:clickable data-tooltip={node.tooltip ?? null}>

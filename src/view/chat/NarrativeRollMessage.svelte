@@ -7,8 +7,7 @@
 
     /** @type {ChatMessage} */
     export let msg;
-    let tjs_msg;
-    $: tjs_msg = new TJSDocument(msg);
+    let tjs_msg = new TJSDocument(msg);
     let flags;
     $: flags = $tjs_msg.flags[game.system.id] ?? {};
 

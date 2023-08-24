@@ -4,7 +4,7 @@ import { writable } from "svelte/store";
  * Retrieves writeable stores by a unique key.
  * If the store does not exist, create it and set its vaalue to null
  */
-class KeyStoreLookup {
+export class KeyStoreLookup {
     constructor() {
         this.stores = new Map();
     }
@@ -34,6 +34,16 @@ class KeyStoreLookup {
      */
     clearAll() {
         for (let key of this.stores.keys()) this.clear(key);
+    }
+
+    /**
+     * Set all of object into our entries. This is worded horribly
+     * @param {Record<string, any>} obj 
+     */
+    setFrom(obj) {
+        for([k,v] of Object.entries(obj)) {
+            this.get(k).set(v);
+        }
     }
 }
 
