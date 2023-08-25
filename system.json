@@ -144,7 +144,7 @@
   "readme": "https://github.com/whitespine/foundryvtt-icon/blob/master/README.md",
   "bugs": "https://github.com/whitespine/foundryvtt-icon/issues",
   "changelog": "https://github.com/whitespine/foundryvtt-icon/releases/latest/",
-  "manifest": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/module.json",
+  "manifest": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/system.json",
   "download": "https://github.com/whitespine/foundryvtt-icon/releases/download/0.0.0/module.zip",
   "protected": false,
   "coreTranslation": false,
