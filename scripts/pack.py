@@ -41,6 +41,7 @@ if len(sys.argv) > 1:
     
     # Update system.json
     system_json["version"] = new_version
+    system_json["download"] = f"https://github.com/whitespine/foundryvtt-icon/releases/latest/download/icon_{new_version}.zip"
     with open(proj_root / "system.json", "w") as f:
         json.dump(system_json, f, indent=2)
 
@@ -91,7 +92,8 @@ shutil.make_archive(output, 'zip', tmp_dir)
 
 # Release it
 if new_version:
-    subprocess.run(["gh", "release", "create", "--generate-notes", "--latest", f"v{new_version}", str(output) + ".zip"])
+    subprocess.run(["gh", "release", "create", "--generate-notes", "--latest", f"v{new_version}", str(output) + ".zip", str(proj_root / "system.json")])
+    print("Released!")
 
 # Clean up temporary dir
 # shutil.rmtree(tmp_dir)
