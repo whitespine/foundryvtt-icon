@@ -10,3 +10,5 @@ node_modules/
 /style.css
 common
 client
+releases/*
+tmp_output_dir/
