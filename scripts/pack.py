@@ -18,7 +18,7 @@ if len(sys.argv) > 1:
 
     # Validate semver. We only accept numeric
     valid = False
-    for o,n in itertools.zip_longest(curr_version.split(","), new_version.split("")):
+    for o,n in itertools.zip_longest(curr_version.split("."), new_version.split(".")):
         if n and not o:
             # Subversion is longer
             int(n)
@@ -86,7 +86,7 @@ shutil.make_archive(output, 'zip', tmp_dir)
 
 # Release it
 if new_version:
-    subprocess.run(["gh", "release", "create", "--generate-notes", "--latest", f"v{new_version}", str(output)])
+    subprocess.run(["gh", "release", "create", "--generate-notes", "--latest", f"v{new_version}", str(output) + ".zip"])
 
 # Clean up temporary dir
 # shutil.rmtree(tmp_dir)
