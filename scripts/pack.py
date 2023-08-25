@@ -76,9 +76,14 @@ shutil.copy(proj_root / "style.css", tmp_dir / "style.css")
 shutil.copy(proj_root / "index.js", tmp_dir / "index.js")
 shutil.copy(proj_root / "index.js.map", tmp_dir / "index.js.map")
 shutil.copytree(proj_root / "packs", tmp_dir / "packs")
-# TODO: Remove source files from packs. Non-critical
 shutil.copytree(proj_root / "lang", tmp_dir / "lang")
 
+# Clean up detritus
+for root, dirs, files in os.walk(tmp_dir / "packs"):
+    for dir in dirs:
+        dir = os.path.join(root, dir)
+        if dir.endswith("_source"):
+            shutil.rmtree(dir)
 
 # Bundle it
 os.makedirs(output.parent, exist_ok=True)
