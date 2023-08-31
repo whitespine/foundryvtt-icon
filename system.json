@@ -89,6 +89,14 @@
         "compatibility": {
           "verified": "1.0.13"
         }
+      },
+      {
+        "id": "lancer-initiative",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/BoltsJ/lancer-initiative/default/public/module.json",
+        "compatibility": {
+          "verified": "26-dev"
+        }
       }
     ]
   },
