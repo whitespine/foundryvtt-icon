@@ -2,6 +2,7 @@
     import { getContext } from "svelte";
     import { resolveDotpath } from "../../../util/paths";
     import { updateDoc } from "../../actions/update";
+    import ProseMirrorEditor from "./ProseMirrorEditor.svelte";
 
     /** @type {string} Title to show */
     export let title = "Title";
@@ -11,6 +12,9 @@
 
     /** @type {string} Is it numbers? */
     export let numeric = false;
+
+    /** @type {boolean} Should we use a prosemirror editor? */
+    export let prose = false;
 
     let doc = getContext("tjs_doc");
 
@@ -32,7 +36,11 @@
     <h3>{title} <i class="fas fa-plus" on:click={() => handleAdd()}></i></h3>
     {#each array as _item, index}
         <div class="flexrow">
-            <input type={numeric ? "number" : "text"} use:updateDoc={{doc, path: `${path}.${index}`}} />
+            {#if prose}
+                <ProseMirrorEditor doc={$doc} path={`${path}.${index}`} />
+            {:else}
+                <input type={numeric ? "number" : "text"} use:updateDoc={{doc, path: `${path}.${index}`}} />
+            {/if}
             <i class="fas fa-trash" on:click={() => handleDelete(index)}/>
         </div> 
     {/each}

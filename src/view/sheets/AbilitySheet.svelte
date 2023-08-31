@@ -178,7 +178,7 @@
                 </div>
 
                 <div class="block">
-                    <EditableDocArray title="Effects" path={`system.choices.${$selected_tab}.effects`} />
+                    <EditableDocArray title="Effects" path={`system.choices.${$selected_tab}.effects`} prose={true} />
                 </div>
 
                 <div class="flexrow">
@@ -187,7 +187,7 @@
                         {#each $doc.system.talents as talent, index}
                             <div class="flexrow">
                                 <span style="flex: 0">{"I".repeat(index + 1)}.</span>
-                                <input type="text" use:updateDoc={{ doc, path: `system.talents.${index}.text` }} />
+                                <ProseMirrorEditor doc={$doc} path={`system.talents.${index}.text`} />
                                 <input type="checkbox" use:updateDoc={{ doc, path: `system.talents.${index}.unlocked` }} />
                             </div>
                         {/each}
@@ -196,10 +196,10 @@
                     <div class="block">
                         <h3>
                             Mastery:
-                            <input type="text" use:updateDoc={{ doc, path: `system.mastery.name` }} />
+                            <input type="text" placeholder="Name" use:updateDoc={{ doc, path: `system.mastery.name` }} />
                         </h3>
                         <div class="flexrow">
-                            <input type="text" use:updateDoc={{ doc, path: `system.mastery.text` }} />
+                            <ProseMirrorEditor doc={$doc} path={`system.mastery.text`} />
                             <input type="checkbox" use:updateDoc={{ doc, path: `system.mastery.unlocked` }} />
                         </div>
                     </div>
