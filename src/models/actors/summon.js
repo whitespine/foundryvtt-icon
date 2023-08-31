@@ -6,7 +6,7 @@ export class SummonModel extends ActorModel {
             ...super.defineSchema(),
 
             // Does this summon count as an object
-            is_object: new foundry.data.fields.BooleanField({initial: false}),
+            is_object: new foundry.data.fields.BooleanField({ initial: false }),
             tags: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField()),
             // Ongoing, persistent effects
             summon_effects: new foundry.data.fields.HTMLField(),

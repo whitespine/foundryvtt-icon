@@ -49,7 +49,7 @@ import { easyActionBuilder } from './util';
  *      It determines if the dest is a valid drop target
  */
 export const dropDocs = easyActionBuilder({
-    "dragover": (options, event) => {
+    dragover: (options, event) => {
         // Must return false & prevent default to allow dropping
         // Get/check data
         if (!GlobalDragPreview) {
@@ -62,7 +62,7 @@ export const dropDocs = easyActionBuilder({
             return false;
         }
     },
-    "dragenter": (options, event) => {
+    dragenter: (options, event) => {
         // Must return false & prevent default to allow dropping
         if (!GlobalDragPreview) {
             // Blanket allow drops if we don't know whats dragging
@@ -70,7 +70,7 @@ export const dropDocs = easyActionBuilder({
         } 
         
         // Check if we can drop. If no handler, this is always true (so long as GlobalDragPreview exists)
-        if(options.allow?.(GlobalDragPreview, event) ?? true) {
+        if (options.allow?.(GlobalDragPreview, event) ?? true) {
             // curr_options.hover_handler?.(GlobalDragPreview, node, true);
             // Override behavior to allow dropping here
             event.preventDefault();
@@ -79,7 +79,7 @@ export const dropDocs = easyActionBuilder({
 
         return true; // Prevents dropping
     },
-    "drop": (options, event) => {
+    drop: (options, event) => {
         // Check dropability just to be safe - some event may have trickled down here somehow
         if (!event.dataTransfer?.getData("text/plain")) {
             return;
@@ -105,5 +105,5 @@ export const dropDocs = easyActionBuilder({
             });
         }
     },
-})
+});
 

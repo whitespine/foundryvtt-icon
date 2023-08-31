@@ -28,12 +28,12 @@ export default class TJSDocSheet extends SvelteApplication {
       // Ripped from foundy
       const canConfigure = game.user.isGM || (this.actor.isOwner && game.user.can("TOKEN_CONFIGURE"));
       if (canConfigure) {
-        const closeIndex = buttons.findIndex(btn => btn.label === "Close");
+        const closeIndex = buttons.findIndex((btn) => btn.label === "Close");
         buttons.splice(closeIndex, 0, {
           label: this.doc.token ? "Token" : "TOKEN.TitlePrototype",
           class: "configure-token",
           icon: "fas fa-user-circle",
-          onclick: ev => this._onConfigureToken(ev)
+          onclick: (ev) => this._onConfigureToken(ev)
         });
       }
     }
@@ -47,8 +47,11 @@ export default class TJSDocSheet extends SvelteApplication {
       left: Math.max(this.position.left - 560 - 10, 10),
       top: this.position.top
     };
-    if (this.token) return this.token.sheet.render(true, renderOptions);
-    else new CONFIG.Token.prototypeSheetClass(this.doc.prototypeToken, renderOptions).render(true);
+    if (this.token) {
+return this.token.sheet.render(true, renderOptions);
+} else {
+new CONFIG.Token.prototypeSheetClass(this.doc.prototypeToken, renderOptions).render(true);
+}
   }
 
   /**

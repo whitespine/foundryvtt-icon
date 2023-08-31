@@ -65,8 +65,8 @@ Hooks.once("ready", async () => {
     enhanceStatuses();
 
     // Show welcome only if they haven't confirmed it before
-    if(game.settings.get(game.system.id, ICON.settings.welcome)) {
-        new WelcomeApplication().render(true, {focus: true});
+    if (game.settings.get(game.system.id, ICON.settings.welcome)) {
+        new WelcomeApplication().render(true, { focus: true });
     }
 });
 

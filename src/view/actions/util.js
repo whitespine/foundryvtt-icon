@@ -9,6 +9,8 @@
  * 
  * @param {Array<string>} options.types - Which item types are accepted
  *
+ * @param update_logic
+ *
  * @returns {import('svelte/action').ActionReturn} Action lifecycle methods.
  */
 export function augmentAction(action, update_logic) {
@@ -23,9 +25,10 @@ export function augmentAction(action, update_logic) {
  *                                                               Listeners will be provided (options, event), where options is the current options value,
  *                                                               and event is the event they would normally receive.
  *                                                               These are not updated in future calls
+ *
  * @param {((object) => void)} [options_validator=null] - A special logic block for validating options
  */
-export function easyActionBuilder(listeners, options_validator=null) {
+export function easyActionBuilder(listeners, options_validator = null) {
     // Create our actual function body
     /** @type {import('svelte/action').Action<HTMLElement, object>} */
     const action = (node, initial_options) => {
@@ -35,7 +38,7 @@ export function easyActionBuilder(listeners, options_validator=null) {
 
         // Instantiate + bind our listeners
         let mapped_listeners = {};
-        for(let [k, v] of Object.entries(listeners)) {
+        for (let [k, v] of Object.entries(listeners)) {
             mapped_listeners[k] = (event) => v(current_options, event);
             node.addEventListener(k, mapped_listeners[k]);
         }
@@ -47,21 +50,29 @@ export function easyActionBuilder(listeners, options_validator=null) {
                 current_options = new_options;
             },
             destroy: () => {
-                for(let [k, v] of Object.entries(listeners)) {
+                for (let [k, v] of Object.entries(listeners)) {
                     node.removeEventListener(k, v);
                 }
             }
-        }
-    }
+        };
+    };
     return action;
 }
 
 
 // Used for when we need uuids in a dic
+/**
+ *
+ * @param obj
+ */
 export function simpleSlugifyObject(obj) {
     return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll(".", "_"), v]));
 }
 
+/**
+ *
+ * @param obj
+ */
 export function simpleUnslugifyObject(obj) {
     return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll("_", "."), v]));
 }

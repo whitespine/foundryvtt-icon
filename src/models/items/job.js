@@ -60,7 +60,7 @@ export class ClassField extends foundry.data.fields.SchemaField {
 
         return rv;
     }
-};
+}
 
 export class JobModel extends ItemModel {
     static defineSchema() {

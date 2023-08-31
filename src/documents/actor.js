@@ -4,6 +4,10 @@ import { PlayerModel } from "../models/actors/player";
 import { SummonModel } from "../models/actors/summon";
 
 // Provides a sane default image
+/**
+ *
+ * @param meta
+ */
 export function defaultImage(meta) {
     let name = meta.type; // A special name to perhaps look up
     let type = meta.type; // Player, foe, summon
@@ -26,13 +30,19 @@ export function defaultImage(meta) {
  */
 export class IconActor extends Actor {
 
-    /** Patch update to preserve arrays */
+    /**
+     * Patch update to preserve arrays
+     *
+     * @param data
+     *
+     * @param options
+     */
     async update(data, options = {}) {
         data = this.system.fullUpdateData(data);
         return super.update(data, options);
     }
 
-    /** @override
+    /* @override
      * This is overridden to pre-populate with slightly more sensible data,
      * such as nicer icons and default names, token dispositions, etc
      */

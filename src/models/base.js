@@ -97,9 +97,9 @@ export function fancyMerge(target, source) {
 export class FakeBoundedNumberField extends foundry.data.fields.NumberField {
   constructor(options = {}) {
     // Handle no upper bound case
-    if(options.no_upper_bound) {
+    if (options.no_upper_bound) {
       options = foundry.utils.duplicate(options);
-      options.fake_max = options.max
+      options.fake_max = options.max;
       delete options.max;
     }
     super(options);
@@ -197,19 +197,24 @@ export class ControlledLengthArrayField extends fields.ArrayField {
   // Constructor demands options
   constructor(element, options) {
     super(element, options);
-    if (!Number.isInteger(options.length))
-      throw new TypeError("ControlledLengthArrayField requires an integer 'length' option!");
+    if (!Number.isInteger(options.length)) {
+throw new TypeError("ControlledLengthArrayField requires an integer 'length' option!");
+}
   }
 
   _cast(value) {
     value = super._cast(value);
-    if (!Array.isArray(value)) return value; // Give up early
+    if (!Array.isArray(value)) {
+return value;
+} // Give up early
     // Extend or contract as appropriate
     while (value.length < this.options.length) {
       let new_elt = typeof this.element.initial == "function" ? this.element.initial() : this.element.initial;
       value.push(foundry.utils.duplicate(new_elt));
     }
-    if (!this.options.overflow && value.length > this.options.length) value = value.slice(0, this.options.length);
+    if (!this.options.overflow && value.length > this.options.length) {
+value = value.slice(0, this.options.length);
+}
     return value;
   }
 }
@@ -232,6 +237,7 @@ export class CastingStringField extends fields.StringField {
  * Capitalizes the first letter of each word in the provided string
  * 
  * @param {string} text Base text
+ *
  * @returns text as title case
  */
 export function titleCaseString(text) {

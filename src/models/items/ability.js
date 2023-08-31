@@ -60,12 +60,16 @@ export class AbilityChoiceField extends fields.SchemaField {
     /**
      * Yields a string that represents the action cost of this ability
      * // TODO: End turn, limit break
+     *
      * @param {object} data The raw choice data
+     *
      * @returns {string} A simple unicode string
      */
     actionPips(data) {
         // Traits have nothing
-        if (data.actions === null) return "";
+        if (data.actions === null) {
+return "";
+}
 
         // Interrupts look special
         if (data.interrupt) {
@@ -107,15 +111,33 @@ export class AbilityChoiceField extends fields.SchemaField {
         data.delay = false;
         for (let tag of data.tags) {
             let m;
-            if (m = tag.match(/attack/i)) data.is_attack = true;
-            if (m = tag.match(/true strike/i)) data.is_true_strike = true;
-            if (m = tag.match(/unerring/i)) data.is_unerring = true;
-            if (m = tag.match(/interrupt (\d)/i)) data.is_interrupt = parseInt(m[1]);
-            if (m = tag.match(/end turn/i)) data.is_end_turn = true;
-            if (m = tag.match(/mark/i)) data.is_mark = true;
-            if (m = tag.match(/stance/i)) data.is_stance = true;
-            if (m = tag.match(/terrain effect/i)) data.is_terrain_effect = true;
-            if (m = tag.match(/delay/i)) data.is_delay = true;
+            if (m = tag.match(/attack/i)) {
+data.is_attack = true;
+}
+            if (m = tag.match(/true strike/i)) {
+data.is_true_strike = true;
+}
+            if (m = tag.match(/unerring/i)) {
+data.is_unerring = true;
+}
+            if (m = tag.match(/interrupt (\d)/i)) {
+data.is_interrupt = parseInt(m[1]);
+}
+            if (m = tag.match(/end turn/i)) {
+data.is_end_turn = true;
+}
+            if (m = tag.match(/mark/i)) {
+data.is_mark = true;
+}
+            if (m = tag.match(/stance/i)) {
+data.is_stance = true;
+}
+            if (m = tag.match(/terrain effect/i)) {
+data.is_terrain_effect = true;
+}
+            if (m = tag.match(/delay/i)) {
+data.is_delay = true;
+}
         }
     }
 }

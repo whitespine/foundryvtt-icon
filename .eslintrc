@@ -39,6 +39,9 @@
     "brace-style": ["error", "1tbs"],
     "prefer-const": "off",
     "no-unused-vars": "off",
+    "no-cond-assign": "off",
+    "no-fallthrough": "off",
+    "no-case-declarations": "off",
     "eqeqeq": "off"
   }
 }

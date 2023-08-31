@@ -10,7 +10,9 @@ export function localize(s) {
 
 /**
  * Generate a chapter icon for a chapter
+ *
  * @param {number} n 
+ *
  * @returns {string} I, II, or III
  */
 export function chapterIcon(n) {
@@ -23,6 +25,7 @@ export function chapterIcon(n) {
 
 /**
  * Remove UUID refs 
+ *
  * @param {string} text The text to clean up
  */
 export function removeAllUUIDRefs(text) {

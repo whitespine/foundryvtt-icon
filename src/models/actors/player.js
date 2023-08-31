@@ -87,7 +87,7 @@ export class PlayerModel extends ActorModel {
     }
 
     prepareDerivedData() {
-        ///////////////// Narrative:
+        // /////////////// Narrative:
         // Initialize sane defaults in absence of hard-set values
         for (let [k, v] of Object.entries(this.burdens)) {
             if (this._source.burdens[k].name === `New ${k[1]} Clock`) {
@@ -99,9 +99,9 @@ export class PlayerModel extends ActorModel {
                 this._source.ambitions[k].name = `${v.size} Ambition`;
             }
         }
-        this.bond = this.parent.items.find(i => i.type === "bond");
+        this.bond = this.parent.items.find((i) => i.type === "bond");
 
-        ///////////////// Progression:
+        // /////////////// Progression:
         // Compute total points
         // ap = Ability Points - Can be spent on abilities OR talents
         // sap = Static AP - Can only be spent on abilities
@@ -213,11 +213,11 @@ export class PlayerModel extends ActorModel {
         }
 
         // Compute spending
-        let jobs = this.parent.items.filter(i => i.type === "job");
-        let bond_powers = this.parent.items.filter(i => i.type === "bond-power");
-        let abilities = this.parent.items.filter(i => i.type === "ability" && !i.system.trait);
-        let relics = this.parent.items.filter(i => i.type === "relic");
-        let talent_count = abilities.reduce((x, a) => x + a.system.talents.filter(t => t.unlocked).length, 0);
+        let jobs = this.parent.items.filter((i) => i.type === "job");
+        let bond_powers = this.parent.items.filter((i) => i.type === "bond-power");
+        let abilities = this.parent.items.filter((i) => i.type === "ability" && !i.system.trait);
+        let relics = this.parent.items.filter((i) => i.type === "relic");
+        let talent_count = abilities.reduce((x, a) => x + a.system.talents.filter((t) => t.unlocked).length, 0);
         let mastery_count = abilities.reduce((x, a) => x + a.system.mastery.unlocked ? 1 : 0, 0);
         let narrative_action_count = Object.values(this.actions).reduce((a, b) => a + b, 0);
 
@@ -227,8 +227,10 @@ export class PlayerModel extends ActorModel {
         }
 
         const adjudicate = (expected, actual, name) => {
-            if (expected != actual) this.progression.warnings.push(`Invalid number of ${name}. Expected ${expected}, found ${actual}`);
-        }
+            if (expected != actual) {
+this.progression.warnings.push(`Invalid number of ${name}. Expected ${expected}, found ${actual}`);
+}
+        };
         adjudicate(budget.ap + budget.sap, abilities.length + talent_count, "Abilities + Talents unlocked");
         adjudicate(budget.mp, mastery_count, "Masteries");
         adjudicate(budget.jp, jobs.length, "Jobs");
@@ -237,7 +239,7 @@ export class PlayerModel extends ActorModel {
         adjudicate(budget.bp, bond_powers.length, "Bond Powers");
 
 
-        ///////////////// Combat:
+        // /////////////// Combat:
         // Grab key data, setup class, setup hp, etc
         this.job = jobs[0];
         if (this.job) {

@@ -32,9 +32,9 @@ export function setupMessages() {
             if (svelte_msg_type === "ability") {
                 msg._svelteComponent = new AbilityRollMessage({ target, props });
             } else if (svelte_msg_type == "narrative") {
-                msg._svelteComponent = new NarrativeRollMessage({ target, props })
+                msg._svelteComponent = new NarrativeRollMessage({ target, props });
             } else if (svelte_msg_type == "harm") {
-                msg._svelteComponent = new HarmManifestMessage({ target, props })
+                msg._svelteComponent = new HarmManifestMessage({ target, props });
             }
 
 

@@ -2,7 +2,7 @@
 <script>
     import { setContext } from "svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-    import { Node } from "../../util/nlp";
+    import { IcoNode } from "../../util/nlp";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
     import NodeRenderer from "../components/generic/NodeRenderer.svelte";
     import { KeyStoreLookup } from "../../util/stores";
@@ -37,7 +37,7 @@
 
     // Defaults for our nodes etc
     let attack_roll_node = null;
-    $: (attack_roll_node = new Node({ text: "Attack: " })), new Node({ formula: attack_roll_formula });
+    $: (attack_roll_node = new IcoNode({ text: "Attack: " })), new IcoNode({ formula: attack_roll_formula });
 
     /**
      * For ability roll persistence etc
@@ -46,7 +46,7 @@
     let overrides = {};
     $: {
         for(let [k, v] of Object.entries(flags.nodes ?? {})) {
-            overrides[k] = new Node(v);
+            overrides[k] = new IcoNode(v);
         }
     }
 

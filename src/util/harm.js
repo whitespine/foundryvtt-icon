@@ -4,7 +4,7 @@ import HarmApplication from "../view/apps/HarmApplication";
 import { adminUpdateMessage } from "./socket";
 
 Hooks.on("getSceneControlButtons", (controls) => {
-    let tokenControls = controls.find(control => control.name === "token")
+    let tokenControls = controls.find((control) => control.name === "token");
     tokenControls.tools.push({
         name: "iconharm",
         title: "ICON.Harm.Title",
@@ -23,12 +23,12 @@ let harmAppId = null;
  */
 export async function showHarmApplication() {
     let app;
-    if(harmAppId && ui.windows[harmAppId]) {
+    if (harmAppId && ui.windows[harmAppId]) {
         app = ui.windows[harmAppId];
     } else {
         app = new HarmApplication();
     }
-    await app.render(true, { focus: true })
+    await app.render(true, { focus: true });
     harmAppId = app.appId;
 }
 
@@ -55,13 +55,16 @@ export async function showHarmApplication() {
  * @property {string} actor UUID of actor it was applied to
  * 
  * @property {number} original_hp The original hp value
+ *
  * @property {number} final_hp The hp value post harm/heal
+ *
  * @property {boolean} original_bloodied Were they bloodied before?
+ *
  * @property {boolean} final_bloodied Are they bloodied after?
  * 
  * @property {number} original_vigor The original vigor value
+ *
  * @property {number} final_vigor The vigor value post harm/heal
- * 
  */
 
 /**
@@ -74,15 +77,23 @@ export async function showHarmApplication() {
  * It is on the players to appropriately apply flags!
  * 
  * @param {IconActor} actor The actor to target
+ *
  * @param {"damage" | "piercing" | "divine" | "vigor"} type The harm/heal type
+ *
  * @param {number | "25%" | "50%" | "75%" | "vit"} amount The amount to harm/heal
+ *
  * @param {HarmInstance["flags"]} flags The flags to apply
+ *
  * @returns {HarmInstance} A full harm instance
  */
 export function computeHarm(actor, type, amount, flags) {
-    if (!(actor instanceof IconActor)) throw new TypeError("First argument must be an actor");
+    if (!(actor instanceof IconActor)) {
+        throw new TypeError("First argument must be an actor");
+    }
     const valid_types = ["damage", "piercing", "divine", "vigor"];
-    if (!valid_types.includes(type)) throw new TypeError(`Second argument must be one of ${valid_types.join('|')}, not ${type}`);
+    if (!valid_types.includes(type)) {
+        throw new TypeError(`Second argument must be one of ${valid_types.join('|')}, not ${type}`);
+    }
 
     // First parse the amount
     if (typeof amount === "string") {
@@ -103,7 +114,9 @@ export function computeHarm(actor, type, amount, flags) {
             default:
                 // Parse it as a string
                 amount = parseInt(amount);
-                if (isNaN(amount)) throw new TypeError("Third argument must be a number, or 25%|50%|75%|vit");
+                if (isNaN(amount)) {
+                    throw new TypeError("Third argument must be a number, or 25%|50%|75%|vit");
+                }
         }
     }
 
@@ -120,7 +133,9 @@ export function computeHarm(actor, type, amount, flags) {
         let prior = amount;
         amount = Math.ceil(amount / 2);
         let delta = amount - prior;
-        if (delta) deltas.push(["pacified", delta]);
+        if (delta) {
+            deltas.push(["pacified", delta]);
+        }
     }
 
     // All types except vigor are increased by vulnerable
@@ -137,28 +152,36 @@ export function computeHarm(actor, type, amount, flags) {
             let prior_armor = amount;
             amount = Math.max(0, amount - (actor.system.class?.armor ?? 0));
             let armor_delta = amount - prior_armor;
-            if (armor_delta) deltas.push(["armor", armor_delta])
+            if (armor_delta) {
+                deltas.push(["armor", armor_delta]);
+            }
         case "piercing":
             // Reduced by resistance AFTER armor. 
             if (flags.includes("resistance")) {
                 let prior_resist = amount;
                 amount = Math.ceil(amount / 2);
                 let resist_delta = amount - prior_resist;
-                if (resist_delta) deltas.push(["resistance", ])
+                if (resist_delta) {
+                    deltas.push(["resistance",]);
+                }
             }
         case "divine":
             // No reductions target-side really applies to divines except immunity
             if (flags.includes("immune")) {
-                if (amount) deltas.push(["immune", amount]);
+                if (amount) {
+                    deltas.push(["immune", amount]);
+                }
                 amount = 0;
             }
             break;
         case "vigor":
             // Rarely will we really want to halve or ignore vigor, but it doesn't hurt to have it as an option
             if (flags.includes("immune")) {
-                if (amount) deltas.push(["immune", amount]);
+                if (amount) {
+                    deltas.push(["immune", amount]);
+                }
                 amount = 0;
-            } 
+            }
             break;
     }
 
@@ -181,7 +204,9 @@ export function computeHarm(actor, type, amount, flags) {
  * or else the plans will be made without context of each other.
  * 
  * @param {IconActor} actor The actor to affect
+ *
  * @param {HarmInstance[]} harm_instances The harm instance to apply
+ *
  * @returns {HarmRecord[]} Records of the damage applied
  */
 export function planHarm(actor, harm_instances) {
@@ -206,7 +231,9 @@ export function planHarm(actor, harm_instances) {
         } else if (type === "divine") {
             // Ignores vigor
             final_hp = step_original_hp - amount;
-            if (final_hp < 0) final_hp = 0;
+            if (final_hp < 0) {
+                final_hp = 0;
+            }
         } else {
             // If vigor totally covers it, only affect vigor
             if (step_original_vigor >= amount) {
@@ -216,7 +243,9 @@ export function planHarm(actor, harm_instances) {
                 amount -= step_original_vigor;
                 final_vigor = 0;
                 final_hp = step_original_hp - amount;
-                if (final_hp < 0) final_hp = 0;
+                if (final_hp < 0) {
+                    final_hp = 0;
+                }
             }
         }
 
@@ -249,7 +278,9 @@ export async function applyManifest(harm_manifest) {
             continue;
         }
         let final = records[records.length - 1];
-        if (!final) continue; // Empty list
+        if (!final) {
+            continue;
+        } // Empty list
         promises.push(actor.update({
             "system.hp.value": final.final_hp,
             "system.vigor.value": final.final_vigor,
@@ -263,6 +294,7 @@ export async function applyManifest(harm_manifest) {
  * Rebuilds its harm records from the embedded harm instances.
  * 
  * @param {HarmManifest} manifest The manifest to rebuild
+ *
  * @returns {HarmManifest} New manfiest
  */
 export function replayManifest(manifest) {
@@ -273,13 +305,14 @@ export function replayManifest(manifest) {
             ui.notifications.warn(`Could not resolve actor ${uuid}`);
             continue;
         }
-        new_manifest[uuid] = planHarm(actor, records.map(r => r.harm));
+        new_manifest[uuid] = planHarm(actor, records.map((r) => r.harm));
     }
     return new_manifest;
 }
 
 /**
  * Get or create the most recent HarmManifest chat message.
+ *
  * @returns {Promise<ChatMessage>} message
  */
 export async function getCurrentHarmManifestMessage() {
@@ -314,7 +347,9 @@ export async function quickDamage(harms) {
 
     // Create a temporary new manifest entry
     for (let [actor, harm_instance] of harms) {
-        if (!manifest[actor.uuid]) manifest[actor.uuid] = [];
+        if (!manifest[actor.uuid]) {
+            manifest[actor.uuid] = [];
+        }
         manifest[actor.uuid] = [...manifest[actor.uuid],
         {
             harm: harm_instance,

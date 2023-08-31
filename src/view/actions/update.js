@@ -8,6 +8,8 @@ import { resolveDotpath } from '../../util/paths';
  *
  * @param {{ doc: TJSDocument, path: string }}  options - Options
  *
+ * @param initial_options
+ *
  * @returns {import('svelte/action').ActionReturn} Action lifecycle methods.
  */
 export function updateDoc(node, initial_options = {}) {
@@ -23,9 +25,15 @@ export function updateDoc(node, initial_options = {}) {
     let path; 
     let current_doc_val;
     let unsubscribe;
+    /**
+     *
+     * @param new_options
+     */
     function setOptions(new_options) {
         // Clear old if needed
-        if(unsubscribe) unsubscribe();
+        if (unsubscribe) {
+unsubscribe();
+}
 
         doc = new_options.doc;
         path = new_options.path;

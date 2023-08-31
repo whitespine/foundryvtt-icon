@@ -1,7 +1,7 @@
 import { easyActionBuilder } from "./util";
 
 export const dragAsDoc = easyActionBuilder({
-    "dragstart": (options, event) => {
+    dragstart: (options, event) => {
         if (options.doc) {
             event.stopImmediatePropagation();
             event.dataTransfer.setData("text/plain", JSON.stringify(options.doc.toDragData()));
@@ -14,7 +14,7 @@ export const dragAsDoc = easyActionBuilder({
 });
 
 export const dragAsMark = easyActionBuilder({
-    "dragstart": (options, event) => {
+    dragstart: (options, event) => {
         if (options.doc) {
             event.stopImmediatePropagation();
             let mark_data = {

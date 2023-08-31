@@ -15,7 +15,7 @@ export default class HarmApplication extends SvelteApplication {
          id: "ICON.harm",
          title: 'ICON.Harm.Title',
          width: 64 * 8,
-         height: 128+30,
+         height: 128 + 30,
          classes: ["icon"],
          zIndex: null,
 

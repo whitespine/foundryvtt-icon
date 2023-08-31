@@ -78,7 +78,9 @@ export async function resolveNativeDrop(drop) {
     if (typeof drop == "string") {
         parsed_drop = safeParseJSON(drop);
     }
-    if (parsed_drop.uuid) parsed_drop = parsed_drop.uuid;
+    if (parsed_drop.uuid) {
+parsed_drop = parsed_drop.uuid;
+}
     if (!parsed_drop && typeof drop == "string") {
         // Either wasn't an object, or failed to parse to be one from a stringAttempt uuid route
         let document = await fromUuid(drop);
