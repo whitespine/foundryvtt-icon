@@ -14,6 +14,7 @@ import { SvelteChatLog, setupMessages } from './config/messages.js';
 import { setupTransformers } from './util/nlp.js';
 import { enhanceStatuses } from './config/statuses.js';
 import "./util/harm.js";
+import WelcomeApplication from './view/apps/WelcomeApplication.js';
 
 // Import sliding HUD (used for accuracy/difficulty windows)
 // import * as slidingHUD from "./module/helpers/slidinghud/index.js";
@@ -63,7 +64,10 @@ Hooks.once("ready", async () => {
     setupMessages();
     enhanceStatuses();
 
-    // new BasicApplication().render(true, {focus: true});
+    // Show welcome only if they haven't confirmed it before
+    if(game.settings.get(game.system.id, ICON.settings.welcome)) {
+        new WelcomeApplication().render(true, {focus: true});
+    }
 });
 
 

@@ -11,6 +11,14 @@ export function setupSettings() {
         config: false,
         type: String,
         default: "0",
+    });    
+    
+    game.settings.register(game.system.id, ICON.settings.welcome, {
+        name: "Show welcome message",
+        scope: "client",
+        config: true,
+        type: Boolean,
+        default: true,
     });
 
     // Public hp?

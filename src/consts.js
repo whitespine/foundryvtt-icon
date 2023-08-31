@@ -4,6 +4,7 @@ export const ICON = {
         // Internal state
         migration: "migration_version",
         dsn_setup: "dice_so_nice_setup",
+        welcome: "welcome_message",
 
         // Configurable
         show_foe_hp: "show_foe_hp",
