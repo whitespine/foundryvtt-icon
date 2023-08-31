@@ -66,13 +66,17 @@
             <input type="text" use:updateDoc={{ doc, path: "system.kin" }} />
             <span><strong>{localize("ICON.Culture")}:</strong> </span>
             <input type="text" use:updateDoc={{ doc, path: "system.culture" }} />
-            <span><strong>{localize("ICON.Bonds.Bond")}:</strong></span>
+            <span data-tooltip={$actor.system.bond ? null : localize("ICON.Tutorial.AddBond")}>
+                <strong>{localize("ICON.Bonds.Bond")}:</strong>
+            </span>
             <span>{$actor.system.bond?.name ?? "None"}</span>
         </div>
         <div style="grid-area: comb" class="header-information">
             <span><strong>{localize("ICON.Class")}:</strong></span>
             <span>{$actor.system.class?.player_class_name ?? "None"}</span>
-            <span><strong>{localize("ICON.Job")}:</strong></span>
+            <span data-tooltip={$actor.system.job ? null : localize("ICON.Tutorial.AddJob")}>
+                <strong>{localize("ICON.Job")}:</strong>
+            </span>
             <span draggable="true" use:dragAsDoc={{ doc: $actor.system.job }}>
                 {#if $actor.system.job}
                     {$actor.system.job?.name}
@@ -96,8 +100,14 @@
         <Narrative />
     {:else if $selected_tab === "ICON.Combat"}
         <section class="sheet-body combat">
-            <StatsDisplay style="grid-area: stats" />
-            <CombatHud />
+            {#if $actor.system.job}
+                <StatsDisplay style="grid-area: stats" />
+                <CombatHud />
+            {:else}
+                <span>
+                    {localize("ICON.Tutorial.AddJob")}
+                </span> 
+            {/if}
         </section>
     {:else if $selected_tab == "ICON.Progression"}
         <Progression />

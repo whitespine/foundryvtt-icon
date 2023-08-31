@@ -238,6 +238,10 @@
     "Aspect": "Aspect",
     "NarrativeInfo": "Narrative Info",
     "Description": "Description",
+    "Tutorial": {
+      "AddBond": "Create a Bond item in the item sidebar, then drag it to this sheet!",
+      "AddJob": "Create a Job item in the item sidebar, then drag it to this sheet!"
+    },
     "Bonds": {
       "Bond": "Bond",
       "Powers": "Bond Powers",

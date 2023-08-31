@@ -70,8 +70,8 @@
                     {/each}
                 </ul>
             {:else}
-                <h2>No Bonds???</h2>
-                <p>Drag a bond from the compendium or item tab!</p>
+                <h2>No Bonds</h2>
+                <p>{localize("ICON.Tutorial.AddBond")}</p>
             {/if}
         </div>
     </div>
