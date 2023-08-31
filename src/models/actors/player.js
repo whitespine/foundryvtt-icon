@@ -197,7 +197,7 @@ export class PlayerModel extends ActorModel {
                 budget.bp++;
                 budget.nap++;
             case 1:
-                budget.ap += 2;
+                budget.ap += 2; 
                 budget.bp++;
                 budget.nap++;
                 budget.jp++;
@@ -205,7 +205,8 @@ export class PlayerModel extends ActorModel {
 
         // Adjust by prior and current half-level ap increments
         if (this.level >= 1) {
-            budget.ap += this.level - 1; // All previous half increments
+            // According to pg 115 of 1.5, you technically get the half-level AP from 0
+            budget.ap += this.level; // All previous half increments
             if (this.xp.value >= 7) {
                 budget.ap += 1; // This level half increment
             }
