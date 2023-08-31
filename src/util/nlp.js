@@ -122,10 +122,6 @@ export class Node {
          * @type {any | undefined}
          */
         this.formula = options.formula;
-
-        if (!this.text && !this.tag && !this.roll) {
-            console.warn("EMPTY NODE");
-        }
     }
 
     /** 
