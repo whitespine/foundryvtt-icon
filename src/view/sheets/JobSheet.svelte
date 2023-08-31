@@ -49,7 +49,7 @@
                         <option value={GENERIC_COLORS[i]}>{c}</option>
                     {/each}
                 </select>
-                {#each ["defense", "damage_die", "fray_damage", "speed", "dash", "vitality"] as stat}
+                {#each ["defense", "damage_die", "fray_damage", "speed", "dash", "vitality", "armor"] as stat}
                     <label for={stat}>{stat}:</label>
                     <input name={stat} type="number" use:updateDoc={{ doc, path: `system.class.${stat}` }} />
                 {/each}

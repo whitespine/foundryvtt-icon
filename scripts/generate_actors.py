@@ -246,6 +246,10 @@ class ActorProcessor:
         foe_class["damage_die"] = self.data.get("damage_die", 6)
         self.actions.extend(mandate_list(self.data.get("actions")))
 
+        foe_class["armor"] = 0
+        if "Guard" in [t["name"] for t in self.traits]:
+            foe_class["armor"] = 2
+
         self.process_setup_info()
         self.process_conditional_abilities()
 

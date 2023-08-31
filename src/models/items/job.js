@@ -47,6 +47,7 @@ export class ClassField extends foundry.data.fields.SchemaField {
             defense: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 0, min: 0 }),
             fray_damage: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 1, min: 0 }),
             damage_die: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 6, min: 4 }),
+            armor: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 0, min: 0 }), // Technically comes from a trait, but more easily defined here
         }, options);
     }
 

@@ -135,7 +135,7 @@ export function computeHarm(actor, type, amount, flags) {
         case "damage":
             // Reduced by armor
             let prior_armor = amount;
-            amount = Math.max(0, amount - (actor.system.armor ?? 0));
+            amount = Math.max(0, amount - (actor.system.class?.armor ?? 0));
             let armor_delta = amount - prior_armor;
             if (armor_delta) deltas.push(["armor", armor_delta])
         case "piercing":
