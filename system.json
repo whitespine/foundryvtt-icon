@@ -110,6 +110,15 @@
       "private": false,
       "flags": {}
     },
+{
+      "label": "Jobs",
+      "type": "Item",
+      "name": "jobs",
+      "path": "packs/jobs",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
     {
       "label": "Abilities",
       "type": "Item",
@@ -142,6 +151,42 @@
       "type": "Item",
       "name": "bond-powers",
       "path": "packs/bond-powers",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
+{
+      "name": "seer-cards",
+      "label": "Seer Cards",
+      "type": "Cards",
+      "path": "packs/seer-cards",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
+{
+      "name": "rules",
+      "label": "Rules",
+      "type": "JournalEntry",
+      "path": "packs/rules",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
+{
+      "name": "effects",
+      "label": "Effects",
+      "type": "Item",
+      "path": "packs/effects",
+      "system": "icon",
+      "private": false,
+      "flags": {}
+    },
+{
+      "name": "bonds",
+      "label": "Bonds",
+      "type": "Item",
+      "path": "packs/bonds",
       "system": "icon",
       "private": false,
       "flags": {}
