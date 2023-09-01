@@ -49,9 +49,8 @@ export class AbilityChoiceField extends fields.SchemaField {
         rv.name ||= model.parent.name;
 
         // Add in any derived data
-        rv.actionPips = this.actionPips(rv);
-        rv.derived = {};
         this.populateTags(rv);
+        rv.actionPips = this.actionPips(rv);
 
         return rv;
     }
@@ -108,6 +107,8 @@ export class AbilityChoiceField extends fields.SchemaField {
         data.terrain_effect = false;
         // Does it have a delay effect
         data.delay = false;
+        // Is it a limit break
+        data.limit_break = !!data.resolve;
         for (let tag of data.tags) {
             let m;
             if (m = tag.match(/attack/i)) {
