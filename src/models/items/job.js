@@ -78,7 +78,7 @@ export class JobModel extends ItemModel {
 
             // Limit break granted by this job
             // As above. This should be granted when a job is selected. 
-            limit_break: new foundry.data.fields.StringField(),
+            limit_break: new foundry.data.fields.StringField({ nullable: true, initial: null }),
         };
     }
 }
