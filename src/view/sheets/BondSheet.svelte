@@ -24,17 +24,28 @@
     <section class="sheet-body">
         <div class="flexcol">
             <span>Description:</span>
-            <ProseMirrorEditor doc={$doc} path={"system.description" } />
+            <ProseMirrorEditor doc={$doc} path={"system.description"} />
 
-            <EditableDocArray title="Ideals" path={"system.ideals"}></EditableDocArray>
+            <EditableDocArray title="Ideals" path={"system.ideals"} />
+
+            <div class="flexrow">
+                <div>
+                    <label for="strain_cap">Max Strain</label>
+                    <input name="strain_cap" type="number" use:updateDoc={{doc, path: "system.strain_cap"}} />
+                </div>
+                <div>
+                    <label for="effort_cap">Max Effort</label>
+                    <input name="effort_cap" type="number" use:updateDoc={{doc, path: "system.effort_cap"}} />
+                </div>
+            </div>
 
             <span>Second Wind:</span>
-            <ProseMirrorEditor doc={$doc} path={"system.second_wind" } />
+            <ProseMirrorEditor doc={$doc} path={"system.second_wind"} />
 
             <span>Special Ability:</span>
-            <ProseMirrorEditor doc={$doc} path={"system.special_ability" } />
+            <ProseMirrorEditor doc={$doc} path={"system.special_ability"} />
 
-            <EditableDocArray title="Action Upgrades" path={"system.plus_two_options"}></EditableDocArray>
+            <EditableDocArray title="Action Upgrades" path={"system.plus_two_options"} />
 
             <span> TODO: Gear, powers list, etc </span>
         </div>
@@ -52,8 +63,7 @@
 
     header {
         display: grid;
-        grid-template:
-            "pic name" 120px / 120px 1fr;
+        grid-template: "pic name" 120px / 120px 1fr;
     }
 
     .sheet-body {

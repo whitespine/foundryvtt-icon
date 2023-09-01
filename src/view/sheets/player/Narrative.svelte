@@ -70,7 +70,7 @@
                     {/each}
                 </ul>
             {:else}
-                <h2>No Bonds</h2>
+                <h2>No Bond</h2>
                 <p>{localize("ICON.Tutorial.AddBond")}</p>
             {/if}
         </div>
@@ -104,6 +104,11 @@
             align-items: center;
             border-bottom: var(--primary-border);
             padding-bottom: 10px;
+        }
+
+        .bond {
+            display: flex;
+            flex-direction: column;
         }
     }
 </style>
