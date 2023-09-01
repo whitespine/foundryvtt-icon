@@ -71,7 +71,7 @@
             />
         {/if}
     {/each}
-    {#if choice.ability.system.mastery}
+    {#if choice.ability.system.mastery.unlocked}
         <RichTextDisplay
             body={choice.ability.system.mastery.text}
             node_override={overrides["mastery"] ?? null}
