@@ -29,7 +29,7 @@
 
     // Setup context
     let actor = new TJSDocument(undefined);
-    $: actor.set($item.actor ?? undefined);
+    $: actor.set($item?.actor ?? undefined);
 
     // Shorthand for the selected choice
     let choice = null;
