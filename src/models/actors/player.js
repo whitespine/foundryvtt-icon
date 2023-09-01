@@ -14,8 +14,8 @@ export class PlayerModel extends ActorModel {
             kin: new fields.StringField({ initial: "Arken" }),
             culture: new fields.StringField({ initial: "Arken" }),
             bond: new fields.StringField({ initial: "Arkenlord" }), // Eventually will be item
-            effort: new FakeBoundedNumberField({ min: 0, max: 3, initial: 0 }),
-            strain: new FakeBoundedNumberField({ min: 0, max: 5, initial: 0 }),
+            effort: new FakeBoundedNumberField({ min: 0, initial: 0 }),
+            strain: new FakeBoundedNumberField({ min: 0, initial: 0 }),
             burdens: new fields.SchemaField({
                 c4: new ClockField({ size: 4 }, { initial: () => ({ name: "4 Burden" }) }),
                 c6: new ClockField({ size: 6 }, { initial: () => ({ name: "6 Burden" }) }),
@@ -100,6 +100,8 @@ export class PlayerModel extends ActorModel {
             }
         }
         this.bond = this.parent.items.find((i) => i.type === "bond");
+        this.strain.max = this.bond?.system.strain_cap ?? 5;
+        this.effort.max = this.bond?.system.effort_cap ?? 3;
 
         // /////////////// Progression:
         // Compute total points

@@ -44,4 +44,10 @@
     :global(.prosemirror .editor-container .editor-content) {
         position: relative;
     }
+
+    div {
+        border: var(--primary-border);
+        border-radius: 5px;
+        padding: 4px;
+    }
 </style>

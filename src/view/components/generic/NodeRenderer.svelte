@@ -1,5 +1,6 @@
 <script>
     import { IcoNode } from "../../../util/nlp";
+    import MediumRoll from "./dice/MediumRoll.svelte";
     import SmallRoll from "./dice/SmallRoll.svelte";
     import { createEventDispatcher } from "svelte";
 
@@ -58,7 +59,7 @@
 {#if !node}
     Err
 {:else if node.roll}
-    <SmallRoll roll={node.roll} />
+    <MediumRoll roll={node.roll} />
 {:else if node.tag}
     <svelte:element this={node.tag} on:click={click} class:clickable data-tooltip={node.tooltip ?? null}>
         {#each node.children || [] as child}

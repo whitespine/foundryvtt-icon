@@ -1,12 +1,9 @@
 <!-- Super simple Svelte component that takes in a prop and outputs it. -->
 <script>
-    import { setContext } from "svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
     import { IcoNode } from "../../util/nlp";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
     import NodeRenderer from "../components/generic/NodeRenderer.svelte";
-    import { KeyStoreLookup } from "../../util/stores";
-    import { writable } from "svelte/store";
 
     // import { fly, fade } from "svelte/transition";
 
@@ -21,7 +18,7 @@
      * @type {string}
      */
     let attack_roll_formula;
-    $: attack_roll_formula = flags.boon === 0 ? "1d20" : boon > 0 ? `1d20 + ${boon}d6kh1` : `1d20 - ${-boon}d6kh1`;
+    $: attack_roll_formula = flags.boon === 0 ? "1d20" : flags.boon > 0 ? `1d20 + ${flags.boon}d6kh1` : `1d20 - ${-flags.boon}d6kh1`;
 
     // Deduce the item
     let item = new TJSDocument(undefined);
@@ -37,7 +34,12 @@
 
     // Defaults for our nodes etc
     let attack_roll_node = null;
-    $: (attack_roll_node = new IcoNode({ text: "Attack: " })), new IcoNode({ formula: attack_roll_formula });
+    $: attack_roll_node = new IcoNode({ 
+        tag: "div", 
+        formula: attack_roll_formula,
+        children: [
+            new IcoNode({ text: `Attack Roll: ${attack_roll_formula}` })
+    ]});
 
     /**
      * For ability roll persistence etc
