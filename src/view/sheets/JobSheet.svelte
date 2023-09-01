@@ -72,7 +72,7 @@
     <section class="sheet-body" use:dropDocs={{ handle: handleDropAbility, allow: allowDropAbility }}>
         {#if selected_tab === "ICON.JobSheet.Details"}
             <div class="flexcol">
-                <span>Description:</span>
+                <h3>Description:</h3>
                 <ProseMirrorEditor doc={$doc} path={"system.description"} />
             </div>
         {:else if selected_tab === "ICON.JobSheet.Abilities"}
