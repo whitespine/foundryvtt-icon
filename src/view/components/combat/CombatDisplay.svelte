@@ -60,7 +60,7 @@
         {#each item.system.choices as choice, i}
             <div class="choice" class:bottomed={i < item.system.choices.length - 1}>
                 <AbilityDetail {choice} style="flex: auto" />
-                <i class="fas fa-dice-d20" on:click={() => rollChoice(i)} data-tooltip="Activate" />
+                <i class="fas fa-dice-d20 fa-xl" on:click={() => rollChoice(i)} data-tooltip="Activate" />
             </div>
         {/each}
     {:else if item.type === "relic"}

@@ -102,7 +102,7 @@
         <section class="sheet-body combat">
             {#if $actor.system.job}
                 <StatsDisplay style="grid-area: stats" />
-                <CombatHud />
+                <CombatHud loadout_button={true} />
             {:else}
                 <span>
                     {localize("ICON.Tutorial.AddJob")}

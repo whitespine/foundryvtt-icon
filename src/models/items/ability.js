@@ -24,7 +24,6 @@ export class AbilityChoiceField extends fields.SchemaField {
             // UUIDs of any summons it might have
             summons: new fields.ArrayField(new fields.StringField()),
 
-
             // ------- TAGS ---------------
             tags: new fields.ArrayField(new CastingStringField({ cast: titleCaseString })),
 
@@ -68,8 +67,8 @@ export class AbilityChoiceField extends fields.SchemaField {
     actionPips(data) {
         // Traits have nothing
         if (data.actions === null) {
-return "";
-}
+            return "";
+        }
 
         // Interrupts look special
         if (data.interrupt) {
@@ -112,32 +111,32 @@ return "";
         for (let tag of data.tags) {
             let m;
             if (m = tag.match(/attack/i)) {
-data.is_attack = true;
-}
+                data.is_attack = true;
+            }
             if (m = tag.match(/true strike/i)) {
-data.is_true_strike = true;
-}
+                data.is_true_strike = true;
+            }
             if (m = tag.match(/unerring/i)) {
-data.is_unerring = true;
-}
+                data.is_unerring = true;
+            }
             if (m = tag.match(/interrupt (\d)/i)) {
-data.is_interrupt = parseInt(m[1]);
-}
+                data.interrupt = parseInt(m[1]);
+            }
             if (m = tag.match(/end turn/i)) {
-data.is_end_turn = true;
-}
+                data.is_end_turn = true;
+            }
             if (m = tag.match(/mark/i)) {
-data.is_mark = true;
-}
+                data.is_mark = true;
+            }
             if (m = tag.match(/stance/i)) {
-data.is_stance = true;
-}
+                data.is_stance = true;
+            }
             if (m = tag.match(/terrain effect/i)) {
-data.is_terrain_effect = true;
-}
+                data.is_terrain_effect = true;
+            }
             if (m = tag.match(/delay/i)) {
-data.is_delay = true;
-}
+                data.is_delay = true;
+            }
         }
     }
 }
@@ -162,6 +161,9 @@ export class AbilityModel extends ItemModel {
 
             // Minimum chapter it is allowed in
             chapter: new fields.NumberField({ nullable: false, initial: 1, integer: true, min: 1, max: 3 }),
+
+            // Is it currently equipped
+            equipped: new fields.BooleanField({ initial: true }),
 
             // Special rules for it
             special_requirements: new fields.ArrayField(new fields.StringField()),

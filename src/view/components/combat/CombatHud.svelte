@@ -9,16 +9,19 @@
 
     let actor = getContext("tjs_actor");
 
+    /** @type {boolean} Whether to show */
+    export let loadout_button = false;
+
     // Props
     const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
     const abilities = actor.embedded.create(Item, {
         name: "abilities",
-        filters: [(i) => i.type === "ability" && !i.system.trait],
+        filters: [(i) => i.system.equipped && i.type === "ability" && !i.system.trait],
         sort: name_alphabetical,
     });
     const traits = actor.embedded.create(Item, {
         name: "traits",
-        filters: [(i) => i.type === "ability" && i.system.trait],
+        filters: [(i) => i.system.equipped && i.type === "ability" && i.system.trait],
         sort: name_alphabetical,
     });
     const relics = actor.embedded.create(Item, {
@@ -41,6 +44,11 @@
         } else {
             selected = new TJSDocument(item);
         }
+    }
+
+    function showLoadout() {
+        // Show a loadout application
+        ui.notifications.warn("Loadout view not yet implemented.");
     }
 </script>
 
@@ -88,6 +96,10 @@
                 <span>{chapterIcon(relic.system.rank)} {relic.name}</span>
             </div>
         {/each}
+
+        {#if loadout_button}
+            <button on:click={showLoadout}>Edit Loadout</button>
+        {/if}
     </div>
 
     <div class="preview">
@@ -146,6 +158,12 @@
                     background-color: var(--secondary-background);
                     color: var(--secondary-color);
                 }
+            }
+
+            button {
+                /* Want it floating at the bottom of the ability bar */
+                margin-top: auto;
+                width: 90%;
             }
         }
 
