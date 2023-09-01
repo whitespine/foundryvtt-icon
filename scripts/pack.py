@@ -73,6 +73,10 @@ os.makedirs(tmp_dir)
 # Perform the actual build
 subprocess.run(["npm", "run", "build"])
 
+# Build packs too
+subprocess.run([proj_root / "scripts" / "gen_and_pack_foes.sh"])
+# subprocess.run(["python3", proj_root / "scripts" / "mine_icon_data.py"])
+
 # Populate it
 shutil.copy(proj_root / "system.json", tmp_dir / "system.json")
 shutil.copy(proj_root / "template.json", tmp_dir / "template.json")
