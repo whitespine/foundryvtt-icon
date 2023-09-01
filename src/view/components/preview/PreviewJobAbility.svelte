@@ -26,11 +26,14 @@
             use:dragAsDoc={{ doc: $ability }}
         >
             <img class="icon" src={$ability.img} />
-            <span>{$ability.name}</span>
+            <span>
+                {$ability.name}
+                -
+                {$ability.system.trait ? "Trait" : "Ability"}
+            </span>
             <div style="margin-left: auto">
-                <slot name="controls">
-                    <i class="fas fa-edit fa-xl" on:click={$ability.sheet.render(true, { focus: true })} />
-                </slot>
+                <i class="fas fa-edit fa-lg" on:click={$ability.sheet.render(true, { focus: true })} />
+                <slot name="controls" />
             </div>
         </div>
         {#if expanded}
@@ -38,12 +41,13 @@
                 {#each $ability.system.choices as choice}
                     <AbilityDetail {choice} />
                 {/each}
-                <div style="float: right">
-                </div>
+                <div style="float: right" />
             </div>
         {/if}
+    {:else if uuid}
+        ERROR {uuid}
     {:else}
-            ERROR {uuid}
+        Undefined. You can probably drag something here
     {/if}
 </div>
 

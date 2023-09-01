@@ -6,9 +6,12 @@
     import { GENERIC_COLORS, PLAYER_COLORS } from "../../models/items/job";
     import { localize } from "../../util/misc";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
+    import { dropDocs } from "../actions/drop";
+    import PreviewJobAbility from "../components/preview/PreviewJobAbility.svelte";
+    import { simpleMixUUIDList } from "../actions/util";
 
     let actor = getContext("tjs_actor");
-    let item = getContext("tjs_item"); // Alias
+    let item = getContext("tjs_item");
     let doc = item;
 
     // Set our tabs
@@ -17,6 +20,39 @@
         key: s,
     }));
     let selected_tab = "ICON.JobSheet.Details";
+
+    function allowDropAbility(drop) {
+        // A very simple requirement
+        return drop.document.type === "ability";
+    }
+    function handleDropAbility(drop, event) {
+        // Just add it to the end of the list
+        let effective_target = event.target.closest("[data-uuid]")?.dataset.uuid;
+        if (drop.document.system.choices.some((x) => x.is_limit_break)) {
+            // It's a limit break
+            $item.update({
+                "system.limit_break": drop.document.uuid,
+            });
+        } else if (drop.document.system.trait) {
+            // It's not a limit break, and is a trait
+            $item.update({
+                "system.traits": simpleMixUUIDList($item.system.traits, drop.document.uuid, effective_target, true),
+            });
+        } else {
+            // It's an ability
+            $item.update({
+                "system.abilities": simpleMixUUIDList($item.system.abilities, drop.document.uuid, effective_target, true),
+            });
+        }
+    }
+
+    function removeAbility(uuid) {
+        $item.update({
+            "system.limit_break": $item.system.limit_break === uuid ? null : $item.system.limit_break,
+            "system.traits": $item.system.traits.filter((uuid2) => uuid != uuid2),
+            "system.abilities": $item.system.abilities.filter((uuid2) => uuid != uuid2),
+        });
+    }
 </script>
 
 <main>
@@ -33,14 +69,25 @@
     </header>
 
     <!-- Sheet Body -->
-    <section class="sheet-body">
+    <section class="sheet-body" use:dropDocs={{ handle: handleDropAbility, allow: allowDropAbility }}>
         {#if selected_tab === "ICON.JobSheet.Details"}
             <div class="flexcol">
                 <span>Description:</span>
                 <ProseMirrorEditor doc={$doc} path={"system.description"} />
             </div>
         {:else if selected_tab === "ICON.JobSheet.Abilities"}
-            <span> TODO: Abilities previews </span>
+            <div class="flexcol">
+                {#each [["Limit Break", [$item.system.limit_break]], ["Traits", $item.system.traits], ["Abilities", $item.system.abilities]] as [category, items]}
+                    <h2>{category}</h2>
+                    {#each items as item}
+                        <PreviewJobAbility uuid={item}>
+                            <svelte:fragment slot="controls">
+                                <i class="fas fa-trash fa-lg" on:click={() => removeAbility(item)} />
+                            </svelte:fragment>
+                        </PreviewJobAbility>
+                    {/each}
+                {/each}
+            </div>
         {:else if selected_tab === "ICON.JobSheet.Attributes"}
             <div class="flexcol">
                 <label for="color">Color</label>

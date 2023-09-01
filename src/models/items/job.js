@@ -71,10 +71,15 @@ export class JobModel extends ItemModel {
             // We just build these directly into jobs
             class: new ClassField(),
 
-            // Traits granted & Abilities offered by this job
+            // Abilities offered by this job
             // An array of compendium uuids
             // Ideally you don't edit typically this, and only show it when in a special unlock menu
             abilities: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField()),
+
+            // Traits granted by this job + class
+            // An array of compendium uuids
+            // Ideally you don't edit typically this, and only show it when in a special unlock menu
+            traits: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField()),
 
             // Limit break granted by this job
             // As above. This should be granted when a job is selected. 

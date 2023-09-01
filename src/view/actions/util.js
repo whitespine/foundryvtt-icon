@@ -14,7 +14,7 @@
  * @returns {import('svelte/action').ActionReturn} Action lifecycle methods.
  */
 export function augmentAction(action, update_logic) {
-} 
+}
 
 
 /**
@@ -60,19 +60,44 @@ export function easyActionBuilder(listeners, options_validator = null) {
 }
 
 
-// Used for when we need uuids in a dic
+// Used for when we need uuids in a way that foundry won't fuck with
 /**
  *
- * @param obj
+ * @param {object} obj An object with dotpath keys
+ * @returns {object} An object wherein all keys have had their periods replaced with ampersands
  */
 export function simpleSlugifyObject(obj) {
-    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll(".", "_"), v]));
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll(".", "&"), v]));
 }
 
 /**
  *
- * @param obj
+ * @param {object} obj An object wherein all keys have had their periods replaced with ampersands
+ * @returns {object} An object wherein all keys have had their ampersands returned to periods
  */
 export function simpleUnslugifyObject(obj) {
-    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll("_", "."), v]));
+    return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k.replaceAll("&", "."), v]));
+}
+
+
+/**
+ * 
+ * @param {Array<string>} existing_list 
+ * @param {string} new_item An item to add to the list
+ * @param {string | null | undefined} insertion_point Where we want to insert it before, possibly
+ * @param {boolean} replace_duplicates If true, then old instances of new_item will be removed
+ */
+export function simpleMixUUIDList(existing_list, new_item, insertion_point, replace_duplicates=true) {
+    // Pre filter
+    if(replace_duplicates) {
+        existing_list = existing_list.filter(x => x !== new_item);
+    }
+
+    // Find where it goes
+    let index = existing_list.indexOf(insertion_point);
+    if(index === -1) {
+        return [...existing_list, new_item]; // Tack on the end
+    } else {
+        return [...existing_list.slice(0, index), new_item, ...existing_list.slice(index)];
+    }
 }
