@@ -1,4 +1,5 @@
 import { TJSDialog } from '#runtime/svelte/application';
+import { RapidPromptApplication } from './RapidPromptApplication';
 
 export class BoonBaneApplication extends TJSDialog {
     static async promptBoonBane(data = {}, options = {}) {
@@ -30,6 +31,11 @@ export class BoonBaneApplication extends TJSDialog {
                     label: "+2 Boon",
                     onPress: () => 2
                 },
+                custom: {
+                    icon: "fas fa-question",
+                    label: "Custom",
+                    onPress: () => RapidPromptApplication.show("number", { title: "Custom Boon/Bane" })
+                }
 
             },
             default: 'neutral'

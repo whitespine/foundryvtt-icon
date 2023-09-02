@@ -17,11 +17,6 @@ export default class WelcomeApplication extends SvelteApplication {
          svelte: {
             class: WelcomeAppShell,
             target: document.body,
-            props: function() {
-               return {
-                  app: this // `this` is the SvelteApplication when invoked
-               };
-            }
          }
       });
    }

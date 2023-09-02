@@ -89,10 +89,10 @@
                     {#each items as item}
                         <PreviewItem uuid={item}>
                             <svelte:fragment slot="controls">
-                                <i class="fas fa-trash fa-lg" on:click={() => removeAbility(item)} />
+                                <i class="fas fa-trash fa-lg" on:click|stopPropagation={() => removeAbility(item)} />
                             </svelte:fragment>
-                            <svelte:fragment slot="content" let:item>
-                                {#each item.system.choices as choice}
+                            <svelte:fragment slot="content" let:doc={resolved}>
+                                {#each resolved?.system.choices ?? [] as choice}
                                     <AbilityDetail {choice} />
                                 {/each}
                             </svelte:fragment>

@@ -2,10 +2,11 @@
 
 <script>
     import { ApplicationShell } from "#runtime/svelte/component/core";
+    import { getContext } from "svelte";
     import { ICON } from "../../consts";
 
     export let elementRoot;
-    export let app;
+    const { application } = getContext("#external");
 
     const credits = [
         {
@@ -33,7 +34,7 @@
     // Close this welcome message, foreevr!
     function clear() {
         game.settings.set(game.system.id, ICON.settings.welcome, false);
-        app.close();
+        application.close();
     }
 </script>
 

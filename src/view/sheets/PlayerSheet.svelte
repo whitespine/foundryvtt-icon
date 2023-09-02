@@ -42,12 +42,6 @@
     function allowDrop(drop) {
         return drop.type == "Item" && ["bond-power", "bond", "job", "ability", "relic"].includes(drop.document.type);
     }
-    /**
-     * Open the current job for editing
-     */
-    function editJob() {
-        $actor.system.job.sheet.render(true, { focus: true });
-    }
 </script>
 
 <main use:dropDocs={{ handle: handleDrop, allow: allowDrop }}>
@@ -69,7 +63,14 @@
             <span data-tooltip={$actor.system.bond ? null : localize("ICON.Tutorial.AddBond")}>
                 <strong>{localize("ICON.Bonds.Bond")}:</strong>
             </span>
-            <span>{$actor.system.bond?.name ?? "None"}</span>
+            <span>
+                {#if $actor.system.bond}
+                    {$actor.system.bond.name}
+                    <i class="fas fa-edit" style="float: right; cursor: pointer" on:click={() => $actor.system.bond.sheet.render(true, { focus: true })} />
+                {:else}
+                    None
+                {/if}
+            </span>
         </div>
         <div style="grid-area: comb" class="header-information">
             <span><strong>{localize("ICON.Class")}:</strong></span>
@@ -79,8 +80,8 @@
             </span>
             <span draggable="true" use:dragAsDoc={{ doc: $actor.system.job }}>
                 {#if $actor.system.job}
-                    {$actor.system.job?.name}
-                    <i class="fas fa-edit" style="float: right; cursor: pointer" on:click={editJob} />
+                    {$actor.system.job.name}
+                    <i class="fas fa-edit" style="float: right; cursor: pointer" on:click={() => $actor.system.job.sheet.render(true, { focus: true })} />
                 {:else}
                     None
                 {/if}
