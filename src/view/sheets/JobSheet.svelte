@@ -62,7 +62,7 @@
     }
 </script>
 
-<main>
+<main use:dropDocs={{ handle: handleDropAbility, allow: allowDropAbility }}>
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
@@ -76,7 +76,7 @@
     </header>
 
     <!-- Sheet Body -->
-    <section class="sheet-body" use:dropDocs={{ handle: handleDropAbility, allow: allowDropAbility }}>
+    <section class="sheet-body">
         {#if $selected_tab === "ICON.JobSheet.Details"}
             <div class="flexcol">
                 <h3>Description:</h3>
@@ -91,7 +91,7 @@
                             <svelte:fragment slot="controls">
                                 <i class="fas fa-trash fa-lg" on:click={() => removeAbility(item)} />
                             </svelte:fragment>
-                            <svelte:fragment slot="content" let:item={item}>
+                            <svelte:fragment slot="content" let:item>
                                 {#each item.system.choices as choice}
                                     <AbilityDetail {choice} />
                                 {/each}

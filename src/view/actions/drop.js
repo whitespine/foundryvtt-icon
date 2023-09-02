@@ -50,27 +50,15 @@ import { easyActionBuilder } from './util';
  */
 export const dropDocs = easyActionBuilder({
     dragover: (options, event) => {
-        // Must return false & prevent default to allow dropping
-        // Get/check data
-        if (!GlobalDragPreview) {
-            return true;
-        } // Blanket allow drops if we don't know whats dragging
-
-        // If permitted, override behavior to allow drops
-        if (options.allow_drop?.(GlobalDragPreview, this, event) ?? true) {
+        // If permitted, override behavior to allow drops. If no GlobalDragPreview, allow drops regardless
+        if (!GlobalDragPreview || (options.allow_drop?.(GlobalDragPreview, this, event) ?? true)) {
             event.preventDefault();
             return false;
         }
     },
     dragenter: (options, event) => {
-        // Must return false & prevent default to allow dropping
-        if (!GlobalDragPreview) {
-            // Blanket allow drops if we don't know whats dragging
-            return true;
-        } 
-        
-        // Check if we can drop. If no handler, this is always true (so long as GlobalDragPreview exists)
-        if (options.allow?.(GlobalDragPreview, event) ?? true) {
+        // Check if we can drop. If no handler, this is always true. If no GlobalDragPreview, allow drops regardless
+        if (!GlobalDragPreview || (options.allow?.(GlobalDragPreview, event) ?? true)) {
             // curr_options.hover_handler?.(GlobalDragPreview, node, true);
             // Override behavior to allow dropping here
             event.preventDefault();

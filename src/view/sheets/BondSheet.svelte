@@ -9,6 +9,7 @@
     import { TAB_STORES } from "../../util/stores";
     import PreviewItem from "../components/preview/PreviewItem.svelte";
     import { dropDocs } from "../actions/drop";
+    import { simpleMixUUIDList } from "../actions/util";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -42,7 +43,7 @@
     }
 </script>
 
-<main>
+<main use:dropDocs={{ handle: handleDropPower, allow: allowDropPower }}>
     <!-- Sheet Header -->
     <header>
         <Portrait style="grid-area: pic" />
@@ -84,7 +85,7 @@
                 <EditableDocArray title="Action Upgrades" path={"system.plus_two_options"} />
             </div>
         {:else if $selected_tab === "ICON.BondSheet.Abilities"}
-            <div class="flexcol" use:dropDocs={{ handle: handleDropPower, allow: allowDropPower }}>
+            <div class="flexcol">
                 <h2>Powers</h2>
                 {#each $item.system.powers as item}
                     <PreviewItem uuid={item}>
