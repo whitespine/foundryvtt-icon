@@ -6,9 +6,6 @@
     export let power;
 
     let expanded = false;
-    function toggleExpanded() {
-        expanded = !expanded;
-    }
 
     function sendToChat(evt) {
         evt.stopPropagation();

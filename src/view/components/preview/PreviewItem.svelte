@@ -1,47 +1,40 @@
 <script>
     import { slide } from "svelte/transition";
     import { dragAsDoc } from "../../actions/drag";
-    import AbilityDetail from "../combat/AbilityDetail.svelte";
     import { UUIDDocumentStore } from "../../../util/stores";
 
     /** @type {string}*/
     export let uuid;
 
-    let ability = new UUIDDocumentStore(null);
-    $: $ability = uuid;
+    let doc = new UUIDDocumentStore(null);
+    $: $doc = uuid;
 
     let expanded = false;
-    function toggleExpanded() {
-        expanded = !expanded;
-    }
 </script>
 
 <div class="root">
-    {#if $ability}
+    {#if $doc}
         <div
             class="header"
             on:click={() => (expanded = !expanded)}
             data-uuid={uuid}
             draggable="true"
-            use:dragAsDoc={{ doc: $ability }}
+            use:dragAsDoc={{ doc: $doc }}
         >
-            <img class="icon" src={$ability.img} />
+            <img class="icon" src={$doc.img} />
             <span>
-                {$ability.name}
-                -
-                {$ability.system.trait ? "Trait" : "Ability"}
+                <slot name="title" doc={$doc}>
+                    {$doc.name}
+                </slot>
             </span>
             <div style="margin-left: auto">
-                <i class="fas fa-edit fa-lg" on:click={$ability.sheet.render(true, { focus: true })} />
+                <i class="fas fa-edit fa-lg" on:click={$doc.sheet.render(true, { focus: true })} />
                 <slot name="controls" />
             </div>
         </div>
         {#if expanded}
             <div class="description" transition:slide>
-                {#each $ability.system.choices as choice}
-                    <AbilityDetail {choice} />
-                {/each}
-                <div style="float: right" />
+                <slot name="content" doc={$doc}/>
             </div>
         {/if}
     {:else if uuid}

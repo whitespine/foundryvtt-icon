@@ -377,6 +377,11 @@
       "Details": "Details",
       "Abilities": "Abilities",
       "Attributes": "Attributes"
+    },    
+    "BondSheet": {
+      "Details": "Details",
+      "Abilities": "Abilities",
+      "Gear": "Gear"
     },
     "Rolls": {
       "Narrative": {

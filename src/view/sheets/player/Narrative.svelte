@@ -3,8 +3,8 @@
     import { localize } from "../../../util/misc";
     import BoundedNumberDisplay from "../../components/generic/BoundedNumberDisplay.svelte";
     import ActionRating from "../../components/ActionRating.svelte";
-    import PreviewBondPower from "../../components/preview/PreviewBondPower.svelte";
     import { dragAsDoc } from "../../actions/drag";
+    import BondPowerDisplay from "../../components/narrative/BondPowerDisplay.svelte";
 
     let actor = getContext("tjs_actor");
 
@@ -39,7 +39,7 @@
     </div>
     <div class="midcol">
         {#each [...$bond_powers] as bp (bp.id)}
-            <PreviewBondPower power={bp} />
+            <BondPowerDisplay power={bp} />
         {/each}
     </div>
     <div class="rightcol">

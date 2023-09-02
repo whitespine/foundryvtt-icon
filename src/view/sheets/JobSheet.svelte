@@ -7,8 +7,10 @@
     import { localize } from "../../util/misc";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
     import { dropDocs } from "../actions/drop";
-    import PreviewJobAbility from "../components/preview/PreviewJobAbility.svelte";
+    import PreviewItem from "../components/preview/PreviewItem.svelte";
     import { simpleMixUUIDList } from "../actions/util";
+    import { TAB_STORES } from "../../util/stores";
+    import AbilityDetail from "../components/combat/AbilityDetail.svelte";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item");
@@ -19,7 +21,7 @@
         label: localize(s),
         key: s,
     }));
-    let selected_tab = "ICON.JobSheet.Details";
+    let selected_tab = TAB_STORES.get($actor.uuid, "ICON.JobSheet.Details");
 
     function allowDropAbility(drop) {
         // A very simple requirement
@@ -41,7 +43,12 @@
         } else {
             // It's an ability
             $item.update({
-                "system.abilities": simpleMixUUIDList($item.system.abilities, drop.document.uuid, effective_target, true),
+                "system.abilities": simpleMixUUIDList(
+                    $item.system.abilities,
+                    drop.document.uuid,
+                    effective_target,
+                    true
+                ),
             });
         }
     }
@@ -64,31 +71,36 @@
             <input name="name" type="text" use:updateDoc={{ doc, path: "name" }} />
         </div>
         <div style="grid-area: tabs">
-            <Tabs horizontal={false} {tabs} bind:selected={selected_tab} />
+            <Tabs horizontal={false} {tabs} bind:selected={$selected_tab} />
         </div>
     </header>
 
     <!-- Sheet Body -->
     <section class="sheet-body" use:dropDocs={{ handle: handleDropAbility, allow: allowDropAbility }}>
-        {#if selected_tab === "ICON.JobSheet.Details"}
+        {#if $selected_tab === "ICON.JobSheet.Details"}
             <div class="flexcol">
                 <h3>Description:</h3>
                 <ProseMirrorEditor doc={$doc} path={"system.description"} />
             </div>
-        {:else if selected_tab === "ICON.JobSheet.Abilities"}
+        {:else if $selected_tab === "ICON.JobSheet.Abilities"}
             <div class="flexcol">
                 {#each [["Limit Break", [$item.system.limit_break]], ["Traits", $item.system.traits], ["Abilities", $item.system.abilities]] as [category, items]}
                     <h2>{category}</h2>
                     {#each items as item}
-                        <PreviewJobAbility uuid={item}>
+                        <PreviewItem uuid={item}>
                             <svelte:fragment slot="controls">
                                 <i class="fas fa-trash fa-lg" on:click={() => removeAbility(item)} />
                             </svelte:fragment>
-                        </PreviewJobAbility>
+                            <svelte:fragment slot="content" let:item={item}>
+                                {#each item.system.choices as choice}
+                                    <AbilityDetail {choice} />
+                                {/each}
+                            </svelte:fragment>
+                        </PreviewItem>
                     {/each}
                 {/each}
             </div>
-        {:else if selected_tab === "ICON.JobSheet.Attributes"}
+        {:else if $selected_tab === "ICON.JobSheet.Attributes"}
             <div class="flexcol">
                 <label for="color">Color</label>
                 <select name="color" use:updateDoc={{ doc, path: "system.class.color" }}>
