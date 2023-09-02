@@ -3,7 +3,7 @@
   "name": "icon",
   "title": "ICON System",
   "description": "<p>A Foundry VTT game system for <a href=\"https://massif-press.itch.io/icon\">ICON</a> by <a href=\"https://massif-press.itch.io/\">Massif Press</a></p><p>\"ICON for FoundryVTT\" is not an official <i>ICON</i> product; it is a third party work, and is not affiliated with Massif Press.</p><p><i>ICON</i> is copyright Massif Press.</p>",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "authors": [
     {
       "name": "WHITESPINE"
@@ -110,7 +110,7 @@
       "private": false,
       "flags": {}
     },
-{
+    {
       "label": "Jobs",
       "type": "Item",
       "name": "jobs",
@@ -155,7 +155,7 @@
       "private": false,
       "flags": {}
     },
-{
+    {
       "name": "seer-cards",
       "label": "Seer Cards",
       "type": "Cards",
@@ -164,7 +164,7 @@
       "private": false,
       "flags": {}
     },
-{
+    {
       "name": "rules",
       "label": "Rules",
       "type": "JournalEntry",
@@ -173,7 +173,7 @@
       "private": false,
       "flags": {}
     },
-{
+    {
       "name": "effects",
       "label": "Effects",
       "type": "Item",
@@ -182,7 +182,7 @@
       "private": false,
       "flags": {}
     },
-{
+    {
       "name": "bonds",
       "label": "Bonds",
       "type": "Item",
@@ -198,7 +198,7 @@
   "bugs": "https://github.com/whitespine/foundryvtt-icon/issues",
   "changelog": "https://github.com/whitespine/foundryvtt-icon/releases/latest/",
   "manifest": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/system.json",
-  "download": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/icon_0.3.0.zip",
+  "download": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/icon_0.3.1.zip",
   "protected": false,
   "coreTranslation": false,
   "library": false
