@@ -40,7 +40,7 @@
     header {
         display: grid;
         grid-template:
-            "pic power_name" 120px / 120px 1fr;
+            "pic name" 120px / 120px 1fr;
     }
 
     .sheet-body {
