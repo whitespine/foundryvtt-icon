@@ -37,6 +37,7 @@
     $: attack_roll_node = new IcoNode({ 
         tag: "div", 
         formula: attack_roll_formula,
+        rollSize: "large",
         children: [
             new IcoNode({ text: `Attack Roll: ${attack_roll_formula}` })
     ]});

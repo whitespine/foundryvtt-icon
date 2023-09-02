@@ -71,13 +71,19 @@ class RegexTransformer extends Transformer {
 /**
  * @typedef {object} NodeData
  *
- * @property {string} [options.text] The base text
+ * @property {string} [options.tag] Tag, if it is a parent node
+ * 
+ * @property {string} [options.text] Text, if it is a text node. Overridden by tag
  *
- * @property {string} [options.tooltip] What shows on hover
+ * @property {string} [options.tooltip] What shows on hover.
  *
  * @property {object} [options.dragdata] What should be dragged, if anything
  *
- * @property {object} [options.roll] A JSON serialized roll
+ * @property {object} [options.roll] A JSON serialized roll. Overridden by tag
+ * 
+ * @property {object} [options.formula] If provided, the node will act as a clickable roll button
+ * 
+ * @property {"small" | "medium" | "large"} [options.rollSize] Specifications for what size of roll this is / should create
  *
  * @property {object[]} [options.children] Child nodes to create
  */
@@ -130,17 +136,23 @@ export class IcoNode {
          */
         this.dragdata = options.dragdata;
         /**
-         * An embedded roll
+         * An embedded roll to render instead of tag/text
          *
-         * @type {any | undefined}
+         * @type {Roll | undefined}
          */
         this.roll = options.roll ? Roll.fromData(options.roll) : undefined;
         /**
-         * A roll formula
+         * Roll formula if applicable
          *
-         * @type {any | undefined}
+         * @type {NodeData["formula"]}
          */
         this.formula = options.formula;
+        /**
+         * What size of roll this is / should create
+         *
+         * @type {NodeData["rollSize"]}
+         */
+        this.rollSize = options.rollSize;
     }
 
     /** 
@@ -159,6 +171,7 @@ export class IcoNode {
             dragdata: this.dragdata,
             roll: this.roll?.toJSON(),
             formula: this.formula,
+            rollSize: this.rollSize
         };
     }
 

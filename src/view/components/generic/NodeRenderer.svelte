@@ -1,5 +1,6 @@
 <script>
     import { IcoNode } from "../../../util/nlp";
+    import LargeRoll from "./dice/LargeRoll.svelte";
     import MediumRoll from "./dice/MediumRoll.svelte";
     import SmallRoll from "./dice/SmallRoll.svelte";
     import { createEventDispatcher } from "svelte";
@@ -27,6 +28,7 @@
         game.audio.play(CONFIG.sounds.dice, { volume });
         addChild({
             roll: roll.toJSON(),
+            rollSize: node.rollSize
         });
         saveSelf();
     }
@@ -44,8 +46,8 @@
     }
 
     /** Generic click handler, multiplexes to more specific options */
-    function click() {
-        if (node.formula) {
+    function click(event) {
+        if (node.formula && !event.target.closest(".dice-roll")) {
             requestRoll();
         } else if (node.tooltip) {
             postDescription();
@@ -59,7 +61,13 @@
 {#if !node}
     Err
 {:else if node.roll}
-    <MediumRoll roll={node.roll} />
+    {#if node.rollSize === "large"}
+        <LargeRoll roll={node.roll} />
+    {:else if node.rollSize === "medium"}
+        <MediumRoll roll={node.roll} />
+    {:else}
+        <SmallRoll roll={node.roll} />
+    {/if}
 {:else if node.tag}
     <svelte:element this={node.tag} on:click={click} class:clickable data-tooltip={node.tooltip ?? null}>
         {#each node.children || [] as child}
