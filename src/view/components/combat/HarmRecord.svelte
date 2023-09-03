@@ -1,6 +1,8 @@
 <script>
     import { ICON } from "../../../consts";
     import * as harm from "../../../util/harm";
+    import { TJSContextMenu } from "#standard/application";
+    import { createEventDispatcher } from "svelte";
 
     /** @type {harm.HarmRecord} */
     export let record;
@@ -13,14 +15,53 @@
     $: {
         tooltip = `${record.harm.original_amount} ${record.harm.type}`;
         let amount = record.harm.original_amount;
-        for(let [cause, delta] of record.harm.deltas) {
+        for (let [cause, delta] of record.harm.deltas) {
             amount += delta;
             tooltip += ` → ${amount} (${delta} ${cause})`;
         }
     }
+
+    let dispatch = createEventDispatcher();
+
+    function summonEditMenu(event) {
+        let items = [];
+
+        // Add a button that removes this entry
+        items.push({
+            label: "Remove",
+            icon: "fas fa-times",
+            onPress: () => {dispatch("delete")},
+        });
+
+        // Add buttons to change type
+        for(let type of ["damage, piercing, divine, vigor"]) {
+            if(record.harm.type === type) continue;
+            items.push({
+                label: `Change type to ${type}`,
+                icon: ICON.css[type],
+                onPress: () => dispatch("changetype", type)
+            })
+        }
+
+        // Add buttons to add or remove flags
+        for(let type of ["damage, piercing, divine, vigor"]) {
+            if(record.harm.type === type) continue;
+            items.push({
+                label: `Change type to ${type}`,
+                icon: ICON.css[type],
+                onPress: () => dispatch("changetype", type)
+            })
+        }
+
+        // Summon the context menu itself
+        TJSContextMenu.create({
+            event,
+            items,
+        });
+    }
 </script>
 
-<div data-tooltip={tooltip}>
+<div data-tooltip={tooltip} on:contextmenu={summonEditMenu}>
     <span class="amount">
         <i class={ICON.css[record.harm.type]} data-tooltip={record.harm.type} />
         {record.harm.amount}
@@ -58,6 +99,10 @@
             span {
                 min-width: 24px;
             }
+        }
+
+        &:hover {
+            font-weight: bolder;
         }
     }
 

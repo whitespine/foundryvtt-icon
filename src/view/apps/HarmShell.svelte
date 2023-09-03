@@ -4,10 +4,10 @@
 <script>
     import { ApplicationShell } from "#runtime/svelte/component/core";
     import { computeHarm, quickDamage } from "../../util/harm";
-    import { SELECTED_TOKENS } from "../../util/stores";
+    import { SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores";
     import HarmControl from "../components/combat/HarmControl.svelte";
 
-    import { slide } from "svelte/transition";
+    import { fade, slide } from "svelte/transition";
 
     export let elementRoot;
 
@@ -17,7 +17,7 @@
     function emitHarm(evt) {
         let { type, value } = evt.detail;
         let items = [];
-        for (let v of $SELECTED_TOKENS.values()) {
+        for (let v of $TARGETED_TOKENS.values()) {
             if (v.actor) items.push([v.actor, computeHarm(v.actor, type, value, [])]);
         }
         if (items.length) {
@@ -31,16 +31,18 @@
 <ApplicationShell bind:elementRoot>
     <main>
         <div class="targs">
+            <span>Origin:</span>
+            <img transition:fade src={$SELECTED_TOKENS.first()?.document.texture?.src ?? "icons/logo-scifi.png"} />
             <span>Targets:</span>
-            {#each $SELECTED_TOKENS as st (st.id)}
+            {#each $TARGETED_TOKENS as st (st.id)}
                 <img
                     transition:slide={{ axis: "x", duration: 200 }}
                     src={st.document.texture?.src}
                     data-tooltip={st.name}
                 />
             {/each}
-            {#if $SELECTED_TOKENS.size === 0}
-                <span>Select tokens to apply damage to</span>
+            {#if $TARGETED_TOKENS.size === 0}
+                <span>Target tokens to apply damage to</span>
             {/if}
         </div>
         <div class="standard">

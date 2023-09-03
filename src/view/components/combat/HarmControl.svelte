@@ -9,7 +9,7 @@
      */
     export let value;
     let svalue;
-    $: svalue = value.toString();
+    $: svalue = value?.toString() ?? 0;
     let smalltext;
     $: smalltext = svalue.length > 1;
 

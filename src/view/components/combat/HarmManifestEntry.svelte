@@ -2,6 +2,7 @@
     import * as harm from "../../../util/harm";
     import HarmRecord from "./HarmRecord.svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
+    import { actorTokenImage } from "../../actions/util";
 
     /** @type {string} */
     export let actor_uuid;
@@ -36,7 +37,7 @@
 <div class="flexcol">
     <div class="header">
         {#if $actor}
-            <img src={$actor.img} class="portrait" />
+            <img src={actorTokenImage($actor)} class="portrait" />
             <span>{$actor.token ? $actor.token.name : $actor.name}</span>
         {:else}
             <span> UNKNOWN TARGET </span>
