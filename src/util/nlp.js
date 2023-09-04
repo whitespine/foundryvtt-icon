@@ -234,7 +234,7 @@ export function setupTransformers() {
     StaticTransformers.push(new RegexTransformer(
         /(\[?fray\]?)/ig,
         (ctx) => {
-            if (ctx.actor.system.class?.fray_damage) {
+            if (ctx.actor?.system.class?.fray_damage) {
                 return [ctx.actor.system.class.fray_damage.toString()];
             } else {
                 return ["fray"];
@@ -246,7 +246,7 @@ export function setupTransformers() {
     StaticTransformers.push(new RegexTransformer(
         /(\[D\])/g,
         (ctx) => {
-            if (ctx.actor.system.class?.damage_die) {
+            if (ctx.actor?.system.class?.damage_die) {
                 return [`d${ctx.actor.system.class.damage_die}`];
             } else {
                 return ["[D]"];

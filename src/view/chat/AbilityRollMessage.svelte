@@ -1,6 +1,7 @@
 <!-- Super simple Svelte component that takes in a prop and outputs it. -->
 <script>
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
+    import { setContext } from "svelte";
     import { IcoNode } from "../../util/nlp";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
     import NodeRenderer from "../components/generic/NodeRenderer.svelte";
@@ -24,9 +25,13 @@
     let item = new TJSDocument(undefined);
     $: item.set(fromUuidSync(flags.ability_uuid) ?? undefined);
 
-    // Setup context
+    // Deduce the actor
     let actor = new TJSDocument(undefined);
     $: actor.set($item?.actor ?? undefined);
+
+    // Setup context
+    setContext("tjs_actor", actor);
+    setContext("tjs_item", item);
 
     // Shorthand for the selected choice
     let choice = null;
