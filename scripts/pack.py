@@ -104,4 +104,4 @@ if new_version:
     print("Released!")
 
 # Clean up temporary dir
-# shutil.rmtree(tmp_dir)
+shutil.rmtree(tmp_dir)
