@@ -70,9 +70,9 @@
         {#each item.system.ranks.slice(0, item.system.rank.value) as rank, i}
             <div class="rank" class:bottomed={i < item.system.rank}>
                 <div>
-                    <RichTextDisplay body={rank} />
+                    <RichTextDisplay body={rank.text} />
                 </div>
-                <i class="fas fa-dice-d20" on:click={() => postRank(i)} data-tooltip="Activate" />
+                <i class="fas fa-xl fa-dice-d20" on:click={() => postRank(i)} data-tooltip="Activate" />
             </div>
         {/each}
     {/if}

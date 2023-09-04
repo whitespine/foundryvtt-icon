@@ -126,7 +126,7 @@
                     {/if}
                 </div>
                 {#each relic.system.ranks.slice(0, relic.system.rank.value) as rank}
-                    {@html rank}
+                    {@html rank.text}
                 {/each}
             </div>
         {/each}
