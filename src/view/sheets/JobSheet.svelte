@@ -30,7 +30,7 @@
     function handleDropAbility(drop, event) {
         // Just add it to the end of the list
         let effective_target = event.target.closest("[data-uuid]")?.dataset.uuid;
-        if (drop.document.system.choices.some((x) => x.is_limit_break)) {
+        if (drop.document.system.choices.some((x) => x.limit_break)) {
             // It's a limit break
             $item.update({
                 "system.limit_break": drop.document.uuid,

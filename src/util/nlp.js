@@ -193,43 +193,6 @@ export class IcoNode {
  * Initializes our transformer pipeline once all translations are available
  */
 export function setupTransformers() {
-    // Do some stuff generic from our localizations
-    let definitions = {};
-    for (let [k, v] of [
-        ...Object.entries(game.i18n.translations.ICON.Glossary),
-        ...Object.entries(game.i18n.translations.ICON.Statuses),
-        ...Object.entries(game.i18n.translations.ICON.Effects),
-    ]) {
-        // Un-camel-case it
-        let name = k.replaceAll(/([a-z])([A-Z])/g, "$1 $2");
-
-        // Exclude ones that have bespoke logic
-        const exclusions = ["fray", "gamble"];
-        if (exclusions.includes(name.toLowerCase())) {
-            continue;
-        }
-
-        // Assign to definitions
-        definitions[name] = v;
-    }
-
-    // Build a transformer for each definition
-    for (let [k, v] of Object.entries(definitions)) {
-        StaticTransformers.push(new RegexTransformer(
-            new RegExp(`(${k})`, "i"),
-            (_c, [text]) => [new IcoNode({
-                tag: "span",
-                tooltip: v,
-                children: [
-                    new IcoNode({
-                        text
-                    })
-                ]
-            })]
-        ));
-    }
-
-    // And some more specific ones
     // Substitute fray damage
     StaticTransformers.push(new RegexTransformer(
         /(\[?fray\]?)/ig,

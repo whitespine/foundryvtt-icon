@@ -47,7 +47,9 @@
 
     /** Generic click handler, multiplexes to more specific options */
     function click(event) {
-        if (node.formula && !event.target.closest(".dice-roll")) {
+        if(event.target.closest(".dice-roll, .inline-roll")) return;
+
+        if (node.formula) {
             requestRoll();
         } else if (node.tooltip) {
             postDescription();
@@ -75,7 +77,12 @@
         {/each}
     </svelte:element>
 {:else}
-    {node.text}
+    <!-- svelte-ignore missing-declaration -->
+    {#await TextEditor.enrichHTML(node.text, {async: false, rolls: false})}
+        {node.text} 
+    {:then enriched} 
+        {@html enriched} 
+    {/await}
 {/if}
 
 <style lang="scss">
