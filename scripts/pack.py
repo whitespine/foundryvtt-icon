@@ -85,6 +85,7 @@ shutil.copy(proj_root / "index.js", tmp_dir / "index.js")
 shutil.copy(proj_root / "index.js.map", tmp_dir / "index.js.map")
 shutil.copytree(proj_root / "packs", tmp_dir / "packs")
 shutil.copytree(proj_root / "lang", tmp_dir / "lang")
+shutil.copytree(proj_root / "Book Art", tmp_dir / "Book Art")
 
 # Clean up detritus
 for root, dirs, files in os.walk(tmp_dir / "packs"):
