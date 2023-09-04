@@ -26,7 +26,7 @@ export default class TJSDocSheet extends SvelteApplication {
     let buttons = [...super._getHeaderButtons()];
     if (this.doc instanceof Actor) {
       // Ripped from foundy
-      const canConfigure = game.user.isGM || (this.actor.isOwner && game.user.can("TOKEN_CONFIGURE"));
+      const canConfigure = game.user.isGM || (this.doc.isOwner && game.user.can("TOKEN_CONFIGURE"));
       if (canConfigure) {
         const closeIndex = buttons.findIndex((btn) => btn.label === "Close");
         buttons.splice(closeIndex, 0, {
