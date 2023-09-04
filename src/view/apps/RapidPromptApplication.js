@@ -4,8 +4,7 @@ import RapidPromptShell from "./RapidPromptShell.svelte";
 /**
  * Provides a dialog for creating documents that by default is modal and not draggable.
  */
-export class RapidPromptApplication extends TJSDialog
-{
+export class RapidPromptApplication extends TJSDialog {
    /**
     * Prompts the user for data
     *
@@ -13,10 +12,8 @@ export class RapidPromptApplication extends TJSDialog
     *
     * @param {import('#svelte-fvtt/application').TJSDialogOptions} [dialogData] - Optional data to modify dialog.
     */
-   constructor(data_type, dialogData = {})
-   {
-      if (["text" | "number"].includes(data_type))
-      {
+   constructor(data_type, dialogData = {}) {
+      if (["text" | "number"].includes(data_type)) {
          console.warn(`RapidPromptApplication - invalid type ${data_type}`);
          return null;
       }
@@ -60,10 +57,11 @@ export class RapidPromptApplication extends TJSDialog
     * 
     * @param {import('#svelte-fvtt/application').TJSDialogOptions} [dialogData] - Optional data to modify dialog.
     * 
+    * @param dialog_data
+    *
     * @returns {string | number | null} The value, or null if the user cancelled the prompt
     */
-   static async show(data_type, dialog_data = {})
-   {
+   static async show(data_type, dialog_data = {}) {
       return new RapidPromptApplication(data_type, dialog_data).wait();
    }
 }
