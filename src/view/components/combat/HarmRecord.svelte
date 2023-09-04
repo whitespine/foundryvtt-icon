@@ -34,22 +34,22 @@
         });
 
         // Add buttons to change type
-        for(let type of ["damage, piercing, divine, vigor"]) {
+        for(let type of ["damage", "piercing", "divine", "vigor"]) {
             if(record.harm.type === type) continue;
             items.push({
                 label: `Change type to ${type}`,
                 icon: ICON.css[type],
-                onPress: () => dispatch("changetype", type)
+                onPress: (...x) => [console.log(x), dispatch("changetype", type)]
             })
         }
 
         // Add buttons to add or remove flags
-        for(let type of ["damage, piercing, divine, vigor"]) {
-            if(record.harm.type === type) continue;
+        for(let flag of ["resistance", "immune", "vulnerable", "weakened", "pacified"]) {
+            let exists = record.harm.flags.includes(flag);
             items.push({
-                label: `Change type to ${type}`,
-                icon: ICON.css[type],
-                onPress: () => dispatch("changetype", type)
+                label: `Set ${flag} -> ${exists ? 'off' : 'on'}`,
+                icon: ICON.css[flag],
+                onPress: () => dispatch("toggleflag", flag)
             })
         }
 
@@ -61,7 +61,7 @@
     }
 </script>
 
-<div data-tooltip={tooltip} on:contextmenu={summonEditMenu}>
+<div data-tooltip={tooltip} on:contextmenu|preventDefault|stopPropagation={summonEditMenu}>
     <span class="amount">
         <i class={ICON.css[record.harm.type]} data-tooltip={record.harm.type} />
         {record.harm.amount}

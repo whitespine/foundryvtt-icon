@@ -14,11 +14,21 @@ export const ICON = {
         status_ongoing: "status_ongoing"
     },
     css: {
+        // Resources
         hp: "fas fa-heart",
+
+        // Damage types
         damage: "fas fa-burst",
         piercing: "fas fa-shield-slash",
         divine: "fas fa-stars",
-        vigor: "fas fa-shield-plus"
+        vigor: "fas fa-shield-plus",
+
+        // Attack modifiers
+        resistance: "fas fa-solid fa-shield-halved",
+        immune: "fas fa-shield-cross",
+        vulnerable: "fas fa-shield-slash",
+        weakened: "fas fa-hexagon-minus",
+        pacified: "fas fa-peace",
     },
 };
 
