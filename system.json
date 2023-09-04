@@ -174,10 +174,10 @@
       "flags": {}
     },
     {
-      "name": "effects",
-      "label": "Effects",
-      "type": "Item",
-      "path": "packs/effects",
+      "name": "glossary",
+      "label": "Glossary",
+      "type": "JournalEntry",
+      "path": "packs/glossary",
       "system": "icon",
       "private": false,
       "flags": {}
