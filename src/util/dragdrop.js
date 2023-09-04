@@ -79,11 +79,11 @@ export async function resolveNativeDrop(drop) {
         parsed_drop = safeParseJSON(drop);
     }
     if (parsed_drop.uuid) {
-parsed_drop = parsed_drop.uuid;
-}
-    if (!parsed_drop && typeof drop == "string") {
+        parsed_drop = parsed_drop.uuid;
+    }
+    if (typeof parsed_drop == "string") {
         // Either wasn't an object, or failed to parse to be one from a stringAttempt uuid route
-        let document = await fromUuid(drop);
+        let document = await fromUuid(parsed_drop);
         if (!document) {
             return null;
         }
@@ -108,7 +108,7 @@ parsed_drop = parsed_drop.uuid;
                 document,
             };
         }
-    } 
+    }
     return null;
 }
 

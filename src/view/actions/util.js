@@ -111,7 +111,6 @@ export function simpleMixUUIDList(existing_list, new_item, insertion_point, repl
 export function actorTokenImage(actor) {
     const def = "icons/svg/mystery-man.svg";
     const filter = (s) => (s && (s !== def)) ? s : null;
-    debugger;
     if (actor instanceof foundry.documents.BaseToken) {
         // It's a token!
         return filter(actor.texture?.src) ?? filter(actor.actor?.prototypeToken?.texture?.src) ?? filter(actor.actor?.img) ?? def;
