@@ -49,14 +49,31 @@
                     </div>
                 </div>
             {:else if $selected_tab === "ICON.Relics.Mechanics"}
-                <h3>Rank 1:</h3>
-                <ProseMirrorEditor doc={$doc} path={"system.ranks.0"} />
-                <h3>Rank 2:</h3>
-                <ProseMirrorEditor doc={$doc} path={"system.ranks.1"} />
-                <h3>Rank 3:</h3>
-                <ProseMirrorEditor doc={$doc} path={"system.ranks.2"} />
-                <h3>Aspected:</h3>
-                <ProseMirrorEditor doc={$doc} path={"system.ranks.3"} />
+                {#each ["1", "2", "3", "Aspected"] as rank_name, rank_index}
+                    <div class="rank">
+                        <h3 style="grid-area: header;">Rank {rank_name}:</h3>
+                        <div style="grid-area: body;">
+                            <ProseMirrorEditor doc={$doc} path={`system.ranks.${rank_index}.text`} />
+                        </div>
+                        <span>Attack Invoke:</span>
+                        <input
+                            type="number"
+                            use:updateDoc={{ doc, path: `system.ranks.${rank_index}.attack_invoke` }}
+                            placeholder="-1 to disable"
+                        />
+                        <span>Round Invoke:</span>
+                        <input
+                            type="number"
+                            use:updateDoc={{ doc, path: `system.ranks.${rank_index}.round_invoke` }}
+                            placeholder="-1 to disable"
+                        />
+                        <span>Show Gambit Tracker:</span>
+                        <input
+                            type="checkbox"
+                            use:updateDoc={{ doc, path: `system.ranks.${rank_index}.gambit` }}
+                        />
+                    </div>
+                {/each}
             {:else}
                 <span> ERROR {$selected_tab}</span>
             {/if}
@@ -66,7 +83,6 @@
 
 <style lang="scss">
     main {
-        background-color: #99d9ea;
         height: 100%;
         overflow: auto;
         display: flex;
@@ -82,5 +98,14 @@
         padding: 5px;
         flex: 1 0 auto;
         max-height: calc(100% - 140px);
+    }
+
+    .rank {
+        display: grid;
+        align-items: center;
+        grid-template:
+            "header header header header header header" 1fr
+            "body   body   body   body   body   body"   1fr
+            "atk_m  atk_f  rnd_m  rnd_f  gmb_m  gmb_f"  1fr / 1fr 1fr 1fr 1fr 1fr 1fr;
     }
 </style>
