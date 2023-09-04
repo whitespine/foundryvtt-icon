@@ -3,11 +3,14 @@
     import HarmRecord from "./HarmRecord.svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
     import { actorTokenImage } from "../../actions/util";
+    import { getContext } from "svelte";
 
     /** @type {string} */
     export let actor_uuid;
 
     let actor = new TJSDocument(fromUuidSync(actor_uuid) ?? undefined);
+
+    let tjs_msg = getContext("tjs_msg");
 
     /** @type {harm.HarmRecord[]} */
     export let records;
@@ -18,8 +21,9 @@
 
     /** @type {boolean} */
     let can_apply;
-    $: can_apply = last_record && (
-        last_record.final_hp != $actor?.system.hp.value || last_record.final_vigor != $actor?.system.vigor.value);
+    $: can_apply =
+        last_record &&
+        (last_record.final_hp != $actor?.system.hp.value || last_record.final_vigor != $actor?.system.vigor.value);
 
     /** @type {boolean} */
     let can_see;
@@ -31,6 +35,49 @@
             "system.hp.value": last_record.final_hp,
             "system.vigor.value": last_record.final_vigor,
         });
+    }
+
+    // Replaces this harm manifest with a new one
+    async function updateRecords(new_records) {
+        let curr = await harm.getHarmManifest($tjs_msg);
+        harm.setHarmManifest($tjs_msg, {
+            ...curr,
+            [$actor.uuid]: new_records,
+        });
+    }
+
+    // Delete the harm at the specified index
+    function deleteHarm(index) {
+        updateRecords([...records.slice(0, index), ...records.slice(index + 1)]);
+    }
+
+    // Add specified flag to harm at specified index
+    function toggleFlag(index, flag) {
+        let old_record = records[index];
+        let new_flags = old_record.harm.flags.includes(flag)
+            ? old_record.harm.flags.filter((f) => f != flag)
+            : [...old_record.harm.flags, flag];
+        let new_record = {
+            ...old_record,
+            harm: {
+                ...old_record.harm,
+                flags: new_flags,
+            },
+        };
+        updateRecords([...records.slice(0, index), new_record, ...records.slice(index + 1)]);
+    }
+
+    // Set the damage type at specified index
+    function setType(index, type) {
+        let old_record = records[index];
+        let new_record = {
+            ...old_record,
+            harm: {
+                ...old_record.harm,
+                type,
+            },
+        };
+        updateRecords([...records.slice(0, index), new_record, ...records.slice(index + 1)]);
     }
 </script>
 
@@ -46,7 +93,13 @@
 
     {#each records as rec, i (i)}
         <div>
-            <HarmRecord record={rec} obscure={!can_see} />
+            <HarmRecord
+                record={rec}
+                obscure={!can_see}
+                on:changetype={(evt) => setType(i, evt.detail)}
+                on:delete={() => deleteHarm(i)}
+                on:toggleflag={(evt) => toggleFlag(i, evt.detail)}
+            />
         </div>
     {/each}
 

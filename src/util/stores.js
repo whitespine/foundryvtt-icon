@@ -73,17 +73,19 @@ Hooks.on("controlToken", (token, controlled) => {
 });
 
 Hooks.on("targetToken", (user, token, targeted) => {
-    if(user._id != game.user.id) return; // Not us
+    if (user._id != game.user.id) {
+        return;
+    } // Not us
     if (targeted) {
         TARGETED_TOKENS.update((s) => {
             s.add(token);
             return s;
-        })
+        });
     } else {
         TARGETED_TOKENS.update((s) => {
             s.delete(token);
             return s;
-        })
+        });
     }
 });
 
@@ -101,21 +103,22 @@ export class UUIDDocumentStore {
     /**
      * 
      * @param {string} document The new uuid, a document, or null/undefined
+     *
      * @param {object} options Options to pass to underlying TJSDocument store
      */
     set(document, options = {}) {
         // Attempt to resolve before passing down to wrapped store
-        if(document instanceof foundry.abstract.Document) {
+        if (document instanceof foundry.abstract.Document) {
             this.uuid = document.uuid;
             this.wrapped_store.set(document, options);
-        } else if(typeof document === "string") {
+        } else if (typeof document === "string") {
             this.uuid = document;
-            fromUuid(document).then(x => {
+            fromUuid(document).then((x) => {
                 // Only proceed if uuids still match
-                if(this.uuid === document) {
+                if (this.uuid === document) {
                     this.wrapped_store.set(x ? x : undefined, options);
                 }
-            })
+            });
         } else {
             // Just set as undefined
             this.uuid = null;

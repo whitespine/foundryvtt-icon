@@ -30,27 +30,35 @@
         items.push({
             label: "Remove",
             icon: "fas fa-times",
-            onPress: () => {dispatch("delete")},
+            onPress: () => {
+                dispatch("delete");
+            },
+        });
+        items.push({
+            separator: "hr"
         });
 
         // Add buttons to change type
-        for(let type of ["damage", "piercing", "divine", "vigor"]) {
-            if(record.harm.type === type) continue;
+        for (let type of ["damage", "piercing", "divine", "vigor"]) {
+            if (record.harm.type === type) continue;
             items.push({
-                label: `Change type to ${type}`,
+                label: `Change to ${type}`,
                 icon: ICON.css[type],
-                onPress: (...x) => [console.log(x), dispatch("changetype", type)]
-            })
+                onPress: (...x) => [console.log(x), dispatch("changetype", type)],
+            });
         }
+       items.push({
+            separator: "hr"
+        });
 
         // Add buttons to add or remove flags
-        for(let flag of ["resistance", "immune", "vulnerable", "weakened", "pacified"]) {
+        for (let flag of ["resistance", "immune", "vulnerable", "weakened", "pacified"]) {
             let exists = record.harm.flags.includes(flag);
             items.push({
-                label: `Set ${flag} -> ${exists ? 'off' : 'on'}`,
+                label: `${exists ? "-" : "+"}${flag}`,
                 icon: ICON.css[flag],
-                onPress: () => dispatch("toggleflag", flag)
-            })
+                onPress: () => dispatch("toggleflag", flag),
+            });
         }
 
         // Summon the context menu itself
@@ -64,7 +72,10 @@
 <div data-tooltip={tooltip} on:contextmenu|preventDefault|stopPropagation={summonEditMenu}>
     <span class="amount">
         <i class={ICON.css[record.harm.type]} data-tooltip={record.harm.type} />
-        {record.harm.amount}
+        {record.harm.original_amount}
+        {#if record.harm.amount !== record.harm.original_amount}
+            ({record.harm.amount})
+        {/if}
     </span>
     {#if obscure}
         <span>
@@ -87,6 +98,13 @@
                 <span>{record.original_vigor}</span> → <span>{record.final_vigor}</span>
             </span>
         {/if}
+    {/if}
+    {#if record.harm.flags.length}
+        <span class="flags">
+            {#each record.harm.flags as flag}
+                <i class={ICON.css[flag]} />
+            {/each}
+        </span>
     {/if}
 </div>
 
@@ -122,6 +140,11 @@
     }
 
     .vigor {
+        padding-left: 6px;
+        border-left: var(--primary-border);
+    }
+
+    .flags {
         padding-left: 6px;
         border-left: var(--primary-border);
     }

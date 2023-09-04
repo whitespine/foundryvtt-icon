@@ -42,16 +42,16 @@ export class RelicModel extends ItemModel {
     
     static migrateData(data) {
         // We made ranks slightly more complex over time
-        if(data.ranks) {
-            data.ranks = data.ranks.map(possibly_string => {
-                if(typeof possibly_string === "string") {
+        if (data.ranks) {
+            data.ranks = data.ranks.map((possibly_string) => {
+                if (typeof possibly_string === "string") {
                     return {
                         text: possibly_string
                     };
                 } else {
                     return possibly_string;
                 }
-            })
+            });
         }
 
     }

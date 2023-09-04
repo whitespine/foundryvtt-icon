@@ -12,6 +12,8 @@
     let flags;
     $: flags = $tjs_msg.flags[game.system.id] ?? {};
 
+    setContext("tjs_msg", tjs_msg);
+
     /**
      * The displayed harm manifest, un-slugified
      * @type {harm.HarmManifest}

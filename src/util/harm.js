@@ -293,7 +293,7 @@ export async function applyManifest(harm_manifest) {
  * Assumes a manifest whose HarmInstances have been edited in place.
  * Rebuilds its harm records from the embedded harm instances.
  * 
- * @param {HarmManifest} manifest The manifest to rebuild
+ * @param {HarmManifest} manifest The manifest to rebuild. 
  *
  * @returns {HarmManifest} New manfiest
  */
@@ -305,7 +305,7 @@ export function replayManifest(manifest) {
             ui.notifications.warn(`Could not resolve actor ${uuid}`);
             continue;
         }
-        new_manifest[uuid] = planHarm(actor, records.map((r) => r.harm));
+        new_manifest[uuid] = planHarm(actor, records.map((r) => computeHarm(actor, r.harm.type, r.harm.original_amount, r.harm.flags)));
     }
     return new_manifest;
 }
@@ -331,35 +331,32 @@ export async function getCurrentHarmManifestMessage() {
 }
 
 /**
- * Performs the following
- * 1. Gets the most recent harm manifest message
- * 2. Modifies it to include the provided harm instance
- * Does not actually modify the actor.
- * 
- * @param {Array<[IconActor, HarmInstance]>} harms 
+ * Get or create the most recent HarmManifest manifest
+ *
+ * @param {Message} [message] The message to extract from. If not provided, uses most recent harm manifest message
+ *
+ * @returns {Promise<HarmManifest>} manifest Its manifest, {} if new
  */
-export async function quickDamage(harms) {
-    let message = await getCurrentHarmManifestMessage();
+export async function getHarmManifest(message = null) {
+    message = message ?? await getCurrentHarmManifestMessage();
 
     /** @type {HarmManifest} */
     let manifest = message.getFlag(game.system.id, "harm_manifest") ?? {};
     manifest = simpleUnslugifyObject(manifest);
 
-    // Create a temporary new manifest entry
-    for (let [actor, harm_instance] of harms) {
-        if (!manifest[actor.uuid]) {
-            manifest[actor.uuid] = [];
-        }
-        manifest[actor.uuid] = [...manifest[actor.uuid],
-        {
-            harm: harm_instance,
-            actor: actor.uuid,
-            final_hp: -1,
-            final_vigor: -1,
-            original_hp: -1,
-            original_vigor: -1
-        }];
-    }
+    return manifest;
+}
+
+/**
+ * Update (or create) the current harm manifest with new records 
+ *
+ * @param {Message} message The message to update, or null for current
+ *
+ * @param {HarmManifest} manifest The new/updated manifest
+ */
+export async function setHarmManifest(message, manifest) {
+    // Get the message
+    message = message ?? await getCurrentHarmManifestMessage();
 
     // Replay the manifest
     manifest = replayManifest(manifest);
@@ -370,4 +367,33 @@ export async function quickDamage(harms) {
     await adminUpdateMessage(message, {
         [`flags.${game.system.id}.harm_manifest`]: manifest
     });
+}
+
+
+/**
+ * Performs the following
+ * 1. Gets the most recent harm manifest message
+ * 2. Modifies it to include the provided harm instance
+ * Does not actually modify the actor.
+ * 
+ * @param {Array<[IconActor, HarmInstance]>} harms 
+ */
+export async function quickDamage(harms) {
+    let manifest = await getHarmManifest();
+
+    // Create a temporary new manifest entry
+    for (let [actor, harm_instance] of harms) {
+        if (!manifest[actor.uuid]) {
+            manifest[actor.uuid] = [];
+        }
+        manifest[actor.uuid] = [
+            ...manifest[actor.uuid],
+            {
+                harm: harm_instance
+            }
+        ];
+    }
+
+    // Replay the manifest
+    await setHarmManifest(null, manifest);
 }
