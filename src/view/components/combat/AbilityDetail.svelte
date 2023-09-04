@@ -23,11 +23,13 @@
         <span>
             {#if choice.interrupt > 0}
                 Interrupt {choice.interrupt}
-            {:else if choice.actions == 0}
+            {:else if choice.actions === -1}
+                <!-- Not an action -->
+            {:else if choice.actions === 0}
                 Free Action
-            {:else if choice.actions == 1}
+            {:else if choice.actions === 1}
                 1 Action
-            {:else if choice.actions == 2}
+            {:else if choice.actions === 2}
                 2 Actions
             {/if}
 

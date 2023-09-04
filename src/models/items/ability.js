@@ -12,8 +12,8 @@ export class AbilityChoiceField extends fields.SchemaField {
             name: new fields.StringField({ nullable: true, initial: null }),
             // Its description
             description: new fields.HTMLField(),
-            // How many actions does it take? Null if not an action (e.x. a trait description)
-            actions: new fields.NumberField({ nullable: true, integer: true, min: 0, max: 2, initial: 1 }),
+            // How many actions does it take? -1 if not an action (e.x. a trait description)
+            actions: new fields.NumberField({ nullable: false, integer: true, min: -1, max: 2, initial: 1 }),
             // Is it a round action?
             round_action: new fields.BooleanField({ initial: false }),
             // What is/are its listed range(s)?
