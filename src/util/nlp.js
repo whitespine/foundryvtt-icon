@@ -219,7 +219,7 @@ export function setupTransformers() {
 
     // Make dice formulae in angle brackets rollable
     StaticTransformers.push(new RegexTransformer(
-        /\[\[(\S+)\]\]/g,
+        /\{(\S+)\}/g,
         (ctx, m) => [
             new IcoNode({
                 tag: "span",
