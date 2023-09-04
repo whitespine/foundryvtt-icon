@@ -14,13 +14,6 @@
     let flags = {};
     $: flags = $tjs_msg.flags[game.system.id] ?? {};
 
-    /**
-     * Attack roll formula, which may or may not be used
-     * @type {string}
-     */
-    let attack_roll_formula;
-    $: attack_roll_formula = flags.boon === 0 ? "1d20" : flags.boon > 0 ? `1d20 + ${flags.boon}d6kh1` : `1d20 - ${-flags.boon}d6kh1`;
-
     // Deduce the item
     let item = new TJSDocument(undefined);
     $: item.set(fromUuidSync(flags.ability_uuid) ?? undefined);
@@ -39,13 +32,12 @@
 
     // Defaults for our nodes etc
     let attack_roll_node = null;
-    $: attack_roll_node = new IcoNode({ 
-        tag: "div", 
-        formula: attack_roll_formula,
-        rollSize: "large",
-        children: [
-            new IcoNode({ text: `Attack Roll: ${attack_roll_formula}` })
-    ]});
+    $: attack_roll_node = flags.roll
+        ? new IcoNode({
+              roll: flags.roll,
+              rollSize: "large",
+          })
+        : null;
 
     /**
      * For ability roll persistence etc
@@ -53,7 +45,7 @@
      */
     let overrides = {};
     $: {
-        for(let [k, v] of Object.entries(flags.nodes ?? {})) {
+        for (let [k, v] of Object.entries(flags.nodes ?? {})) {
             overrides[k] = new IcoNode(v);
         }
     }
@@ -67,8 +59,8 @@
 
 <div class="icon flexcol">
     {#if item}
-        {#if choice?.is_attack}
-            <NodeRenderer node={attack_roll_node} on:savenode={(evt) => persist("attack", evt.detail)} />
+        {#if attack_roll_node}
+            <NodeRenderer node={attack_roll_node} />
         {/if}
 
         {#if choice}

@@ -11,19 +11,22 @@
     // Roll a specific ability
     async function rollChoice(index) {
         let choice = item.system.choices[index];
-        let boon = 0;
+        let attack = null;
         // Prompt boon if we are an attack
         if (choice.is_attack) {
-            boon = await BoonBaneApplication.promptBoonBane({
+            let boon = await BoonBaneApplication.promptBoonBane({
                 content: `Select Boons/Banes for ${choice.name} Attack Roll`,
             });
+            let attack_roll_formula = boon === 0 ? "1d20" : boon > 0 ? `1d20 + ${boon}d6kh1` : `1d20 - ${-boon}d6kh1`;
+            attack = new Roll(attack_roll_formula);
+            await attack.roll();
         }
         await ChatMessage.create({
             [`flags.${game.system.id}`]: {
                 svelte_msg_type: "ability",
                 ability_uuid: item.uuid,
                 choice_index: index,
-                boon,
+                roll: attack,
             },
         });
     }
