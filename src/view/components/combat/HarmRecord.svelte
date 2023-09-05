@@ -113,10 +113,6 @@
         padding: 0px;
         span {
             display: inline-block;
-
-            span {
-                min-width: 24px;
-            }
         }
 
         &:hover {
@@ -142,6 +138,7 @@
     .vigor {
         padding-left: 6px;
         border-left: var(--primary-border);
+        min-width: 40px;
     }
 
     .flags {

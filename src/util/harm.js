@@ -43,7 +43,7 @@ export async function showHarmApplication() {
  * 
  * @property {number} amount The numeric change that is to be applied
  * 
- * @property {Array<"resistance" | "immune" | "vulnerable" | "weakened" | "pacified">} flags 
+ * @property {Array<"resistance" | "immune" | "shattered" | "vulnerable" | "weakened" | "pacified">} flags 
  *           All auxilary effects on damage, tracked so we can cycle them and sanely track the value.
  */
 
@@ -228,7 +228,7 @@ export function planHarm(actor, harm_instances) {
             if (final_vigor > actor.system.class.vitality ?? 0) { // If no vitality, forbid
                 final_vigor = actor.system.class.vitality ?? 0;
             }
-        } else if (type === "divine") {
+        } else if (type === "divine" || type === "piercing" || harm_instance.flags.includes("shattered")) {
             // Ignores vigor
             final_hp = step_original_hp - amount;
             if (final_hp < 0) {
@@ -396,4 +396,38 @@ export async function quickDamage(harms) {
 
     // Replay the manifest
     await setHarmManifest(null, manifest);
+}
+
+/**
+ * 
+ * @param {Actor} actor Actor to check effects on
+ * @returns {HarmInstance["flags"]} Relevant flags on the attacker
+ */
+export function flagsForAttacker(actor) {
+    /** @type {HarmInstance["flags"]} */
+    let result = []
+    if(actor.effects.some(e => e.name === "Weakened")) {
+        result.push("weakened")
+    }
+    if(actor.effects.some(e => e.name === "Pacified")) {
+        result.push("pacified")
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param {Actor} actor Actor to check effects on
+ * @returns {HarmInstance["flags"]} Relevant flags on the defender
+ */
+export function flagsForDefender(actor) {
+    /** @type {HarmInstance["flags"]} */
+    let result = []
+    if(actor.effects.some(e => e.name === "Vulnerable")) {
+        result.push("vulnerable")
+    }
+    if(actor.effects.some(e => e.name === "Shattered")) {
+        result.push("shattered")
+    }
+    return result;
 }

@@ -3,7 +3,7 @@
 
 <script>
     import { ApplicationShell } from "#runtime/svelte/component/core";
-    import { computeHarm, quickDamage } from "../../util/harm";
+    import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../util/harm";
     import { SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores";
     import HarmControl from "../components/combat/HarmControl.svelte";
 
@@ -17,8 +17,14 @@
     function emitHarm(evt) {
         let { type, value } = evt.detail;
         let items = [];
-        for (let v of $TARGETED_TOKENS.values()) {
-            if (v.actor) items.push([v.actor, computeHarm(v.actor, type, value, [])]);
+        for (let target of $TARGETED_TOKENS.values()) {
+            if (target.actor) {
+                let flags = flagsForDefender(target.actor);
+                if($SELECTED_TOKENS.first().actor) {
+                    flags.push(...flagsForAttacker($SELECTED_TOKENS.first().actor));
+                }
+                items.push([target.actor, computeHarm(target.actor, type, value, flags)]);
+            }
         }
         if (items.length) {
             quickDamage(items);
