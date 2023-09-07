@@ -39,7 +39,9 @@ export class FoeModel extends ActorModel {
 
             // Class is built directly into the foe
             class: new ClassField(),
-            hp_multiplier: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 4, min: 1 }),
+
+            // If set & nonzero, use this instead of 4*VIT
+            hp_max_override: new foundry.data.fields.NumberField({ nullable: false, integer: true, initial: 0, min: 0 }),
 
             // Mutable stats:
             hp: new FakeBoundedNumberField(),
@@ -55,7 +57,7 @@ export class FoeModel extends ActorModel {
 
     prepareDerivedData() {
         // Initialize our fields
-        this.hp.max = this.class.vitality * this.hp_multiplier;
+        this.hp.max = this.hp_max_override || (this.class.vitality * 4);
         if (this._source.hp === null) {
             this.hp.value = this.hp.max;
         }
