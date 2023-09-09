@@ -5,7 +5,7 @@
     import { localize } from "../../util/misc";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
-    import { TAB_STORES } from "../../util/stores";
+    import { TAB_STORES } from "../../util/stores/tabs";
     import BoundedNumberDisplay from "../components/generic/BoundedNumberDisplay.svelte";
 
     let actor = getContext("tjs_actor");

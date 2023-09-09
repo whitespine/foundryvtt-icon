@@ -10,7 +10,7 @@
     import { dragAsDoc } from "../actions/drag";
     import Progression from "./player/Progression.svelte";
     import Narrative from "./player/Narrative.svelte";
-    import { TAB_STORES } from "../../util/stores";
+    import { TAB_STORES } from "../../util/stores/tabs";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias

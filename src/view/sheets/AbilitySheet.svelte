@@ -6,7 +6,7 @@
     import EditableDocArray from "../components/generic/EditableDocArray.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
-    import { TAB_STORES } from "../../util/stores";
+    import { TAB_STORES } from "../../util/stores/tabs";
     import ActorUuidReference from "../components/combat/ActorUUIDReference.svelte";
 
     let actor = getContext("tjs_actor");

@@ -4,7 +4,7 @@
 <script>
     import { ApplicationShell } from "#runtime/svelte/component/core";
     import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../util/harm";
-    import { SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores";
+    import { SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores/tokens";
     import HarmControl from "../components/combat/HarmControl.svelte";
 
     import { fade, slide } from "svelte/transition";

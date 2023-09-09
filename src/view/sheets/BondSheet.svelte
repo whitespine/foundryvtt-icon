@@ -6,7 +6,7 @@
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
     import { localize } from "../../util/misc";
-    import { TAB_STORES } from "../../util/stores";
+    import { TAB_STORES } from "../../util/stores/tabs";
     import PreviewItem from "../components/preview/PreviewItem.svelte";
     import { dropDocs } from "../actions/drop";
     import { simpleMixUUIDList } from "../actions/util";

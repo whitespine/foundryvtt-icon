@@ -1,5 +1,5 @@
 <script>
-    import { UUIDDocumentStore } from "../../../util/stores";
+    import { UUIDDocumentStore } from "../../../util/stores/uuid";
 
     /** @type {string}*/
     export let uuid;

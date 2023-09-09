@@ -9,7 +9,7 @@
     import { FOE_COLORS, GENERIC_COLORS } from "../../models/items/job";
     import StatsDisplay from "../components/combat/StatsDisplay.svelte";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
-    import { TAB_STORES } from "../../util/stores";
+    import { TAB_STORES } from "../../util/stores/tabs";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias

@@ -1,7 +1,7 @@
 <script>
     import { slide } from "svelte/transition";
     import { dragAsDoc } from "../../actions/drag";
-    import { UUIDDocumentStore } from "../../../util/stores";
+    import { UUIDDocumentStore } from "../../../util/stores/uuid";
 
     /** @type {string}*/
     export let uuid;

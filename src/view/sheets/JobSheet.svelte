@@ -9,7 +9,7 @@
     import { dropDocs } from "../actions/drop";
     import PreviewItem from "../components/preview/PreviewItem.svelte";
     import { simpleMixUUIDList } from "../actions/util";
-    import { TAB_STORES } from "../../util/stores";
+    import { TAB_STORES } from "../../util/stores/tabs";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
 
     let actor = getContext("tjs_actor");
