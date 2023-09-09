@@ -80,9 +80,11 @@
             on:savenode={(e) => requestPersist("mastery", e.detail)}
         />
     {/if}
-    {#each choice.summons as summon}
-        <span>Summon: <ActorUUIDReference uuid={summon} /></span>
-    {/each}
+    <div class="flexcol">
+        {#each choice.summons as summon}
+            <span>Summon: <ActorUUIDReference uuid={summon} /></span>
+        {/each}
+    </div>
 </div>
 
 <style lang="scss">
