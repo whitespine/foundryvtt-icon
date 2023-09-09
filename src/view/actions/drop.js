@@ -1,10 +1,11 @@
-import { GlobalDragPreview, resolveNativeDrop } from '../../util/dragdrop';
+import { getStore } from '../../util/misc';
+import { DRAGGED_DOCUMENT, resolveNativeDrop } from '../../util/stores/dragdrop';
 import { easyActionBuilder } from './util';
 
 /**
  * @callback DropHandler A callback for handling document drops
  *
- * @param {ResolvedDrop} doc The dropped document
+ * @param {Item | Actor | JournalEntry | Macro | Scene} doc The dropped document
  *
  * @param {HTMLEvent} dest Where it was dropped
  *
@@ -14,7 +15,7 @@ import { easyActionBuilder } from './util';
 /**
  * @callback DropPredicate A callback for determining whether document drop is allowed
  *
- * @param {ResolvedDrop} doc The potentially dropped document
+ * @param {Item | Actor | JournalEntry | Macro | Scene} doc The potentially dropped document
  *
  * @param {DropEvent | DragOverEvent | DragEnterEvent | DragLeaveEvent} event Event for it hovering ominously / perhaps being dropped
  */
@@ -23,7 +24,7 @@ import { easyActionBuilder } from './util';
  * @callback HoverHandler A callback for doing temporary ui changes when hovering over a valid drop target.
  *                        Somewhat unreliably triggered in nested situations!
  *
- * @param {ResolvedDrop} doc The potentially dropped document
+ * @param {Item | Actor | JournalEntry | Macro | Scene} doc The potentially dropped document
  *
  * @param {HTMLElement} dest Where it would be dropped
  *
@@ -51,15 +52,16 @@ import { easyActionBuilder } from './util';
 export const dropDocs = easyActionBuilder({
     dragover: (options, event) => {
         // If permitted, override behavior to allow drops. If no GlobalDragPreview, allow drops regardless
-        if (!GlobalDragPreview || (options.allow_drop?.(GlobalDragPreview, this, event) ?? true)) {
+        let current = getStore(DRAGGED_DOCUMENT);
+        if (!current || (options.allow_drop?.(current, this, event) ?? true)) {
             event.preventDefault();
             return false;
         }
     },
     dragenter: (options, event) => {
         // Check if we can drop. If no handler, this is always true. If no GlobalDragPreview, allow drops regardless
-        if (!GlobalDragPreview || (options.allow?.(GlobalDragPreview, event) ?? true)) {
-            // curr_options.hover_handler?.(GlobalDragPreview, node, true);
+        let current = getStore(DRAGGED_DOCUMENT);
+        if (!current || (options.allow?.(current, event) ?? true)) {
             // Override behavior to allow dropping here
             event.preventDefault();
             return false;
@@ -72,14 +74,15 @@ export const dropDocs = easyActionBuilder({
         if (!event.dataTransfer?.getData("text/plain")) {
             return;
         }
+        let current = getStore(DRAGGED_DOCUMENT);
 
-        if (GlobalDragPreview) {
+        if (current) {
             // We can proceed synchronously
-            if (options.allow?.(GlobalDragPreview, event) ?? true) {
+            if (options.allow?.(current, event) ?? true) {
                 // It's a good drop - prevent propagation and handle
                 event.stopImmediatePropagation();
                 event.preventDefault();
-                options.handle?.(GlobalDragPreview, event);
+                options.handle?.(current, event);
             }
         } else {
             // Unfortunately, if global drag preview isn't set then it is necessary for us to aggressively cancel events to prevent possible duplicate drop handling

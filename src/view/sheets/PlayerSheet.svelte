@@ -23,24 +23,24 @@
 
     /**
      * Add dropped items to this actor
-     * @param {import("../../util/dragdrop").ResolvedDrop} drop
+     * @param {Item} doc The dropped document
      */
-    function handleDrop(drop) {
+    async function handleDrop(doc) {
         // Destroy old job or bond
-        if (drop.type === "Item") {
-            if (drop.document.type === "bond") $actor.system.bond?.delete();
-            if (drop.document.type === "job") $actor.system.job?.delete();
+        if (doc instanceof Item) {
+            if (doc.type === "bond") await $actor.system.bond?.delete();
+            if (doc.type === "job") await $actor.system.job?.delete();
+            $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(doc.toObject(true))]);
         }
-        // Create the item
-        $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(drop.document.toObject(true))]);
     }
 
     /**
      * Test whether to allow the specified drop
-     * @param {import("../../util/dragdrop").ResolvedDrop} drop Resolved drop data
+     * @param {Item} doc The dropped document
      */
-    function allowDrop(drop) {
-        return drop.type == "Item" && ["bond-power", "bond", "job", "ability", "relic"].includes(drop.document.type);
+    function allowDrop(doc) {
+        console.log(doc);
+        return ["bond-power", "bond", "job", "ability", "relic"].includes(doc.type);
     }
 </script>
 

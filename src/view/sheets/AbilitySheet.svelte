@@ -31,17 +31,24 @@
         });
     }
 
-    // Handle dropped documents
+    /**
+     *
+     * @param {Actor} doc The dropped document
+     */
     function handleDrop(drop) {
         let summons = selected_choice.summons;
-        summons = [...summons, drop.document.uuid];
+        summons = [...summons, drop.uuid];
         $doc.update({
             [`system.choices.${$selected_tab}.summons`]: summons,
         });
     }
 
+    /**
+     *
+     * @param {Actor} doc The dropped document
+     */
     function allowDrop(drop) {
-        return drop.type == "Actor" && ["summon"].includes(drop.document.type);
+        return ["summon"].includes(drop.type);
     }
 
     // Delete the summon at the specified index for the current choice
@@ -188,7 +195,10 @@
                             <div class="flexrow">
                                 <span style="flex: 0">{"I".repeat(index + 1)}.</span>
                                 <ProseMirrorEditor doc={$doc} path={`system.talents.${index}.text`} />
-                                <input type="checkbox" use:updateDoc={{ doc, path: `system.talents.${index}.unlocked` }} />
+                                <input
+                                    type="checkbox"
+                                    use:updateDoc={{ doc, path: `system.talents.${index}.unlocked` }}
+                                />
                             </div>
                         {/each}
                     </div>
@@ -196,7 +206,11 @@
                     <div class="block">
                         <h3>
                             Mastery:
-                            <input type="text" placeholder="Name" use:updateDoc={{ doc, path: `system.mastery.name` }} />
+                            <input
+                                type="text"
+                                placeholder="Name"
+                                use:updateDoc={{ doc, path: `system.mastery.name` }}
+                            />
                         </h3>
                         <div class="flexrow">
                             <ProseMirrorEditor doc={$doc} path={`system.mastery.text`} />

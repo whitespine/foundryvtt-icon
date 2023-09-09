@@ -21,18 +21,26 @@
     }));
     let selected_tab = TAB_STORES.get($actor.uuid, "ICON.BondSheet.Details");
 
+    /**
+     *
+     * @param {Item} doc The dropped document
+     */
     function allowDropPower(drop) {
         // A very simple requirement
-        return drop.document.type === "bond-power";
+        return drop.type === "bond-power";
     }
 
+    /**
+     *
+     * @param {Item} doc The dropped document
+     */
     function handleDropPower(drop, event) {
         // Just add it to the end of the list
         let effective_target = event.target.closest("[data-uuid]")?.dataset.uuid;
 
         // It's not a limit break, and is a trait
         $item.update({
-            "system.powers": simpleMixUUIDList($item.system.powers, drop.document.uuid, effective_target, true),
+            "system.powers": simpleMixUUIDList($item.system.powers, drop.uuid, effective_target, true),
         });
     }
 

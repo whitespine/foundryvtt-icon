@@ -21,13 +21,20 @@
     }));
     let selected_tab = TAB_STORES.get($actor.uuid, "ICON.Foe.Abilities");
 
-    // Handle dropped documents
-    function handleDrop(drop) {
-        $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(drop.document.toObject(true))]);
+    /**
+     *
+     * @param {Item} doc The dropped document
+     */
+    function handleDrop(doc) {
+        $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(doc.toObject(true))]);
     }
 
-    function allowDrop(drop) {
-        return drop.type == "Item" && ["ability"].includes(drop.document.type);
+    /**
+     *
+     * @param {Item} doc The dropped document
+     */
+    function allowDrop(doc) {
+        return ["ability"].includes(doc.type);
     }
 </script>
 

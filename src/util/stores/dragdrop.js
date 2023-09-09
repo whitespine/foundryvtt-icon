@@ -1,5 +1,6 @@
-import { IconActor } from "../documents/actor";
-import { IconItem } from "../documents/item";
+import { IconActor } from "../../documents/actor";
+import { IconItem } from "../../documents/item";
+import { writable } from "svelte/store";
 
 // //////////// HERE BE DRAGON DROPS ////////////
 // Very useful:
@@ -87,27 +88,7 @@ export async function resolveNativeDrop(drop) {
         if (!document) {
             return null;
         }
-        if (document instanceof Actor) {
-            return {
-                type: "Actor",
-                document,
-            };
-        } else if (document instanceof Item) {
-            return {
-                type: "Item",
-                document,
-            };
-        } else if (document instanceof Macro) {
-            return {
-                type: "Macro",
-                document,
-            };
-        } else if (document instanceof JournalEntry) {
-            return {
-                type: "JournalEntry",
-                document,
-            };
-        }
+        return document;
     }
     return null;
 }
@@ -119,68 +100,17 @@ export async function resolveNativeDrop(drop) {
 // }
 
 // GlobalDragState 
+
 /** 
- * Provides a resolved document of whatever is being dragged, if a document can be resolved
- *
- * @type {ResolvedDrop | null} 
+ * Store containing resolved foundry document of whatever is being dragged, if a document can be resolved
+ * Note: not cleared even when a drag is over.
  */
-export let GlobalDragPreview = null;
+export let DRAGGED_DOCUMENT = writable(null);
 
 /**
- * Generates a CSS class for the given document type, 
- * to be affixed to the document body
- *
- * @param {string} for_type The document subtype that is being dragged
- *
- * @returns {string} An appropriately named css class
+ * Store containing whether dragging is currently occurring
  */
-function draggingClass(for_type) {
-    return `dragging-${for_type}`;
-}
-
-/**
- * Sets the GlobalDragPreview constant, and manages global classes appropriately for it
- *
- * @param {IconActor | IconItem | null} to What we are currently dragging, if anything
- */
-function setGlobalDrag(to) {
-    console.log("Draggin: ", to);
-    // Clear if necessary
-    if (GlobalDragPreview?.type == "Actor" || GlobalDragPreview?.type == "Item") {
-        $("body").removeClass(draggingClass(GlobalDragPreview.document.type));
-    }
-
-    // Store the draggee
-    if (to instanceof Actor) {
-        GlobalDragPreview = {
-            document: to,
-            type: "Actor",
-        };
-    } else if (to instanceof Item) {
-        GlobalDragPreview = {
-            document: to,
-            type: "Item",
-        };
-    } else if (to instanceof Macro) {
-        GlobalDragPreview = {
-            document: to,
-            type: "Macro",
-        };
-    } else if (to instanceof Scene) {
-        GlobalDragPreview = {
-            document: to,
-            type: "Scene",
-        };
-    } else if (to == null) {
-        GlobalDragPreview = null;
-        return;
-    }
-
-    // Add an appropriate class
-    if (GlobalDragPreview?.type == "Actor" || GlobalDragPreview?.type == "Item") {
-        $("body").addClass(draggingClass(GlobalDragPreview.document.type));
-    }
-}
+export let DRAGGING = writable(false);
 
 // Setup global drag resolution
 /**
@@ -194,6 +124,10 @@ export function applyGlobalDragListeners() {
     body.addEventListener(
         "dragstart",
         (evt) => {
+            // Clear whatever was there before
+            DRAGGED_DOCUMENT.set(null);
+            DRAGGING.set(true);
+
             // Attempt to recover the item
             let target = evt.target;
             let uuid = "";
@@ -219,14 +153,12 @@ export function applyGlobalDragListeners() {
                 return; // Not a uuid
             }
 
-            // TODO: handle journals, macros, scenes
-
             // May or may not have a uuid by now
             // If we do, tell it to try setting global drag
             let cancel_token_copy = cancel_token;
             fromUuid(uuid).then((doc) => {
                 if (!cancel_token_copy.canceled) {
-                    setGlobalDrag(doc);
+                    DRAGGED_DOCUMENT.set(doc);
                 }
             });
         },
@@ -238,7 +170,7 @@ export function applyGlobalDragListeners() {
 
     // Clear whenever we stop dragging anywhere. Have to handle both drag end and drop.
     const endListener = () => {
-        setGlobalDrag(null);
+        DRAGGING.set(false);
         cancel_token.canceled = true;
         cancel_token = { canceled: false };
     };
@@ -246,7 +178,7 @@ export function applyGlobalDragListeners() {
         capture: true, // Same as above
         passive: true,
     });
-    body.addEventListener("drop", () => setTimeout(endListener, 100), {
+    body.addEventListener("drop", endListener, {
         capture: true, // Same as above
         passive: true,
     });

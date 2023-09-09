@@ -23,29 +23,38 @@
     }));
     let selected_tab = TAB_STORES.get($actor.uuid, "ICON.JobSheet.Details");
 
-    function allowDropAbility(drop) {
+    /**
+     *
+     * @param {Item} doc The dropped document
+     */
+    function allowDropAbility(doc) {
         // A very simple requirement
-        return drop.document.type === "ability";
+        return doc.type === "ability";
     }
-    function handleDropAbility(drop, event) {
+
+    /**
+     *
+     * @param {Item} doc The dropped document
+     */
+    function handleDropAbility(doc, event) {
         // Just add it to the end of the list
         let effective_target = event.target.closest("[data-uuid]")?.dataset.uuid;
-        if (drop.document.system.choices.some((x) => x.limit_break)) {
+        if (doc.system.choices.some((x) => x.limit_break)) {
             // It's a limit break
             $item.update({
-                "system.limit_break": drop.document.uuid,
+                "system.limit_break": doc.uuid,
             });
-        } else if (drop.document.system.trait) {
+        } else if (doc.system.trait) {
             // It's not a limit break, and is a trait
             $item.update({
-                "system.traits": simpleMixUUIDList($item.system.traits, drop.document.uuid, effective_target, true),
+                "system.traits": simpleMixUUIDList($item.system.traits, doc.uuid, effective_target, true),
             });
         } else {
             // It's an ability
             $item.update({
                 "system.abilities": simpleMixUUIDList(
                     $item.system.abilities,
-                    drop.document.uuid,
+                    doc.uuid,
                     effective_target,
                     true
                 ),

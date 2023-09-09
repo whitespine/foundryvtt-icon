@@ -31,3 +31,14 @@ export function chapterIcon(n) {
 export function removeAllUUIDRefs(text) {
     return text.replaceAll(/@UUID\[.*?\]\{(.*?)\}/g, (_, n) => n);
 }
+
+/**
+ * Read the value of a store. Can be expensive, so don't spam it if subscribing would make more sense
+ * @param {store} store 
+ */
+export function getStore(store) {
+  let val;
+  // Sub and immediately unsub
+  store.subscribe(x => val = x)();
+  return val;
+}

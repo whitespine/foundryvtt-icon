@@ -6,7 +6,7 @@ import { setupSheets } from './config/sheets.js';
 import { ICON } from './consts.js';
 import { IconActor } from './documents/actor.js';
 import { IconItem } from './documents/item.js';
-import { applyGlobalDragListeners } from './util/dragdrop.js';
+import { applyGlobalDragListeners } from './util/stores/dragdrop.js';
 import BasicApplication from './view/apps/BasicApplication.js';
 
 import "./icon.scss";
@@ -85,17 +85,20 @@ function setupDSN() {
 
 // ------------------------------------------------------------------------
 // Sliding HUD Zone, including accuracy/difficulty window
-// Hooks.on("renderHeadsUpDisplay", slidingHUD.attach);
-// let openingBasicAttackLock = false;
-// Hooks.on("targetToken", (user: User, _token: Token, isNewTarget: boolean) => {
-//   if (user.isSelf && isNewTarget && !openingBasicAttackLock) {
-//     // this only works because openBasicAttack is a promise and runs on a future tick
-//     openingBasicAttackLock = true;
-//     macros.openBasicAttack().finally(() => {
-//       openingBasicAttackLock = false;
-//     });
-//   }
-// });
+/*
+Hooks.on("renderHeadsUpDisplay", slidingHUD.attach);
+let openingBasicAttackLock = false;
+Hooks.on("targetToken", (user: User, _token: Token, isNewTarget: boolean) => {
+    if (user.isSelf && isNewTarget && !openingBasicAttackLock) {
+        // this only works because openBasicAttack is a promise and runs on a future tick
+        openingBasicAttackLock = true;
+        macros.openBasicAttack().finally(() => {
+            openingBasicAttackLock = false;
+        });
+    }
+});
+*/
+
 
 // For the settings tab
 Hooks.on("renderSettings", async (app, html) => {
