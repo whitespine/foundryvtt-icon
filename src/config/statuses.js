@@ -7,12 +7,7 @@ export function enhanceStatuses() {
     let statuses = game.i18n.translations.ICON.Statuses;
     let glossary = game.i18n.translations.ICON.Glossary;
     CONFIG.statusEffects.forEach((v) => {
-        let description = effects[v.name] || statuses[v.name] || glossary[v.name];
-        v.flags = {
-            [game.system.id]: {
-                description
-            }
-        };
+        v.description = effects[v.name] || statuses[v.name] || glossary[v.name];
     });
 }
 

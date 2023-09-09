@@ -34,7 +34,7 @@
 
     // Definition if we can grab it
     let definition;
-    $: definition = status.getFlag(game.system.id, "description") ?? "No description";
+    $: definition = status.description ?? "No description";
 
     // Post it in chat
     function post() {
