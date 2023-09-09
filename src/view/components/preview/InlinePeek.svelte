@@ -31,8 +31,9 @@
 <style lang="scss">
     span {
         // background: var(--secondary-background);
-        border: var(--primary-border);
-        border-radius: 10px;
+        // border: var(--primary-border);
+        text-decoration: underline;
+        // border-radius: 10px;
         white-space: nowrap;
         word-break: break-all;
         cursor: pointer;
