@@ -1,7 +1,7 @@
 
 import { SvelteApplication } from '#runtime/svelte/application';
 
-import HarmShell from './HarmShell.svelte';
+import HarmAppShell from './HarmAppShell.svelte';
 
 export default class HarmApplication extends SvelteApplication {
    /**
@@ -20,7 +20,7 @@ export default class HarmApplication extends SvelteApplication {
          zIndex: null,
 
          svelte: {
-            class: HarmShell,
+            class: HarmAppShell,
             target: document.body
          }
       });

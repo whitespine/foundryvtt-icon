@@ -1,15 +1,10 @@
 <!-- This is necessary for Svelte to generate accessors TRL can access for `elementRoot` -->
-<svelte:options accessors={true} />
-
 <script>
-    import { ApplicationShell } from "#runtime/svelte/component/core";
     import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../util/harm";
     import { SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores/tokens";
     import HarmControl from "../components/combat/HarmControl.svelte";
 
     import { fade, slide } from "svelte/transition";
-
-    export let elementRoot;
 
     /** @type {number} Our editable damage field*/
     let custom = 0;
@@ -20,7 +15,7 @@
         for (let target of $TARGETED_TOKENS.values()) {
             if (target.actor) {
                 let flags = flagsForDefender(target.actor);
-                if($SELECTED_TOKENS.first().actor) {
+                if ($SELECTED_TOKENS.first().actor) {
                     flags.push(...flagsForAttacker($SELECTED_TOKENS.first().actor));
                 }
                 items.push([target.actor, computeHarm(target.actor, type, value, flags)]);
@@ -32,38 +27,35 @@
     }
 </script>
 
-<!-- ApplicationShell provides the popOut / application shell frame, header bar, content areas -->
-<!-- ApplicationShell exports `elementRoot` which is the outer application shell element -->
-<ApplicationShell bind:elementRoot>
-    <main>
-        <div class="targs">
-            <span>Origin:</span>
-            <img transition:fade src={$SELECTED_TOKENS.first()?.document.texture?.src ?? "icons/logo-scifi.png"} />
-            <span>Targets:</span>
-            {#each $TARGETED_TOKENS as st (st.id)}
-                <img
-                    transition:slide={{ axis: "x", duration: 200 }}
-                    src={st.document.texture?.src}
-                    data-tooltip={st.name}
-                />
-            {/each}
-            {#if $TARGETED_TOKENS.size === 0}
-                <span>Target tokens to apply damage to</span>
-            {/if}
-        </div>
-        <div class="standard">
-            {#each [1, 2, 3, 4, 999, "25%", custom] as value}
-                <HarmControl {value} on:harm={emitHarm} />
-            {/each}
-        </div>
-        <div class="customs" data-tooltip="Custom damage">
-            <input type="number" bind:value={custom} />
-        </div>
-    </main>
-</ApplicationShell>
+<div class="main">
+    <div class="targs">
+        <span>Origin:</span>
+        <img transition:fade src={$SELECTED_TOKENS.first()?.document.texture?.src ?? "icons/logo-scifi.png"} alt={$SELECTED_TOKENS.first()?.name}/>
+        <span>Targets:</span>
+        {#each $TARGETED_TOKENS as st (st.id)}
+            <img
+                alt={st.name}
+                transition:slide={{ axis: "x", duration: 200 }}
+                src={st.document.texture?.src}
+                data-tooltip={st.name}
+            />
+        {/each}
+        {#if $TARGETED_TOKENS.size === 0}
+            <span>Target tokens to apply damage to</span>
+        {/if}
+    </div>
+    <div class="standard">
+        {#each [1, 2, 3, 4, 999, "25%", custom] as value}
+            <HarmControl {value} on:harm={emitHarm} />
+        {/each}
+    </div>
+    <div class="customs" data-tooltip="Custom damage">
+        <input type="number" bind:value={custom} />
+    </div>
+</div>
 
 <style lang="scss">
-    main {
+    .main {
         display: grid;
         grid-template:
             "targs targs" 64px
