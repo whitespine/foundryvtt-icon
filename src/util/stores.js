@@ -109,9 +109,11 @@ export class UUIDDocumentStore {
     set(document, options = {}) {
         // Attempt to resolve before passing down to wrapped store
         if (document instanceof foundry.abstract.Document) {
+            // if(document.uuid === this.uuid) return; // Nothing to do
             this.uuid = document.uuid;
             this.wrapped_store.set(document, options);
         } else if (typeof document === "string") {
+            // if(document === this.uuid) return; // Nothing to do
             this.uuid = document;
             fromUuid(document).then((x) => {
                 // Only proceed if uuids still match

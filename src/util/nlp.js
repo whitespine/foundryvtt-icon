@@ -47,7 +47,7 @@ class RegexTransformer extends Transformer {
     }
 
     apply_inner(ctx, node) {
-        if (node.tag) {
+        if (!node.text) {
             return [node];
         }
 
@@ -77,6 +77,10 @@ class RegexTransformer extends Transformer {
  *
  * @property {string} [options.tooltip] What shows on hover.
  *
+ * @property {string} [options.referenceUUID] Fancier @UUID[<uuid>]{<text>} hydration. The <uuid>
+ * 
+ * @property {string} [options.referenceBody] Fancier @UUID[<uuid>]{<text>} hydration. The <text>
+ *
  * @property {object} [options.dragdata] What should be dragged, if anything
  *
  * @property {object} [options.roll] A JSON serialized roll. Overridden by tag
@@ -97,6 +101,25 @@ export class IcoNode {
      * @param {NodeData} options 
      */
     constructor(options = {}) {
+        /**
+         * An embedded roll to render instead of tag/text
+         *
+         * @type {Roll | undefined}
+         */
+        this.roll = options.roll ? Roll.fromData(options.roll) : undefined;
+        /**
+         * @see 
+         *
+         * @type {string | undefined}
+         */
+        this.referenceUUID = options.referenceUUID;
+        /**
+         * An embedded roll to render instead of tag/text
+         *
+         * @type {string | undefined}
+         */
+        this.referenceBody = options.referenceBody;
+
         /**
          * HTML tag if applicable
          *
@@ -136,12 +159,6 @@ export class IcoNode {
          */
         this.dragdata = options.dragdata;
         /**
-         * An embedded roll to render instead of tag/text
-         *
-         * @type {Roll | undefined}
-         */
-        this.roll = options.roll ? Roll.fromData(options.roll) : undefined;
-        /**
          * Roll formula if applicable
          *
          * @type {NodeData["formula"]}
@@ -162,6 +179,9 @@ export class IcoNode {
      */
     toObject() {
         return {
+            roll: this.roll?.toJSON(),
+            referenceUUID: this.referenceUUID,
+            referenceBody: this.referenceBody,
             tag: this.tag,
             text: this.text,
             attributes: this.attributes,
@@ -169,7 +189,6 @@ export class IcoNode {
 
             tooltip: this.tooltip,
             dragdata: this.dragdata,
-            roll: this.roll?.toJSON(),
             formula: this.formula,
             rollSize: this.rollSize
         };
@@ -215,6 +234,17 @@ export function setupTransformers() {
                 return ["[D]"];
             }
         }
+    ));
+
+    // Our custom UUID loader
+    StaticTransformers.push(new RegexTransformer(
+        /@UUID\[([a-z0-9.]+)\]\{(.*?)\}/gi,
+        (ctx, m) => [
+            new IcoNode({
+                referenceBody: m[1],
+                referenceUUID: m[0],
+            })
+        ]
     ));
 
     // Make dice formulae in angle brackets rollable

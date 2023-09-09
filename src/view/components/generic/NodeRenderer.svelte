@@ -1,5 +1,6 @@
 <script>
     import { IcoNode } from "../../../util/nlp";
+    import InlinePeek from "../preview/InlinePeek.svelte";
     import LargeRoll from "./dice/LargeRoll.svelte";
     import MediumRoll from "./dice/MediumRoll.svelte";
     import SmallRoll from "./dice/SmallRoll.svelte";
@@ -70,6 +71,8 @@
     {:else}
         <SmallRoll roll={node.roll} />
     {/if}
+{:else if node.referenceUUID}
+    <InlinePeek uuid={node.referenceUUID}>{node.referenceBody || "ERR"}</InlinePeek>
 {:else if node.tag}
     <svelte:element this={node.tag} on:click={click} class:clickable data-tooltip={node.tooltip ?? null}>
         {#each node.children || [] as child}
