@@ -1,6 +1,8 @@
 import { IconActor } from "../documents/actor";
 import { simpleSlugifyObject, simpleUnslugifyObject } from "../view/actions/util";
 import HarmApplication from "../view/apps/HarmApplication";
+import { SHOW_HARM_HUD } from "../view/components/hud/hud";
+import { getStore } from "./misc";
 import { adminUpdateMessage } from "./socket";
 
 Hooks.on("getSceneControlButtons", (controls) => {
@@ -22,6 +24,8 @@ let harmAppId = null;
  * Shows the harm application singleton
  */
 export async function showHarmApplication() {
+    SHOW_HARM_HUD.set(!getStore(SHOW_HARM_HUD));
+    /*
     let app;
     if (harmAppId && ui.windows[harmAppId]) {
         app = ui.windows[harmAppId];
@@ -30,6 +34,7 @@ export async function showHarmApplication() {
     }
     await app.render(true, { focus: true });
     harmAppId = app.appId;
+    */
 }
 
 /**

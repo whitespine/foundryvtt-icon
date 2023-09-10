@@ -5,7 +5,7 @@
     import { actorTokenImage, simpleMixList } from "../actions/util";
     import HarmControl from "../components/combat/HarmControl.svelte";
 
-    import { fade, slide } from "svelte/transition";
+    import { slide } from "svelte/transition";
 
     /** @type {number} Our editable damage field*/
     let custom = 0;
@@ -39,7 +39,7 @@
 <div class="main">
     <div class="targs" on:drop={dropHandler}>
         <span>Origin:</span>
-        <img transition:fade src={actorTokenImage($ATTACKER, "icons/logo-scifi.png")} alt={$SELECTED_TOKENS[0]?.name}/>
+        <img src={actorTokenImage($ATTACKER, "icons/logo-scifi.png")} alt={$ATTACKER?.name}/>
         <span>Targets:</span>
         {#each $TARGETED_TOKENS as st (st.id)}
             <img

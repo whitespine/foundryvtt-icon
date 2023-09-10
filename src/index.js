@@ -14,10 +14,8 @@ import { SvelteChatLog, setupMessages } from './config/messages.js';
 import { setupTransformers } from './util/nlp.js';
 import { enhanceStatuses } from './config/statuses.js';
 import "./util/harm.js";
+import "./view/components/hud/hud.js";
 import WelcomeApplication from './view/apps/WelcomeApplication.js';
-
-// Import sliding HUD (used for accuracy/difficulty windows)
-// import * as slidingHUD from "./module/helpers/slidinghud/index.js";
 
 /* ------------------------------------ */
 /* Initialize system                    */
