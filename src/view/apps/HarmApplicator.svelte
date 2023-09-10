@@ -2,7 +2,7 @@
 <script>
     import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../util/harm";
     import { ATTACKER, SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores/tokens";
-    import { actorTokenImage } from "../actions/util";
+    import { actorTokenImage, simpleMixList } from "../actions/util";
     import HarmControl from "../components/combat/HarmControl.svelte";
 
     import { fade, slide } from "svelte/transition";
@@ -26,10 +26,18 @@
             quickDamage(items);
         }
     }
+    
+    let dragged = null;
+
+    function dropHandler(evt) {
+        let token = evt.target.dataset.id ? game.canvas.scene.tokens.get(evt.target.dataset.id) : null;
+        let remixed = simpleMixList($TARGETED_TOKENS, dragged, token?._object, true);
+        $TARGETED_TOKENS = remixed;
+    }
 </script>
 
 <div class="main">
-    <div class="targs">
+    <div class="targs" on:drop={dropHandler}>
         <span>Origin:</span>
         <img transition:fade src={actorTokenImage($ATTACKER, "icons/logo-scifi.png")} alt={$SELECTED_TOKENS[0]?.name}/>
         <span>Targets:</span>
@@ -39,6 +47,9 @@
                 transition:slide={{ axis: "x", duration: 200 }}
                 src={st.document.texture?.src}
                 data-tooltip={st.name}
+                draggable="true"
+                data-id={st.id}
+                on:drag={() => dragged = st}
             />
         {/each}
         {#if $TARGETED_TOKENS.size === 0}
