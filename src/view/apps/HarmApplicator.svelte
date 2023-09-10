@@ -37,6 +37,13 @@
         let token = evt.target.dataset.id ? game.canvas.scene.tokens.get(evt.target.dataset.id) : null;
         let remixed = simpleMixList($TARGETED_TOKENS, dragged, token?._object, true);
         $TARGETED_TOKENS = remixed;
+    }    
+    
+    // For removing targets
+    function clearHandler(evt) {
+        let token = evt.target.dataset.id ? game.canvas.scene.tokens.get(evt.target.dataset.id) : null;
+        let remixed = $TARGETED_TOKENS.filter(t => t != token?._object);
+        $TARGETED_TOKENS = remixed;
     }
     
     // Current selected damage type
@@ -50,6 +57,9 @@
     <div class="targs" on:drop={dropHandler}>
         <img src={actorTokenImage($ATTACKER, "icons/logo-scifi.png")} alt={$ATTACKER?.name} data-tooltip="Select damage source token"/>
         <span><i class="fas fa-arrow-right" /></span>
+        {#if $TARGETED_TOKENS.length === 0}
+            <span>Target tokens to apply damage to them!</span>
+        {/if}
         {#each $TARGETED_TOKENS as st (st.id)}
             <img
                 alt={st.name}
@@ -59,11 +69,9 @@
                 draggable="true"
                 data-id={st.id}
                 on:drag={() => dragged = st}
+                on:contextmenu|preventDefault={clearHandler}
             />
         {/each}
-        {#if $TARGETED_TOKENS.length === 0}
-            <span>Target tokens to apply damage to them!</span>
-        {/if}
     </div>
     <div class="type">
         {#each ["damage", "piercing", "divine", "vigor"] as type}
@@ -86,7 +94,7 @@
     .main {
         display: grid;
         grid-template:
-            "targs targs" 64px
+            "targs targs" 1fr
             "type  std " 64px / 170px 1fr;
     }
 
@@ -95,6 +103,7 @@
         border-bottom: var(--primary-border);
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap-reverse;
         align-items: center;
 
         img {

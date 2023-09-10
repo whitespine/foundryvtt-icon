@@ -19,7 +19,7 @@
         background-color: var(--primary-background);
         color: var(--primary-color);
         width: 360px;
-        height: 130px;
+        min-height: 130px;
         border-top: solid var(--primary-color) 2px;
         border-left: solid var(--primary-color) 2px;
         border-right: solid var(--primary-color) 2px;
