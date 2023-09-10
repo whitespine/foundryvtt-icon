@@ -59,7 +59,7 @@ export class RapidPromptApplication extends TJSDialog {
     * 
     * @param dialog_data
     *
-    * @returns {string | number | null} The value, or null if the user cancelled the prompt
+    * @returns {Promise<string | number | null>} The value, or null if the user cancelled the prompt
     */
    static async show(data_type, dialog_data = {}) {
       return new RapidPromptApplication(data_type, dialog_data).wait();

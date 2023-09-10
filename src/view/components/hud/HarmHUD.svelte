@@ -4,12 +4,9 @@
     import HarmApplicator from "../../apps/HarmApplicator.svelte";
     import { SHOW_HARM_HUD } from "./hud";
     import { fade, slide } from "svelte/transition";
-
-    let tocker = false;
-    setInterval(() => (tocker = !tocker), 500);
 </script>
 
-<HudZone --bottom={"0px"} --left={`${$SIDEBAR_LEFT - 550}px`}>
+<HudZone --bottom={"0px"} --left={`${$SIDEBAR_LEFT - 460}px`}>
     {#if $SHOW_HARM_HUD}
         <div class="root" transition:slide>
             <HarmApplicator />
@@ -21,7 +18,7 @@
     .root {
         background-color: var(--primary-background);
         color: var(--primary-color);
-        width: 520px;
+        width: 360px;
         height: 130px;
         border-top: solid var(--primary-color) 2px;
         border-left: solid var(--primary-color) 2px;

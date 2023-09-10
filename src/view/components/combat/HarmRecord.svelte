@@ -17,7 +17,7 @@
         let amount = record.harm.original_amount;
         for (let [cause, delta] of record.harm.deltas) {
             amount += delta;
-            tooltip += ` → ${amount} (${delta} ${cause})`;
+            tooltip += ` → ${amount} (${delta > 0 ? '+' : ''}${delta} ${cause})`;
         }
     }
 
@@ -71,7 +71,7 @@
 
 <div data-tooltip={tooltip} on:contextmenu|preventDefault|stopPropagation={summonEditMenu}>
     <span class="amount">
-        <i class={ICON.css[record.harm.type]} data-tooltip={record.harm.type} />
+        <i class={ICON.css[record.harm.type]} />
         {record.harm.original_amount}
         {#if record.harm.amount !== record.harm.original_amount}
             ({record.harm.amount})

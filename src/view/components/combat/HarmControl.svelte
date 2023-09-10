@@ -21,11 +21,6 @@
         });
     }
 
-    function edit(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-    }
-
     const dispatch = createEventDispatcher();
 </script>
 
