@@ -1,7 +1,8 @@
 <!-- This is necessary for Svelte to generate accessors TRL can access for `elementRoot` -->
 <script>
     import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../util/harm";
-    import { SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores/tokens";
+    import { ATTACKER, SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores/tokens";
+    import { actorTokenImage } from "../actions/util";
     import HarmControl from "../components/combat/HarmControl.svelte";
 
     import { fade, slide } from "svelte/transition";
@@ -15,8 +16,8 @@
         for (let target of $TARGETED_TOKENS.values()) {
             if (target.actor) {
                 let flags = flagsForDefender(target.actor);
-                if ($SELECTED_TOKENS.first().actor) {
-                    flags.push(...flagsForAttacker($SELECTED_TOKENS.first().actor));
+                if ($ATTACKER?.actor) {
+                    flags.push(...flagsForAttacker($ATTACKER?.actor));
                 }
                 items.push([target.actor, computeHarm(target.actor, type, value, flags)]);
             }
@@ -30,7 +31,7 @@
 <div class="main">
     <div class="targs">
         <span>Origin:</span>
-        <img transition:fade src={$SELECTED_TOKENS.first()?.document.texture?.src ?? "icons/logo-scifi.png"} alt={$SELECTED_TOKENS.first()?.name}/>
+        <img transition:fade src={actorTokenImage($ATTACKER, "icons/logo-scifi.png")} alt={$SELECTED_TOKENS[0]?.name}/>
         <span>Targets:</span>
         {#each $TARGETED_TOKENS as st (st.id)}
             <img
