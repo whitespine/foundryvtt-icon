@@ -111,7 +111,7 @@ export function simpleMixList(existing_list, new_item, insertion_point, replace_
  * Gets, in the following order of priority:
  * Synthetic Actor Token Image -> Prototype Token Image -> Actor image
  *
- * @param {Actor} actor Actor to get token image of possibly
+ * @param {Actor | Token} actor Actor to get token image of possibly
  * @param {string} def Default value
  *
  * @returns {string} Image path
@@ -121,7 +121,7 @@ export function actorTokenImage(actor, def = null) {
     const filter = (s) => (s && (s !== def)) ? s : null;
     if (!actor) {
         return def;
-    } else if (actor instanceof foundry.documents.BaseToken) {
+    } else if (actor instanceof Token) {
         // It's a token!
         return filter(actor.texture?.src) ?? filter(actor.actor?.prototypeToken?.texture?.src) ?? filter(actor.actor?.img) ?? def;
     } else {

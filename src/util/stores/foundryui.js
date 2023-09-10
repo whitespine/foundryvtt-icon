@@ -1,7 +1,7 @@
 import { readable } from "svelte/store";
 
 export const SIDEBAR_LEFT = readable(0, update => {
-    const sidebar = $("#sidebar");
+    const sidebar = document.getElementById("sidebar");
 
     function doUpdate() {
         update(sidebar.getBoundingClientRect().left || 0);
@@ -12,7 +12,7 @@ export const SIDEBAR_LEFT = readable(0, update => {
 });
 
 export const HOTBAR_TOP = readable(0, update => {
-    const bottom = $("#hotbar");
+    const bottom = document.getElementById("hotbar");
 
     function doUpdate() {
         update(bottom.getBoundingClientRect().top || 0);
