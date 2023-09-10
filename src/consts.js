@@ -23,10 +23,13 @@ export const ICON = {
         divine: "fas fa-stars",
         vigor: "fas fa-shield-plus",
 
-        // Attack modifiers
+        // Defense modifiers
         resistance: "fas fa-solid fa-shield-halved",
         immune: "fas fa-shield-cross",
         vulnerable: "fas fa-shield-slash",
+        shattered: "fas fa-heart-crack",
+
+        // Attack modifiers
         weakened: "fas fa-hexagon-minus",
         pacified: "fas fa-peace",
     },

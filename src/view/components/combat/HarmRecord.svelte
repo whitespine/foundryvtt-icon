@@ -52,7 +52,7 @@
         });
 
         // Add buttons to add or remove flags
-        for (let flag of ["resistance", "immune", "vulnerable", "weakened", "pacified"]) {
+        for (let flag of ["resistance", "immune", "vulnerable", "shattered", "weakened", "pacified"]) {
             let exists = record.harm.flags.includes(flag);
             items.push({
                 label: `${exists ? "-" : "+"}${flag}`,
