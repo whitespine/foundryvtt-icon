@@ -8,7 +8,7 @@
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
     import { dropDocs } from "../actions/drop";
     import PreviewItem from "../components/preview/PreviewItem.svelte";
-    import { simpleMixUUIDList } from "../actions/util";
+    import { simpleMixList } from "../actions/util";
     import { TAB_STORES } from "../../util/stores/tabs";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
 
@@ -47,12 +47,12 @@
         } else if (doc.system.trait) {
             // It's not a limit break, and is a trait
             $item.update({
-                "system.traits": simpleMixUUIDList($item.system.traits, doc.uuid, effective_target, true),
+                "system.traits": simpleMixList($item.system.traits, doc.uuid, effective_target, true),
             });
         } else {
             // It's an ability
             $item.update({
-                "system.abilities": simpleMixUUIDList(
+                "system.abilities": simpleMixList(
                     $item.system.abilities,
                     doc.uuid,
                     effective_target,

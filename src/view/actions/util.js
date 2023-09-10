@@ -84,15 +84,15 @@ export function simpleUnslugifyObject(obj) {
 
 /**
  * 
- * @param {Array<string>} existing_list 
+ * @param {Array<T>} existing_list 
  *
- * @param {string} new_item An item to add to the list
+ * @param {T} new_item An item to add to the list
  *
- * @param {string | null | undefined} insertion_point Where we want to insert it before, possibly
+ * @param {T | null | undefined} insertion_point Where we want to insert it before, possibly
  *
  * @param {boolean} replace_duplicates If true, then old instances of new_item will be removed
  */
-export function simpleMixUUIDList(existing_list, new_item, insertion_point, replace_duplicates = true) {
+export function simpleMixList(existing_list, new_item, insertion_point, replace_duplicates = true) {
     // Pre filter
     if (replace_duplicates) {
         existing_list = existing_list.filter((x) => x !== new_item);

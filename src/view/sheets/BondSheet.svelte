@@ -9,7 +9,7 @@
     import { TAB_STORES } from "../../util/stores/tabs";
     import PreviewItem from "../components/preview/PreviewItem.svelte";
     import { dropDocs } from "../actions/drop";
-    import { simpleMixUUIDList } from "../actions/util";
+    import { simpleMixList } from "../actions/util";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
@@ -40,7 +40,7 @@
 
         // It's not a limit break, and is a trait
         $item.update({
-            "system.powers": simpleMixUUIDList($item.system.powers, drop.uuid, effective_target, true),
+            "system.powers": simpleMixList($item.system.powers, drop.uuid, effective_target, true),
         });
     }
 
