@@ -10,7 +10,6 @@
     let tooltip = "...";
     $: {
         if ($doc instanceof foundry.documents.BaseJournalEntry) {
-            loading = false;
             let page = $doc.pages.contents[0];
             if (page) {
                 tooltip = page.text.content;
