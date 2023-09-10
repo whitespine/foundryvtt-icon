@@ -74,7 +74,7 @@ os.makedirs(tmp_dir)
 subprocess.run(["npm", "run", "build"])
 
 # Build packs too
-subprocess.run([proj_root / "scripts" / "gen_and_pack_foes.sh"])
+# subprocess.run([proj_root / "scripts" / "gen_and_pack_foes.sh"])
 # subprocess.run(["python3", proj_root / "scripts" / "mine_icon_data.py"])
 
 # Populate it
