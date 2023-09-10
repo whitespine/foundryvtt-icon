@@ -1,6 +1,5 @@
 import { IconActor } from "../documents/actor";
 import { simpleSlugifyObject, simpleUnslugifyObject } from "../view/actions/util";
-import HarmApplication from "../view/apps/HarmApplication";
 import { SHOW_HARM_HUD } from "../view/components/hud/hud";
 import { getStore } from "./misc";
 import { adminUpdateMessage } from "./socket";

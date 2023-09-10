@@ -1,14 +1,14 @@
 <script>
     import HudZone from "./HudZone.svelte";
     import { SIDEBAR_LEFT } from "../../../util/stores/foundryui";
-    import HarmApplicator from "../../apps/HarmApplicator.svelte";
+    import HarmApplicator from "../../components/combat/HarmApplicator.svelte";
     import { SHOW_HARM_HUD } from "./hud";
     import { fade, slide } from "svelte/transition";
 </script>
 
 <HudZone --bottom={"0px"} --left={`${$SIDEBAR_LEFT - 460}px`}>
     {#if $SHOW_HARM_HUD}
-        <div class="root" transition:slide>
+        <div class="root" transition:fade>
             <HarmApplicator />
         </div>
     {/if}

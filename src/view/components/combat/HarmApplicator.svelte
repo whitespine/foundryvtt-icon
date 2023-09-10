@@ -1,12 +1,12 @@
 <!-- This is necessary for Svelte to generate accessors TRL can access for `elementRoot` -->
 <script>
-    import { ICON } from "../../consts";
-    import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../util/harm";
-    import { ATTACKER, SELECTED_TOKENS, TARGETED_TOKENS } from "../../util/stores/tokens";
-    import { actorTokenImage, simpleMixList } from "../actions/util";
+    import { ICON } from "../../../consts";
+    import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../../util/harm";
+    import { ATTACKER, SELECTED_TOKENS, TARGETED_TOKENS } from "../../../util/stores/tokens";
+    import { actorTokenImage, simpleMixList } from "../../actions/util";
+    import { RapidPromptApplication } from "../../apps/RapidPromptApplication";
 
     import { slide } from "svelte/transition";
-    import { RapidPromptApplication } from "./RapidPromptApplication";
 
     async function emitHarm(value) {
         if(value === "cust.") {
