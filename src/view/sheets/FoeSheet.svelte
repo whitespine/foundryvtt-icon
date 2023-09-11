@@ -81,9 +81,18 @@
             </div>
         {:else if $selected_tab === "ICON.Foe.Stats"}
             <div class="flexcol">
-                {#each ["defense", "damage_die", "fray_damage", "speed", "dash", "vitality", "armor", "hp_max_override"] as stat}
-                    <label for={stat}>{stat}:</label>
-                    <input name={stat} type="number" use:updateDoc={{ doc, path: `system.class.${stat}` }} />
+                {#each [
+                    ["Defense", "class.defense"], 
+                    ["Damage Dice", "class.damage_die"], 
+                    ["Fray Damage", "class.fray_damage"], 
+                    ["Speed", "class.speed"], 
+                    ["Dash", "class.dash"], 
+                    ["Vitality", "class.vitality"], 
+                    ["Armor", "class.armor"], 
+                    ["Max HP (0 for 4*VIT)", "hp_max_override"]
+                 ] as [label, stat]}
+                    <label for={label}>{label}:</label>
+                    <input name={label} type="number" use:updateDoc={{ doc, path: `system.${stat}` }} />
                 {/each}
             </div>
         {:else}
