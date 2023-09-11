@@ -219,8 +219,8 @@ export class PlayerModel extends ActorModel {
         let bond_powers = this.parent.items.filter((i) => i.type === "bond-power");
         let abilities = this.parent.items.filter((i) => i.type === "ability" && !i.system.trait);
         let relics = this.parent.items.filter((i) => i.type === "relic");
-        let talent_count = abilities.reduce((x, a) => x + a.system.talents.filter((t) => t.unlocked).length, 0);
-        let mastery_count = abilities.reduce((x, a) => x + a.system.mastery.unlocked ? 1 : 0, 0);
+        let talent_count = abilities.filter((a) => a.system.talents.some((t) => t.unlocked)).length;
+        let mastery_count = abilities.filter((a) => a.system.mastery.unlocked).length;
         let narrative_action_count = Object.values(this.actions).reduce((a, b) => a + b, 0);
 
         // First bespoke
