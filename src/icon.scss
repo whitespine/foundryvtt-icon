@@ -24,7 +24,7 @@ $document-types: join($item-types, $actor-types);
     --tab-active-text: #290808;
 
     // Clocks
-    --clock-fill:  #d9ac15;
+    --clock-fill: #d9ac15;
     --clock-alt-fill: rgb(158, 20, 18);
     --clock-empty: rgb(222, 228, 228);
     --clock-border: #0c1638;
@@ -49,17 +49,22 @@ $document-types: join($item-types, $actor-types);
 
 
 // Fix inputs on sheets and other stuff core foundry is annoying about
-.icon > section > main,
+.icon>section>main,
 li.chat-message {
     background: var(--primary-background);
     color: var(--primary-color);
 
-    input,select,textarea,option {
+    input,
+    select,
+    textarea,
+    option {
         color: inherit;
     }
+
     option {
         background: var(--primary-background);
     }
+
     textarea {
         border: var(--primary-border);
     }
@@ -68,7 +73,10 @@ li.chat-message {
         border-bottom: none;
     }
 
-    h1,h2,h3,h4 {
+    h1,
+    h2,
+    h3,
+    h4 {
         color: var(--clock-fill);
     }
 
@@ -80,22 +88,46 @@ li.chat-message {
         min-height: 20px;
 
         .editor-menu {
-            span,i,option {
+
+            span,
+            i,
+            option {
                 color: var(--primary-color);
             }
-            
-            button:hover, button ul {
+
+            button:hover,
+            button ul {
                 background: var(--secondary-background);
             }
 
-            .pm-dropdown,option {
+            .pm-dropdown,
+            option {
                 background: var(--secondary-background);
             }
         }
     }
 
-    a.inline-roll, .dice-tooltip {
+    a.inline-roll,
+    .dice-tooltip {
         background: #0c1638;
+    }
+
+    /** Our generic tab view */
+    .tab {
+        clip-path: var(--inset-box-clip);
+        margin: 5px;
+        padding: 5px;
+        text-align: center;
+        width: calc(100% - 20px);
+        cursor: pointer;
+
+        background-color: var(--tab-inactive-background);
+        color: var(--tab-inactive-text);
+
+        &.active {
+            background-color: var(--tab-active-background);
+            color: var(--tab-active-text);
+        }
     }
 }
 

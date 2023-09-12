@@ -9,6 +9,7 @@ const actionPenaltyField = () => new fields.NumberField({ nullable: false, integ
 export class PlayerModel extends ActorModel {
     static defineSchema() {
         return {
+            ...super.defineSchema(),
             player_name: new fields.StringField(),
             // Non combat
             kin: new fields.StringField({ initial: "Arken" }),

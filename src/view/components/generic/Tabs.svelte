@@ -11,7 +11,7 @@
 
 <div class="icon-tabs" class:horizontal {...$$restProps}>
     {#each tabs as tab}
-        <div class="icon-tab" class:active={selected == tab.key} on:click={() => (selected = tab.key)}>
+        <div class="tab" class:active={selected == tab.key} on:click={() => (selected = tab.key)}>
             {tab.label}
         </div>
     {/each}
@@ -32,20 +32,4 @@
         flex-direction: row;
     }
 
-    .icon-tab {
-        clip-path: var(--inset-box-clip);
-        margin: 5px;
-        padding: 5px;
-        text-align: center;
-        width: calc(100% - 20px);
-        cursor: pointer;
-
-        background-color: var(--tab-inactive-background);
-        color: var(--tab-inactive-text);
-
-        &.active {
-            background-color: var(--tab-active-background);
-            color: var(--tab-active-text);
-        }
-    }
 </style>

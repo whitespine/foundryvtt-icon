@@ -24,7 +24,7 @@
     }
 </script>
 
-<section class="sheet-body narrative">
+<section>
     <!-- Narrative Tab -->
     <div class="leftcol">
         <div class="actions">
@@ -32,7 +32,7 @@
                 <ActionRating path={`system.actions.${action_name}`} />
             {/each}
         </div>
-        <div class="flexrow">
+    <div class="flexrow">
             <BoundedNumberDisplay name={localize("ICON.Strain")} path="system.strain" />
             <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
         </div>

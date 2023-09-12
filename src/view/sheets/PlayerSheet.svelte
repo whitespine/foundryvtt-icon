@@ -11,11 +11,13 @@
     import Progression from "./player/Progression.svelte";
     import Narrative from "./player/Narrative.svelte";
     import { TAB_STORES } from "../../util/stores/tabs";
+    import Notes from "./player/Notes.svelte";
+    import Loadout from "./player/Loadout.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
     // Set our tabs
-    const tabs = ["ICON.Narrative", "ICON.Combat", "ICON.Progression"].map((s) => ({
+    const tabs = ["ICON.Narrative", "ICON.Notes", "ICON.Combat", "ICON.Loadout", "ICON.Progression"].map((s) => ({
         label: localize(s),
         key: s,
     }));
@@ -90,9 +92,12 @@
             <input type="number" use:updateDoc={{ doc, path: "system.level" }} />
         </div>
 
-        <div style="grid-area: tabs">
+        <div class="tabs" style="grid-area: tabs">
             <!-- Sheet Tab Navigation -->
-            <Tabs {tabs} horizontal={false} bind:selected={$selected_tab} />
+            <!--<Tabs {tabs} horizontal={false} bind:selected={$selected_tab} />-->
+            {#each tabs as tab}
+                <button class="tab" class:active={tab.key === $selected_tab} on:click={() => $selected_tab = tab.key}>{tab.label}</button>
+            {/each}
         </div>
     </header>
 
@@ -112,6 +117,10 @@
         </section>
     {:else if $selected_tab == "ICON.Progression"}
         <Progression />
+    {:else if $selected_tab == "ICON.Notes"}
+        <Notes />
+    {:else if $selected_tab == "ICON.Loadout"}
+        <Loadout />
     {:else}
         <span>Tab does not exist</span>
     {/if}
@@ -138,6 +147,16 @@
             display: grid;
             grid-template: 1fr 1fr 1fr / 1fr 1fr;
             align-items: center;
+        }
+
+        .tabs {
+            display: grid;
+            height: 100%;
+            grid-template: repeat(3, 1fr) / repeat(2, 1fr);
+
+            button {
+                line-height: 1em;
+            }
         }
     }
 
