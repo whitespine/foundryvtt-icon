@@ -23,6 +23,7 @@
     let can_apply;
     $: can_apply =
         last_record &&
+        !($tjs_msg.getFlag(game.system.id, "applied")?.includes(actor_uuid)) && 
         (last_record.final_hp != $actor?.system.hp.value || last_record.final_vigor != $actor?.system.vigor.value);
 
     /** @type {boolean} */
@@ -35,6 +36,8 @@
             "system.hp.value": last_record.final_hp,
             "system.vigor.value": last_record.final_vigor,
         });
+        let old_applied = $tjs_msg.getFlag(game.system.id, "applied") ?? [];
+        $tjs_msg.setFlag(game.system.id, "applied",  [...old_applied, actor_uuid]);
     }
 
     // Replaces this harm manifest with a new one
