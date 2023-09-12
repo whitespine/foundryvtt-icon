@@ -71,7 +71,18 @@
         {#each [["ICON.XPTracking.Ideal", "system.xp_tracker.ideals"], ["ICON.XPTracking.Challenge", "system.xp_tracker.challenges"], ["ICON.XPTracking.Ambition", "system.xp_tracker.ambitions"], ["ICON.XPTracking.Burdens", "system.xp_tracker.burdens"]] as [text, path]}
             <div class="opportunity">
                 <i class="fas fa-chevron-right" />
-                <span>{localize(text)}</span>
+                {#if text === "ICON.XPTracking.Ideal" && $actor.system.bond}
+                    <div>
+                        <p>{localize(text)}</p>
+                        <ul>
+                            {#each $actor.system.bond.system.ideals as ideal}
+                                <li>{@html ideal}</li>
+                            {/each}
+                        </ul>
+                    </div>
+                {:else}
+                    <span>{localize(text)}</span>
+                {/if}
                 <DocClock clock_width="30px" {path} title={false} />
             </div>
         {/each}
