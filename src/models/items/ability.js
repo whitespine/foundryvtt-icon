@@ -69,8 +69,10 @@ export class AbilityChoiceField extends fields.SchemaField {
             return "";
         }
 
-        // Interrupts look special
-        if (data.interrupt) {
+        // Interrupts/limit breaks look special
+        if (data.resolve) {
+            return "🗲";
+        } else if (data.interrupt) {
             return "⧰".repeat(data.interrupt);
         } else if (data.actions == 0) {
             return "⟡"; // It's free
