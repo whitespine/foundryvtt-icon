@@ -4,9 +4,8 @@
     import DocClock from "../../components/generic/DocClock.svelte";
     import BoundedNumberDisplay from "../../components/generic/BoundedNumberDisplay.svelte";
     import { TJSDialog } from "#runtime/svelte/application";
-    import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-    import { slide, blur } from "svelte/transition";
     import { updateDoc } from "../../actions/update";
+    import ProgressionRelic from "../../components/preview/ProgressionRelic.svelte";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -87,11 +86,11 @@
                 <div>
                     <h4>At level {key} I chose:</h4>
                     <div class="flexrow">
-                        <select use:updateDoc={{doc, path: `system.level_choices.${key}.combat`}}>
+                        <select use:updateDoc={{ doc, path: `system.level_choices.${key}.combat` }}>
                             <option value="job">+1 Job</option>
                             <option value="mastery">+1 Mastery +2 Abilities</option>
                         </select>
-                        <select use:updateDoc={{doc, path: `system.level_choices.${key}.narrative`}}>
+                        <select use:updateDoc={{ doc, path: `system.level_choices.${key}.narrative` }}>
                             <option value="actions">+2 Action Pips</option>
                             <option value="power">+1 Bond Power</option>
                         </select>
@@ -99,7 +98,6 @@
                 </div>
             {/if}
         {/each}
-
 
         {#if $actor.system.progression.warnings.length}
             <button on:click={showWarnings}>{$actor.system.progression.warnings.length} Build Warnings</button>
@@ -109,26 +107,7 @@
         <h2>Relics</h2>
         <BoundedNumberDisplay name={localize("ICON.Dust")} path="system.dust" />
         {#each [...$relics] as relic}
-            <div>
-                <h3 class="clickable" on:click={() => relic.sheet.render(true, { focus: true })}>{relic.name}</h3>
-                <div class="flexrow">
-                    {#if relic.system.rank.value < 4}
-                        <BoundedNumberDisplay
-                            name={localize(relic.system.rank.value < 3 ? "ICON.Upgrade" : "ICON.Aspect")}
-                            doc={new TJSDocument(relic)}
-                            path="system.infused_dust"
-                        />
-                        {#if relic.system.infused_dust.value >= relic.system.infused_dust.max}
-                            <button transition:blur on:click={() => upgradeRelic(relic)}>
-                                Upgrade
-                            </button>
-                        {/if}
-                    {/if}
-                </div>
-                {#each relic.system.ranks.slice(0, relic.system.rank.value) as rank}
-                    {@html rank.text}
-                {/each}
-            </div>
+            <ProgressionRelic relic={relic} /> 
         {/each}
     </div>
     <div class="burdens">
@@ -184,6 +163,8 @@
         .relics {
             border-right: var(--primary-border);
             grid-area: relics;
+
+            
         }
         .burdens {
             grid-area: burdens;

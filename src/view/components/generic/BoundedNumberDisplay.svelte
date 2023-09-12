@@ -20,10 +20,10 @@
 
 <div style="background: linear-gradient(to right, var(--secondary-background) {percent}%, #00000000 {percent}%)">
     <span>{name}</span>
-    <input type="number" use:updateDoc={{ doc, path: `${path}.value` }} />
+    <input type="number" use:updateDoc={{ doc, path: `${path}.value` }} on:click|stopPropagation />
     <span> / </span>
     {#if edit_max}
-        <input type="number" use:updateDoc={{ doc, path: `${path}.max` }} />
+        <input type="number" use:updateDoc={{ doc, path: `${path}.max` }} on:click|stopPropagation />
     {:else}
         <span>{resolveDotpath($doc, `${path}.max`)}</span>
     {/if}
