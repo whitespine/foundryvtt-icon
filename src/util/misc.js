@@ -1,3 +1,5 @@
+import { TJSDialog } from "#runtime/svelte/application";
+
 // Shorthand for localization
 /**
  * @param {string} s The localization path
@@ -17,8 +19,8 @@ export function localize(s) {
  */
 export function chapterIcon(n) {
     return {
-        1: "I", 
-        2: "Ⅱ", 
+        1: "I",
+        2: "Ⅱ",
         3: "Ⅲ"
     }[n] ?? "I";
 }
@@ -37,8 +39,18 @@ export function removeAllUUIDRefs(text) {
  * @param {store} store 
  */
 export function getStore(store) {
-  let val;
-  // Sub and immediately unsub
-  store.subscribe(x => val = x)();
-  return val;
+    let val;
+    // Sub and immediately unsub
+    store.subscribe(x => val = x)();
+    return val;
+}
+
+export function confirmDeleteDocument(doc) {
+    TJSDialog.confirm({
+        content: `Delete ${doc.name}?`,
+        onYes: () => {
+            // Delete the item entirely
+            doc.delete();
+        },
+    });
 }

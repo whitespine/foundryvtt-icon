@@ -1,5 +1,6 @@
 import { TJSDocument } from '#runtime/svelte/store/fvtt/document';
 import { resolveDotpath } from '../../util/paths';
+import { UUIDDocumentStore } from '../../util/stores/uuid';
 
 /**
  * Provides a basic action to update a Foundry document on change events.
@@ -22,7 +23,7 @@ export function updateDoc(node, initial_options = {}) {
 
     // Setup updateable options
     let doc;
-    let path; 
+    let path;
     let current_doc_val;
     let unsubscribe;
     /**
@@ -32,15 +33,15 @@ export function updateDoc(node, initial_options = {}) {
     function setOptions(new_options) {
         // Clear old if needed
         if (unsubscribe) {
-unsubscribe();
-}
+            unsubscribe();
+        }
 
         doc = new_options.doc;
         path = new_options.path;
 
         // Validate
-        if (!(doc instanceof TJSDocument)) {
-            throw new TypeError(`updateDoc error: 'doc' must be an instance of TJSDocument.`);
+        if (!(doc instanceof TJSDocument) && !(doc instanceof UUIDDocumentStore)) {
+            throw new TypeError(`updateDoc error: 'doc' must be an instance of TJSDocument or UUIDDocumentStore.`);
         }
 
         if (typeof path !== 'string') {
@@ -50,7 +51,7 @@ unsubscribe();
         unsubscribe = doc.subscribe(onDocChange);
     }
     setOptions(initial_options);
-    
+
 
     /**
      * Updates `doc` w/ current focused state.

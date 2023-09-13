@@ -8,6 +8,10 @@ export class UUIDDocumentStore {
         this.set(initial);
     }
 
+    get() {
+        return this.wrapped_store.get();
+    }
+
     /**
      * 
      * @param {string} document The new uuid, a document, or null/undefined

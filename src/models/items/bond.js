@@ -32,6 +32,9 @@ export class BondModel extends ItemModel {
             // An array of compendium uuids of unlockable bond powers. 
             // Ideally you don't edit this, and only show it when in a special unlock menu
             powers: new foundry.data.fields.ArrayField(new foundry.data.fields.StringField()),
+
+            // Status
+            equipped: new foundry.data.fields.BooleanField({ initial: true })
         };
     }
 }

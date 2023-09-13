@@ -13,6 +13,7 @@
     import { TAB_STORES } from "../../util/stores/tabs";
     import Notes from "./player/Notes.svelte";
     import Loadout from "./player/Loadout.svelte";
+    import { equipBond, equipJob } from "../../util/loadout";
 
     let actor = getContext("tjs_actor");
     let doc = actor; // Alias
@@ -30,9 +31,9 @@
     async function handleDrop(doc) {
         // Destroy old job or bond
         if (doc instanceof Item) {
-            if (doc.type === "bond") await $actor.system.bond?.delete();
-            if (doc.type === "job") await $actor.system.job?.delete();
-            $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(doc.toObject(true))]);
+            let [owned_doc] = await $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(doc.toObject(true))]);
+            if (owned_doc.type === "bond") await equipBond($actor, owned_doc); 
+            if (owned_doc.type === "job") await equipJob($actor, owned_doc);
         }
     }
 

@@ -4,6 +4,7 @@
     import { BoonBaneApplication } from "../../apps/BoonBaneApplication";
     import { dragAsMark } from "../../actions/drag";
     import RichTextDisplay from "../generic/RichTextDisplay.svelte";
+    import { confirmDeleteDocument } from "../../../util/misc";
 
     // An ability (trait) or a relic. Can be null
     export let item = null;
@@ -46,13 +47,7 @@
 
     /** Deletes the selected item. */
     function deleteSelected() {
-        TJSDialog.confirm({
-            content: `Delete ${item.name}?`,
-            onYes: () => {
-                // Delete the item entirely
-                item.delete();
-            },
-        });
+        confirmDeleteDocument(item);
     }
 </script>
 
