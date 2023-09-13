@@ -3,7 +3,7 @@
   "name": "icon",
   "title": "ICON System",
   "description": "<p>A Foundry VTT game system for <a href=\"https://massif-press.itch.io/icon\">ICON</a> by <a href=\"https://massif-press.itch.io/\">Massif Press</a></p><p>\"ICON for FoundryVTT\" is not an official <i>ICON</i> product; it is a third party work, and is not affiliated with Massif Press.</p><p><i>ICON</i> is copyright Massif Press.</p>",
-  "version": "0.3.16",
+  "version": "0.3.17",
   "authors": [
     {
       "name": "WHITESPINE"
@@ -214,7 +214,7 @@
   "bugs": "https://github.com/whitespine/foundryvtt-icon/issues",
   "changelog": "https://github.com/whitespine/foundryvtt-icon/releases/latest/",
   "manifest": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/system.json",
-  "download": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/icon_0.3.16.zip",
+  "download": "https://github.com/whitespine/foundryvtt-icon/releases/latest/download/icon_0.3.17.zip",
   "protected": false,
   "coreTranslation": false,
   "library": false
