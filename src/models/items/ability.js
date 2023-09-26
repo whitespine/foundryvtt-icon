@@ -57,7 +57,7 @@ export class AbilityChoiceField extends fields.SchemaField {
 
     /**
      * Yields a string that represents the action cost of this ability
-     * // TODO: End turn, limit break
+     * // TODO: End turn
      *
      * @param {object} data The raw choice data
      *
