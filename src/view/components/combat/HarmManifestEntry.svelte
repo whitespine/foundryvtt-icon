@@ -2,8 +2,8 @@
     import * as harm from "../../../util/harm";
     import HarmRecord from "./HarmRecord.svelte";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
-    import { actorTokenImage } from "../../actions/util";
     import { getContext } from "svelte";
+    import { actorTokenImage } from "../../../util/misc";
 
     /** @type {string} */
     export let actor_uuid;

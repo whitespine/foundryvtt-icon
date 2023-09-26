@@ -2,8 +2,7 @@
     import { setContext } from "svelte";
     import * as harm from "../../util/harm";
     import HarmManifestEntry from "../components/combat/HarmManifestEntry.svelte";
-    import { simpleUnslugifyObject } from "../actions/util";
-    import { showHarmApplication } from "../../util/harm";
+    import { simpleUnslugifyObject } from "../../util/misc";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
 
     /** @type {ChatMessage} */
@@ -23,7 +22,7 @@
 </script>
 
 <div class="icon flexcol">
-    <h1 on:click={showHarmApplication}>
+    <h1 on:click={harm.showHarmApplication}>
         Damage Planner
         <i class="fas fa-spider" />
     </h1>

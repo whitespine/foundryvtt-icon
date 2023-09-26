@@ -4,11 +4,10 @@
     import Portrait from "../components/Portrait.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
     import { GENERIC_COLORS, PLAYER_COLORS } from "../../models/items/job";
-    import { localize } from "../../util/misc";
+    import { localize, simpleMixList } from "../../util/misc";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
     import { dropDocs } from "../actions/drop";
     import PreviewItem from "../components/preview/PreviewItem.svelte";
-    import { simpleMixList } from "../actions/util";
     import { TAB_STORES } from "../../util/stores/tabs";
     import AbilityDetail from "../components/combat/AbilityDetail.svelte";
 

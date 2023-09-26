@@ -2,8 +2,8 @@
 <script>
     import { ICON } from "../../../consts";
     import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../../util/harm";
+    import { actorTokenImage, simpleMixList } from "../../../util/misc";
     import { ATTACKER, SELECTED_TOKENS, TARGETED_TOKENS } from "../../../util/stores/tokens";
-    import { actorTokenImage, simpleMixList } from "../../actions/util";
     import { RapidPromptApplication } from "../../apps/RapidPromptApplication";
 
     import { slide } from "svelte/transition";

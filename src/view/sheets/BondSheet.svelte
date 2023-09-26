@@ -5,11 +5,10 @@
     import EditableDocArray from "../components/generic/EditableDocArray.svelte";
     import ProseMirrorEditor from "../components/generic/ProseMirrorEditor.svelte";
     import Tabs from "../components/generic/Tabs.svelte";
-    import { localize } from "../../util/misc";
+    import { localize, simpleMixList } from "../../util/misc";
     import { TAB_STORES } from "../../util/stores/tabs";
     import PreviewItem from "../components/preview/PreviewItem.svelte";
     import { dropDocs } from "../actions/drop";
-    import { simpleMixList } from "../actions/util";
 
     let actor = getContext("tjs_actor");
     let item = getContext("tjs_item"); // Alias
