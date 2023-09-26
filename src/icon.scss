@@ -84,28 +84,6 @@ li.chat-message {
         background: var(--secondary-background);
     }
 
-    .tjs-editor.prosemirror {
-        min-height: 20px;
-
-        .editor-menu {
-
-            span,
-            i,
-            option {
-                color: var(--primary-color);
-            }
-
-            button:hover,
-            button ul {
-                background: var(--secondary-background);
-            }
-
-            .pm-dropdown,
-            option {
-                background: var(--secondary-background);
-            }
-        }
-    }
 
     a.inline-roll,
     .dice-tooltip {
