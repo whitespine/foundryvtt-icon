@@ -53,8 +53,12 @@
         position: relative;
         --tjs-editor-toolbar-button-color: var(--primary-color);
         --tjs-editor-content-color: var(--primary-color);
+        --tjs-editor-toolbar-select-color: var(--secondary-color);
         --tjs-editor-toolbar-select-background: var(--secondary-background);
+        --tjs-editor-toolbar-select-color-hover: var(--tertiary-color);
+        --tjs-editor-toolbar-select-background-hover: var(--tertiary-background);
         // --tjs-editor-active-overflow: unset;
+
     }
 
     :global(.icon-editor .editor-active) {
