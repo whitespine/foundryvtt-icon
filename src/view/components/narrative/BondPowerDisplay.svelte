@@ -2,6 +2,7 @@
     import { slide } from "svelte/transition";
     import { TJSDialog } from "#runtime/svelte/application";
     import { dragAsDoc } from "../../actions/drag";
+    import RichTextDisplay from "../generic/RichTextDisplay.svelte";
     /** @type {TJSDocument<IconItem>}*/
     export let power;
 
@@ -37,7 +38,7 @@
     </div>
     {#if expanded}
         <div class="description" transition:slide>
-            <div>{@html power.system.description}</div>
+            <div><RichTextDisplay body={power.system.description} /></div>
             <div style="float: right">
                 <i class="fas fa-edit" on:click={power.sheet.render(true, { focus: true })} />
                 <i class="fas fa-trash" on:click={promptDelete} />
