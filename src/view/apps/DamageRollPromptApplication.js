@@ -48,7 +48,10 @@ export class DamageRollPromptApplication extends TJSDialog {
             }
          },
          default: 'confirm'
-      }, { width: 400 });
+      }, { 
+         width: 400,
+         classes: ["icon-dialog"],
+      });
    }
 
    /**

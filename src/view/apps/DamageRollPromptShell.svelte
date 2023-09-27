@@ -68,7 +68,7 @@
 
             <div class="flexcol">
                 <button on:click|preventDefault={() => fray_count++}>
-                    <i class="fas fa-minus" />
+                    <i class="fas fa-plus" />
                 </button>
                 <span>{fray_count} × fray ({fray})</span>
                 <button on:click|preventDefault={() => (fray_count = Math.max(0, fray_count - 1))}>
@@ -80,8 +80,16 @@
 
             <input type="number" bind:value={flat_bonus} required style="grid-area: 2 / 7" />
         </div>
-        <div class="flexcol">
-
+        <div class="flexcol options-grid">
+            <div>
+                <button on:click|preventDefault={() => bonus_damage++}>
+                    <i class="fas fa-plus fa-sm" />
+                </button>
+                <span>{bonus_damage} × Bonus Damage</span>
+                <button on:click|preventDefault={() => (bonus_damage = Math.max(0, bonus_damage - 1))}>
+                    <i class="fas fa-minus fa-sm" />
+                </button>
+            </div>
         </div>
     </div>
 </form>
@@ -111,6 +119,18 @@
 
         input {
             width: 16px;
+        }
+    }
+
+    .options-grid {
+        button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            i {
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
     }
 </style>

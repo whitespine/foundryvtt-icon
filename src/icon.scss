@@ -50,6 +50,7 @@ $document-types: join($item-types, $actor-types);
 
 // Fix inputs on sheets and other stuff core foundry is annoying about
 .icon>section>main,
+.icon-dialog.window-app .window-content,
 li.chat-message {
     background: var(--primary-background);
     color: var(--primary-color);
@@ -57,8 +58,14 @@ li.chat-message {
     input,
     select,
     textarea,
-    option {
+    option,
+    button {
         color: inherit;
+    }
+
+    button {
+        color: var(--secondary-color);
+        background-color: var(--secondary-background);
     }
 
     option {
