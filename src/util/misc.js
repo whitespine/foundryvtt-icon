@@ -125,18 +125,23 @@ export function actorTokenImage(actor, def = null) {
     }
 }
 
-/**
+/** Returns a text but with all tags removed. Just inner html all throughout
  * 
  * @param {string} raw_text 
  * @returns {string}
  */
 export function scourHTML(raw_text) {
     // Get rid of html like tags
-    raw_text = raw_text.replaceAll(/<\s*\/?\s*\W+\s*>/g, "");
+    return raw_text.replaceAll(/<\s*\/?\s*\W+\s*>/g, "");
+}
 
+/** Returns a text but with all tags removed. Just inner html all throughout
+ * 
+ * @param {string} raw_text 
+ * @returns {string}
+ */
+export function scourRefs(raw_text) {
     // Substitute uuids for just their sub text
     let re = /@UUID\[.*?\]\{(.*?)\}/gi;
-    raw_text = raw_text.replaceAll(re, (m) => m.match(/\{(.*?)\}/)[1]);
-
-    return raw_text;
+    return raw_text.replaceAll(re, (m) => m.match(/\{(.*?)\}/)[1]);
 }

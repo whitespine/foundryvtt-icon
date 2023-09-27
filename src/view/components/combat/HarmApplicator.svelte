@@ -4,6 +4,7 @@
     import { computeHarm, flagsForAttacker, flagsForDefender, quickDamage } from "../../../util/harm";
     import { actorTokenImage, simpleMixList } from "../../../util/misc";
     import { ATTACKER, SELECTED_TOKENS, TARGETED_TOKENS } from "../../../util/stores/tokens";
+    import { DamageRollPromptApplication } from "../../apps/DamageRollPromptApplication";
     import { RapidPromptApplication } from "../../apps/RapidPromptApplication";
 
     import { slide } from "svelte/transition";
@@ -12,7 +13,9 @@
         if(value === "cust.") {
             value = await RapidPromptApplication.show("number");
             if(!value) return;
-            last_custom = value;
+        } else if (value === "roll") {
+            value = await DamageRollPromptApplication.show($ATTACKER?.actor);
+            if(!value) return;
         }
 
         let items = [];
@@ -48,9 +51,6 @@
     
     // Current selected damage type
     let selected_type = "damage";
-
-    // The last entered custom value
-    let last_custom = 0;
 </script>
 
 <div class="main">
@@ -82,7 +82,7 @@
         {/each}
     </div>
     <div class="standard">
-        {#each [1, 2, 3, 4, 999, "25%", last_custom, "cust."] as value}
+        {#each [1, 2, 3, 4, 999, "25%", "roll", "cust."] as value}
             <button on:click={() => emitHarm(value)}>
                 {value}
             </button>
