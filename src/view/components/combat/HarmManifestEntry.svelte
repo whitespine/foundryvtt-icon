@@ -15,30 +15,10 @@
     /** @type {harm.HarmRecord[]} */
     export let records;
 
-    /** @type {harm.HarmRecord} */
-    let last_record;
-    $: last_record = records[records.length - 1];
-
-    /** @type {boolean} */
-    let can_apply;
-    $: can_apply =
-        last_record &&
-        !($tjs_msg.getFlag(game.system.id, "applied")?.includes(actor_uuid)) && 
-        (last_record.final_hp != $actor?.system.hp.value || last_record.final_vigor != $actor?.system.vigor.value);
-
     /** @type {boolean} */
     let can_see;
     $: can_see = $actor?.testUserPermission(game.user, "OBSERVER");
 
-    // Sets the actors hp/vigor to match the end of the record
-    function apply() {
-        $actor.update({
-            "system.hp.value": last_record.final_hp,
-            "system.vigor.value": last_record.final_vigor,
-        });
-        let old_applied = $tjs_msg.getFlag(game.system.id, "applied") ?? [];
-        $tjs_msg.setFlag(game.system.id, "applied",  [...old_applied, actor_uuid]);
-    }
 
     // Replaces this harm manifest with a new one
     async function updateRecords(new_records) {
@@ -105,10 +85,6 @@
             />
         </div>
     {/each}
-
-    {#if can_apply}
-        <button on:click={apply}>Apply</button>
-    {/if}
 </div>
 
 <style lang="scss">

@@ -19,6 +19,22 @@
      */
     let fixed_manifest;
     $: fixed_manifest = simpleUnslugifyObject(flags.harm_manifest);
+
+    // Sets the actors hp/vigor to match the end of the record
+    async function apply() {
+        for (let [uuid, records] of Object.entries(fixed_manifest)) {
+            let actor = await fromUuid(uuid);
+            if (actor) {
+                let last_record = records[records.length - 1];
+                if (!last_record) continue;
+                actor.update({
+                    "system.hp.value": last_record.final_hp,
+                    "system.vigor.value": last_record.final_vigor,
+                });
+                $tjs_msg.setFlag(game.system.id, "applied", true);
+            }
+        }
+    }
 </script>
 
 <div class="icon flexcol">
@@ -27,12 +43,17 @@
         <i class="fas fa-spider" />
     </h1>
     {#each Object.entries(fixed_manifest) as [actor_uuid, records]}
-        <HarmManifestEntry actor_uuid={actor_uuid} records={records} />
+        {#if records.length}
+            <HarmManifestEntry {actor_uuid} {records} />
+        {/if}
     {/each}
+    {#if !flags.applied}
+        <button on:click={apply}>Apply All</button>
+    {/if}
 </div>
 
 <style lang="scss">
     h1 {
         cursor: pointer;
     }
-    </style>
+</style>
