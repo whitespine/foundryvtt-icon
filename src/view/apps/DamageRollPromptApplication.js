@@ -9,19 +9,12 @@ export class DamageRollPromptApplication extends TJSDialog {
    /**
     * Prompts the user for data
     *
-    * @param {Actor} attacker - The person making the attack
-    *
     * @param {import('#svelte-fvtt/application').TJSDialogOptions} [dialogData] - Optional data to modify dialog.
     */
-   constructor(attacker, dialogData = {}) {
-      if (attacker && !(attacker instanceof Actor)) {
-         console.warn(`DamageRollPromptApplication - invalid attacker, must be an actor`);
-         return null;
-      }
-
+   constructor(dialogData = {}) {
       super({
-         modal: true,
-         draggable: false,
+         modal: false,
+         draggable: true,
          focusFirst: true,
          focusKeep: true,
          minimizable: false,
@@ -29,7 +22,6 @@ export class DamageRollPromptApplication extends TJSDialog {
          content: {
             class: DamageRollPromptShell,
             props: {
-               attacker: new TJSDocument(attacker ?? undefined),
             }
          },
          title: dialogData.title ?? "Damage Roll",
@@ -57,15 +49,13 @@ export class DamageRollPromptApplication extends TJSDialog {
    /**
     * Prompts the user for data. Handles instantiation, rendering, and follow through
     * 
-    * @param {Actor} data_type - Field type
-    * 
     * @param {import('#svelte-fvtt/application').TJSDialogOptions} [dialogData] - Optional data to modify dialog.
     * 
     * @param dialog_data
     *
     * @returns {Promise<string | number | null>} The value, or null if the user cancelled the prompt
     */
-   static async show(attacker, dialog_data = {}) {
-      return new DamageRollPromptApplication(attacker, dialog_data).wait();
+   static async show(dialog_data = {}) {
+      return new DamageRollPromptApplication(dialog_data).wait();
    }
 }

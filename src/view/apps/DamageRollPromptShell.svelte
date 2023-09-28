@@ -2,11 +2,9 @@
 
 <script>
     import { getContext } from "svelte";
+    import { buildDamageFormula } from "../../util/harm";
+    import { ATTACKER } from "../../util/stores/tokens";
 
-    /**
-     * @type {TJSDocument}
-     */
-    export let attacker;
 
     const { application } = getContext("#external");
 
@@ -23,8 +21,10 @@
     let rangiri = false; // Doubles the total rolled result
     let bonus_damage = 0;
 
-    let die = $attacker?.system.class.damage_die ?? 6;
-    let fray = $attacker?.system.class.fray_damage ?? 2;
+    let die;
+    $: die = $ATTACKER?.actor?.system.class?.damage_die ?? 6;
+    let fray;
+    $: fray = $ATTACKER?.actor?.system.class?.fray_damage ?? 2;
 
     // Called by confirm button
     export function requestSubmit() {
@@ -43,9 +43,12 @@
      * @returns {Promise<void>}
      */
     async function saveData(event) {
-        const fd = new FormDataExtended(event.target);
+        // const fd = new FormDataExtended(event.target);
+        let formula = buildDamageFormula(die, dice_count, `${fray_count} * @class.fray_damage`, bonus_damage);
+        let roll = new Roll(formula);
+        await roll.roll();
 
-        managedPromise.resolve(fd.object.value);
+        managedPromise.resolve(roll.total);
         application.close();
     }
 </script>

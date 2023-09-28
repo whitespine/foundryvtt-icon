@@ -435,3 +435,20 @@ export function flagsForDefender(actor) {
     }
     return result;
 }
+
+/**
+ * 
+ * @param {number} die The damage die number
+ * @param {number} die_count How many damage die
+ * @param {number | string} flat_bonuses All the flat bonuses. Fray etc
+ * @param {number} bonus_damage How many instances of bonus damage they have
+ */
+export function buildDamageFormula(die, die_count, flat_bonuses, bonus_damage) {
+    if(die_count <= 0) {
+        return flat_bonuses.toString();
+    } else if (bonus_damage <= 0) {
+        return `${die_count}d${die} + ${flat_bonuses}`;
+    } else {
+        return `${die_count + bonus_damage}d${die}kh${die_count} + ${flat_bonuses}`;
+    }
+}

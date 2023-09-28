@@ -14,7 +14,7 @@
             value = await RapidPromptApplication.show("number");
             if(!value) return;
         } else if (value === "roll") {
-            value = await DamageRollPromptApplication.show($ATTACKER?.actor);
+            value = await DamageRollPromptApplication.show();
             if(!value) return;
         }
 
@@ -33,7 +33,11 @@
         }
     }
     
+    // Are they dragging an attacker?
     let dragged = null;
+
+    // Are they hoving over the roll button?
+    let hovering_roll = false;
 
     // For reordering targets
     function dropHandler(evt) {
@@ -60,7 +64,7 @@
         {#if $TARGETED_TOKENS.length === 0}
             <span>Target tokens to apply damage to them!</span>
         {/if}
-        {#each $TARGETED_TOKENS as st (st.id)}
+        {#each $TARGETED_TOKENS as st, index (st.id)}
             <img
                 alt={st.name}
                 transition:slide={{ axis: "x", duration: 200 }}
@@ -68,6 +72,7 @@
                 data-tooltip={st.name}
                 draggable="true"
                 data-id={st.id}
+                class:glow={index===0 && hovering_roll}
                 on:drag={() => dragged = st}
                 on:contextmenu|preventDefault={clearHandler}
             />
@@ -83,7 +88,11 @@
     </div>
     <div class="standard">
         {#each [1, 2, 3, 4, 999, "25%", "roll", "cust."] as value}
-            <button on:click={() => emitHarm(value)}>
+            <button on:click={() => emitHarm(value)} on:mouseenter={() => {
+                if(value === "roll") hovering_roll = true;
+            }} on:mouseleave={() => {
+                if(value === "roll") hovering_roll = false;
+            }}>
                 {value}
             </button>
         {/each}
@@ -114,6 +123,10 @@
 
         span {
             padding-right: 4px;
+        }
+
+        .glow {
+            box-shadow: 0px 0px 3px 3px green;
         }
     }
 
