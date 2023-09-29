@@ -9,9 +9,6 @@
 
     let actor = getContext("tjs_actor");
 
-    /** @type {boolean} Whether to show */
-    export let loadout_button = false;
-
     // Props
     const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
     const abilities = actor.embedded.create(Item, {
@@ -96,10 +93,6 @@
                 <span>{chapterIcon(relic.system.rank)} {relic.name}</span>
             </div>
         {/each}
-
-        {#if loadout_button}
-            <button on:click={showLoadout}>Edit Loadout</button>
-        {/if}
     </div>
 
     <div class="preview">
