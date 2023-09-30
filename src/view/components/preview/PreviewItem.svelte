@@ -85,10 +85,6 @@
         span {
             margin-left: 5px;
         }
-        i {
-            cursor: pointer;
-            margin-right: 5px;
-        }
 
         .controls {
             margin-left: auto;

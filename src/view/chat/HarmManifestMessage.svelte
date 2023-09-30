@@ -53,7 +53,7 @@
 </div>
 
 <style lang="scss">
-    h1 {
+    h2 {
         cursor: pointer;
     }
 </style>
