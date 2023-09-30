@@ -36,6 +36,5 @@
     div.faded {
         opacity: 0.2;
         pointer-events: unset;
-        
     }
 </style>

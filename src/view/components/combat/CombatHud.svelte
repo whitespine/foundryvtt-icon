@@ -152,12 +152,6 @@
                     color: var(--secondary-color);
                 }
             }
-
-            button {
-                /* Want it floating at the bottom of the ability bar */
-                margin-top: auto;
-                width: 90%;
-            }
         }
 
         .preview {

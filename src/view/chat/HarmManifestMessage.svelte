@@ -38,10 +38,10 @@
 </script>
 
 <div class="icon flexcol">
-    <h1 on:click={harm.showHarmApplication}>
+    <h2 on:click={harm.showHarmApplication}>
         Damage Planner
-        <i class="fas fa-spider" />
-    </h1>
+        <i class="fas fa-spider fa-sm" />
+    </h2>
     {#each Object.entries(fixed_manifest) as [actor_uuid, records]}
         {#if records.length}
             <HarmManifestEntry {actor_uuid} {records} />

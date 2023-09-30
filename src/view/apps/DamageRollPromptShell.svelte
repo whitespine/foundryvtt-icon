@@ -5,7 +5,6 @@
     import { buildDamageFormula } from "../../util/harm";
     import { ATTACKER } from "../../util/stores/tokens";
 
-
     const { application } = getContext("#external");
 
     const managedPromise = getContext("#managedPromise");
@@ -42,11 +41,11 @@
      *
      * @returns {Promise<void>}
      */
-    async function saveData(event) {
+    function saveData(event) {
         // const fd = new FormDataExtended(event.target);
         let formula = buildDamageFormula(die, dice_count, `${fray_count} * @class.fray_damage`, bonus_damage);
         let roll = new Roll(formula);
-        await roll.roll();
+        roll.roll({ async: false });
 
         managedPromise.resolve(roll.total);
         application.close();
