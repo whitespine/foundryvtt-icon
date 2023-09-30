@@ -4,7 +4,7 @@
     import { DRAGGING } from "../../../util/stores/dragdrop";
 </script>
 
-<div class="window-app" class:faded={$DRAGGING}>
+<div class="window-app" class:faded={false}>
     <slot />
 </div>
 
