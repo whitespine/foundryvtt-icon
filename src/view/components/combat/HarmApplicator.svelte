@@ -36,7 +36,8 @@
     // Are they dragging an attacker?
     let dragged = null;
 
-    // Are they hoving over the roll button?
+    // Are they hoving over the "roll" damage button?
+    // This one specifically only applies to the first target
     let hovering_roll = false;
 
     // For reordering targets
@@ -93,7 +94,7 @@
             }} on:mouseleave={() => {
                 if(value === "roll") hovering_roll = false;
             }}>
-                {value}{#if $ATTACKER.actor?.system.class?.fray_damage === value}|fray{/if}
+                {value}{#if $ATTACKER?.actor?.system.class?.fray_damage === value}|fray{/if}
             </button>
         {/each}
     </div>
