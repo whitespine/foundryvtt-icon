@@ -93,7 +93,7 @@
             }} on:mouseleave={() => {
                 if(value === "roll") hovering_roll = false;
             }}>
-                {value}
+                {value}{#if $ATTACKER.actor?.system.class?.fray_damage === value}|fray{/if}
             </button>
         {/each}
     </div>
