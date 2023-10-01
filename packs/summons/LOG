@@ -1,3 +1,5 @@
-2023/09/10-20:04:19.419 8fa4 Recovering log #20
-2023/09/10-20:04:19.423 8fa4 Delete type=0 #20
-2023/09/10-20:04:19.423 8fa4 Delete type=3 #19
+2023/10/01-15:31:28.311 68bc Recovering log #37
+2023/10/01-15:31:28.320 68bc Level-0 table #39: started
+2023/10/01-15:31:28.320 68bc Level-0 table #39: 79071 bytes OK
+2023/10/01-15:31:28.327 68bc Delete type=0 #37
+2023/10/01-15:31:28.327 68bc Delete type=3 #36
