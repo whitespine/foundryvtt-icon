@@ -145,3 +145,37 @@ export function scourRefs(raw_text) {
     let re = /@UUID\[.*?\]\{(.*?)\}/gi;
     return raw_text.replaceAll(re, (m) => m.match(/\{(.*?)\}/)[1]);
 }
+
+/**
+ * 
+ * @param {Item} source The item that was dragged
+ * @param {DropEvent} event 
+ */
+export async function handleSortEmbeddedItem(source, event) {
+    // Just add it to the end of the list
+    let drop_target = event.target.closest("[data-uuid]");
+    let target = await fromUuid(drop_target?.dataset.uuid);
+    if(!target) return;
+
+    // Don't sort on yourself
+    if (source.id === target.id) return;
+
+    // Identify sibling items based on adjacent HTML elements
+    const siblings = [];
+    for (let el of drop_target.parentElement.children) {
+        let sibling_id = el.dataset.uuid;
+        let sibling = await fromUuid(sibling_id); 
+        if (sibling && sibling !== source) siblings.push(sibling);
+    }
+
+    // Perform the sort
+    const sort_updates = SortingHelpers.performIntegerSort(source, { target, siblings });
+    const update_data = sort_updates.map(u => {
+        const update = u.update;
+        update._id = u.target._id;
+        return update;
+    });
+
+    // Perform the update
+    return target.actor.updateEmbeddedDocuments("Item", update_data);
+}

@@ -24,14 +24,8 @@
     }
 </script>
 
-<div class="root">
-    <div
-        class="header"
-        on:click={() => (expanded = !expanded)}
-        data-uuid={power.uuid}
-        draggable="true"
-        use:dragAsDoc={{ doc: power }}
-    >
+<div class="root" data-uuid={power.uuid} draggable="true" use:dragAsDoc={{ doc: power }}>
+    <div class="header" on:click={() => (expanded = !expanded)}>
         <img class="icon hover" src="icons/skills/social/diplomacy-writing-letter.webp" />
         <img class="icon cover" src={power.img} on:click={sendToChat} />
         <span>{power.name}</span>

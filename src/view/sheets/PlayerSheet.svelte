@@ -1,8 +1,7 @@
 <script>
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
-    import { localize } from "../../util/misc";
-    import Tabs from "../components/generic/Tabs.svelte";
+    import { handleSortEmbeddedItem, localize } from "../../util/misc";
     import Portrait from "../components/Portrait.svelte";
     import { dropDocs } from "../actions/drop";
     import CombatHud from "../components/combat/CombatHud.svelte";
@@ -27,13 +26,21 @@
     /**
      * Add dropped items to this actor
      * @param {Item} doc The dropped document
+     * @param {DropEvent} event The drop event
      */
-    async function handleDrop(doc) {
+    async function handleDrop(doc, event) {
         // Destroy old job or bond
         if (doc instanceof Item) {
-            let [owned_doc] = await $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(doc.toObject(true))]);
-            if (owned_doc.type === "bond") await equipBond($actor, owned_doc); 
-            if (owned_doc.type === "job") await equipJob($actor, owned_doc);
+            if (doc.actor === $actor) {
+                // Attempt resorting
+                await handleSortEmbeddedItem(doc, event);
+            } else {
+                let [owned_doc] = await $actor.createEmbeddedDocuments("Item", [
+                    foundry.utils.duplicate(doc.toObject(true)),
+                ]);
+                if (owned_doc.type === "bond") await equipBond($actor, owned_doc);
+                if (owned_doc.type === "job") await equipJob($actor, owned_doc);
+            }
         }
     }
 
@@ -42,7 +49,6 @@
      * @param {Item} doc The dropped document
      */
     function allowDrop(doc) {
-        console.log(doc);
         return ["bond-power", "bond", "job", "ability", "relic"].includes(doc.type);
     }
 </script>
@@ -69,7 +75,11 @@
             <span>
                 {#if $actor.system.bond}
                     {$actor.system.bond.name}
-                    <i class="fas fa-edit" style="float: right; cursor: pointer" on:click={() => $actor.system.bond.sheet.render(true, { focus: true })} />
+                    <i
+                        class="fas fa-edit"
+                        style="float: right; cursor: pointer"
+                        on:click={() => $actor.system.bond.sheet.render(true, { focus: true })}
+                    />
                 {:else}
                     None
                 {/if}
@@ -84,7 +94,11 @@
             <span draggable="true" use:dragAsDoc={{ doc: $actor.system.job }}>
                 {#if $actor.system.job}
                     {$actor.system.job.name}
-                    <i class="fas fa-edit" style="float: right; cursor: pointer" on:click={() => $actor.system.job.sheet.render(true, { focus: true })} />
+                    <i
+                        class="fas fa-edit"
+                        style="float: right; cursor: pointer"
+                        on:click={() => $actor.system.job.sheet.render(true, { focus: true })}
+                    />
                 {:else}
                     None
                 {/if}
@@ -97,7 +111,9 @@
             <!-- Sheet Tab Navigation -->
             <!--<Tabs {tabs} horizontal={false} bind:selected={$selected_tab} />-->
             {#each tabs as tab}
-                <button class="tab" class:active={tab.key === $selected_tab} on:click={() => $selected_tab = tab.key}>{tab.label}</button>
+                <button class="tab" class:active={tab.key === $selected_tab} on:click={() => ($selected_tab = tab.key)}
+                    >{tab.label}</button
+                >
             {/each}
         </div>
     </header>
@@ -113,7 +129,7 @@
             {:else}
                 <span>
                     {localize("ICON.Tutorial.AddJob")}
-                </span> 
+                </span>
             {/if}
         </section>
     {:else if $selected_tab == "ICON.Progression"}

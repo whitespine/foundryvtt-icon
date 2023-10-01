@@ -9,11 +9,11 @@
     let actor = getContext("tjs_actor");
 
     // Initialize our embedded categories
-    const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
+    const sort = (a, b) => a.sort - b.sort;
     const bond_powers = actor.embedded.create(Item, {
         name: "bond-powers",
         filters: [(i) => i.type === "bond-power"],
-        sort: name_alphabetical,
+        sort,
     });
 
     /**
@@ -32,7 +32,7 @@
                 <ActionRating path={`system.actions.${action_name}`} />
             {/each}
         </div>
-    <div class="flexrow">
+        <div class="flexrow">
             <BoundedNumberDisplay name={localize("ICON.Strain")} path="system.strain" />
             <BoundedNumberDisplay name={localize("ICON.Effort")} path="system.effort" />
         </div>
@@ -47,7 +47,7 @@
             {#if $actor.system.bond}
                 <h2
                     style="text-align: center;"
-                    data-tooltip={ $actor.system.bond.system.description }
+                    data-tooltip={$actor.system.bond.system.description}
                     use:dragAsDoc={{ doc: $actor.system.bond }}
                     draggable="true"
                 >

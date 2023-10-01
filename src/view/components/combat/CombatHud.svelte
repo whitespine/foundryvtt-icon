@@ -10,21 +10,21 @@
     let actor = getContext("tjs_actor");
 
     // Props
-    const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
+    const sort = (a, b) => a.sort - b.sort;
     const abilities = actor.embedded.create(Item, {
         name: "abilities",
         filters: [(i) => i.system.equipped && i.type === "ability" && !i.system.trait],
-        sort: name_alphabetical,
+        sort,
     });
     const traits = actor.embedded.create(Item, {
         name: "traits",
         filters: [(i) => i.system.equipped && i.type === "ability" && i.system.trait],
-        sort: name_alphabetical,
+        sort,
     });
     const relics = actor.embedded.create(Item, {
         name: "relics",
         filters: [(i) => i.type === "relic"],
-        sort: name_alphabetical,
+        sort,
     });
 
     // State
@@ -54,6 +54,7 @@
         {#if [...$abilities].length}<h3>Abilities</h3>{/if}
         {#each [...$abilities] as ability (ability.id ?? "err")}
             <div
+                data-uuid={ability.uuid}
                 class="ability"
                 on:click={() => selectItem(ability)}
                 class:selected={ability === $selected}
@@ -70,6 +71,7 @@
         {#if [...$traits].length}<h3>Traits</h3>{/if}
         {#each [...$traits] as trait (trait.id ?? "err")}
             <div
+                data-uuid={trait.uuid}
                 class="trait"
                 on:click={() => selectItem(trait)}
                 class:selected={trait === $selected}
@@ -83,6 +85,7 @@
         {#if [...$relics].length}<h3>Relics</h3>{/if}
         {#each [...$relics] as relic (relic.id ?? "err")}
             <div
+                data-uuid={relic.uuid}
                 class="relic"
                 on:click={() => selectItem(relic)}
                 class:selected={relic === $selected}

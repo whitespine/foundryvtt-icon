@@ -1,7 +1,7 @@
 <script>
     import { getContext } from "svelte";
     import { updateDoc } from "../actions/update";
-    import { localize } from "../../util/misc";
+    import { handleSortEmbeddedItem, localize } from "../../util/misc";
     import Tabs from "../components/generic/Tabs.svelte";
     import Portrait from "../components/Portrait.svelte";
     import { dropDocs } from "../actions/drop";
@@ -25,8 +25,13 @@
      *
      * @param {Item} doc The dropped document
      */
-    function handleDrop(doc) {
-        $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(doc.toObject(true))]);
+    async function handleDrop(doc, event) {
+        if (doc.actor === $actor) {
+            // Attempt resorting
+            await handleSortEmbeddedItem(doc, event);
+        } else if (["ability"].includes(doc.type)) {
+            await $actor.createEmbeddedDocuments("Item", [foundry.utils.duplicate(doc.toObject(true))]);
+        }
     }
 
     /**
@@ -75,22 +80,13 @@
         {:else if $selected_tab === "ICON.Foe.Description"}
             <div class="flexcol">
                 <h2>{localize("ICON.Description")}</h2>
-                <ProseMirrorEditor doc={$doc} path={"system.description" } />
+                <ProseMirrorEditor doc={$doc} path={"system.description"} />
                 <h2>{localize("ICON.Foe.Setup")}</h2>
-                <ProseMirrorEditor doc={$doc} path={"system.setup" } />
+                <ProseMirrorEditor doc={$doc} path={"system.setup"} />
             </div>
         {:else if $selected_tab === "ICON.Foe.Stats"}
             <div class="flexcol">
-                {#each [
-                    ["Defense", "class.defense"], 
-                    ["Damage Dice", "class.damage_die"], 
-                    ["Fray Damage", "class.fray_damage"], 
-                    ["Speed", "class.speed"], 
-                    ["Dash", "class.dash"], 
-                    ["Vitality", "class.vitality"], 
-                    ["Armor", "class.armor"], 
-                    ["Max HP (0 for 4*VIT)", "hp_max_override"]
-                 ] as [label, stat]}
+                {#each [["Defense", "class.defense"], ["Damage Dice", "class.damage_die"], ["Fray Damage", "class.fray_damage"], ["Speed", "class.speed"], ["Dash", "class.dash"], ["Vitality", "class.vitality"], ["Armor", "class.armor"], ["Max HP (0 for 4*VIT)", "hp_max_override"]] as [label, stat]}
                     <label for={label}>{label}:</label>
                     <input name={label} type="number" use:updateDoc={{ doc, path: `system.${stat}` }} />
                 {/each}
