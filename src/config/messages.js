@@ -50,7 +50,9 @@ export function setupMessages() {
     // Iterate over all existing chat message documents and add svelte components
     for (const message of game.messages) {
         const el = document.querySelector(`.message[data-message-id="${message.id}"] .message-content`);
-        sveltifyMessage(message, [el]);
+        if(el) {
+            sveltifyMessage(message, [el]);
+        }
     }
 
     // Clean up / destroy the mounted Svelte component to the message instance when the chat message is deleted.
