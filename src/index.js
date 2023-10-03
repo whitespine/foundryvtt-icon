@@ -77,7 +77,7 @@ function setupDSN() {
     if (game.modules.get("dice-so-nice")?.active && !game.settings.get(game.system.id, ICON.settings.dsn_setup)) {
         console.log(`First login setup for Dice So Nice`);
         game.settings.set("dice-so-nice", "enabledSimultaneousRollForMessage", false);
-        game.settings.set(game.system.id, ICON.setting_dsn_setup, true);
+        game.settings.set(game.system.id, ICON.settings.dsn_setup, true);
     }
 }
 
