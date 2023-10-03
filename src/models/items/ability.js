@@ -183,4 +183,13 @@ export class AbilityModel extends ItemModel {
             equipped: new fields.BooleanField({ initial: true })
         };
     }
+
+    prepareDerivedData() {
+        // Select an active choice based on combo state
+        let combo_token = this.parent.actor?.system.combo ?? null;
+        this.active_choice = this.choices[0];
+        if(combo_token && this.active_choice.combo === 1) {
+            this.active_choice = this.choices.find(c => c.combo === -1) ?? this.active_choice;
+        }
+    }
 }
