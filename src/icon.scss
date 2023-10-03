@@ -55,6 +55,11 @@ li.chat-message {
     background: var(--primary-background);
     color: var(--primary-color);
 
+    // Fix for whisper messages
+    &.whisper {
+        color: black;
+    }
+
     input,
     select,
     textarea,
