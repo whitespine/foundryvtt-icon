@@ -11,6 +11,11 @@
 
     // Props
     const sort = (a, b) => a.sort - b.sort;
+    const round_actions = actor.embedded.create(Item, {
+        name: "abilities",
+        filters: [(i) => i.system.equipped && i.type === "ability" && !i.system.trait],
+        sort,
+    });
     const abilities = actor.embedded.create(Item, {
         name: "abilities",
         filters: [(i) => i.system.equipped && i.type === "ability" && !i.system.trait],
@@ -62,9 +67,9 @@
                 use:dragAsDoc={{ doc: ability }}
             >
                 <img class="icon" src={ability.img} alt={ability.name} />
-                <span>{chapterIcon(ability.system.chapter)} {ability.name}</span>
+                <span>{chapterIcon(ability.system.chapter)} {ability.system.active_choice.name}</span>
                 <span style="margin-left: auto">
-                    {ability.system.choices[0].actionPips}
+                    {ability.system.active_choice.actionPips}
                 </span>
             </div>
         {/each}
