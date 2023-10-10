@@ -16,7 +16,7 @@
 
     // Deduce the item
     let item = new TJSDocument(undefined);
-    $: item.set(fromUuidSync(flags.ability_uuid) ?? undefined);
+    $: item.set(fromUuidSync(flags.ability_uuid, { strict: false }) ?? undefined);
 
     // Deduce the actor
     let actor = new TJSDocument(undefined);
