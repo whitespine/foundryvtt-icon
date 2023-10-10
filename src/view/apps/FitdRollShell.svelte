@@ -101,7 +101,6 @@
 
     .roll {
         width: 120px;
-        background-color: lightblue;
     }
 
     .dicebox {
@@ -138,17 +137,21 @@
         align-items: center;
         justify-items: center;
 
-        .choices button {
-            opacity: 40%;
-            background-color: black;
-            color: white;
-            margin: 2px;
+        .choices {
             width: 100%;
-            cursor: pointer;
-            padding: 0px;
 
-            &.selected {
-                opacity: 100%;
+            button {
+                opacity: 40%;
+                background-color: black;
+                color: white;
+                margin: 2px;
+                width: 100%;
+                cursor: pointer;
+                padding: 0px;
+
+                &.selected {
+                    opacity: 100%;
+                }
             }
         }
     }
