@@ -1,4 +1,7 @@
 // Adds glossary definitions to status flags
+
+import { ICON } from "../consts";
+
 /**
  *
  */
@@ -7,7 +10,15 @@ export function enhanceStatuses() {
     let statuses = game.i18n.translations.ICON.Statuses;
     let glossary = game.i18n.translations.ICON.Glossary;
     CONFIG.statusEffects.forEach((v) => {
+        // Augment description
         v.description = effects[v.name] || statuses[v.name] || glossary[v.name];
+
+        // Augment saveability
+        let saveable = false;
+        if (["stunned", "weakened", "slashed", "hatred", "blind", "dazed", "sealed", "pacified", "vulnerable", "shattered", "immobile"].includes(v.id)) {
+            saveable = true;
+        }
+        foundry.utils.mergeObject(v, { [`flags.icon.${ICON.flags.status_saveable}`]: saveable });
     });
 }
 
@@ -15,16 +26,16 @@ export function enhanceStatuses() {
 export async function saveAgainst(...effects) {
     let rolls = [];
     let messages = [];
-    for(let effect of effects) {
+    for (let effect of effects) {
         let actor = effect.parent;
-        if(!(actor instanceof Actor)) {
+        if (!(actor instanceof Actor)) {
             throw new Error("Cannot save against a non-owned effect");
         }
         let roll = new Roll("1d20");
         await roll.roll();
         let value = roll.total;
         let message;
-            if (value >= 10) {
+        if (value >= 10) {
             await effect.delete();
             message = `${actor.name} saved vs. ${effect.name}: ${roll.toAnchor().outerHTML}!`;
         } else {
@@ -34,7 +45,7 @@ export async function saveAgainst(...effects) {
         rolls.push(roll);
     }
     let content = `<div>
-        ${messages.map(m =>`<span>${m}</span>`)}
+        ${messages.map(m => `<span>${m}</span>`)}
     </div>`;
 
     return ChatMessage.create({

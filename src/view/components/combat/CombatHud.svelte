@@ -117,8 +117,8 @@
         height: 100%;
         display: grid;
         grid-template:
-            "abilities preview" 2fr
-            "abilities statuses" 1fr / 1fr 2fr;
+            "abilities preview" 1fr
+            "abilities statuses" 0fr / 1fr 2fr;
 
         h3 {
             max-width: fit-content;
