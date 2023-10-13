@@ -44,8 +44,8 @@ export async function saveAgainst(...effects) {
         messages.push(message);
         rolls.push(roll);
     }
-    let content = `<div>
-        ${messages.map(m => `<span>${m}</span>`)}
+    let content = `<div class="flexcol">
+        ${messages.map(m => `<span>${m}</span>`).join("")}
     </div>`;
 
     return ChatMessage.create({
