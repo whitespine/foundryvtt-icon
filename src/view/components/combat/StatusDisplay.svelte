@@ -2,6 +2,8 @@
     import { getContext } from "svelte";
     import IndividualStatusDisplay from "./IndividualStatusDisplay.svelte";
 
+    import { slide } from "svelte/transition";
+
     let actor = getContext("tjs_actor");
 
     const name_alphabetical = (a, b) => a.name.localeCompare(b.name);
@@ -14,8 +16,10 @@
 
 <div class="statuses">
     <h3>Statuses</h3>
-    {#each [...$statuses] as status}
-        <IndividualStatusDisplay status={status} />    
+    {#each [...$statuses] as status (status.id)}
+        <div transition:slide={{ axis: "y", duration: 200 }}>
+            <IndividualStatusDisplay status={status} />    
+        </div>
     {/each}
 </div>
 

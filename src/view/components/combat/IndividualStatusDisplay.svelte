@@ -1,20 +1,8 @@
 <script>
     import { ICON } from "../../../consts";
+    import { saveAgainst } from "../../../config/statuses";
 
     export let status;
-
-    // Save against an active effect
-    async function saveAgainst() {
-        let roll = new Roll("1d20");
-        await roll.roll();
-        let value = roll.total;
-        if (value >= 10) {
-            await ae.delete();
-            ui.notifications.info(`Succeeded on save with a ${value}`);
-        } else {
-            ui.notifications.info(`Failed on save with a ${value}`);
-        }
-    }
 
     // Is the effect ongoing? (+)
     let ongoing;
@@ -63,6 +51,7 @@
         data-tooltip="Make Ongoing"
     />
     <!-- svelte-ignore missing-declaration -->
+    <i on:click={() => saveAgainst(status)} class="fas fa-dice" data-tooltip="Roll Save" />
     <i on:click={post} class="fas fa-comment" data-tooltip="Post" />
     <i on:click={() => status.sheet?.render(true, { focus: true })} class="fas fa-edit" data-tooltip="Edit" />
     <i on:click={() => status.delete()} class="fas fa-trash" data-tooltip="Delete" />
@@ -71,7 +60,7 @@
 <style lang="scss">
     div {
         display: grid;
-        grid-template-columns: 48px 1fr repeat(4, 24px);
+        grid-template-columns: 48px 1fr repeat(5, 24px);
         grid-auto-flow: dense;
 
         align-items: center;
