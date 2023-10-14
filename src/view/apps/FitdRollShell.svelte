@@ -42,6 +42,10 @@
                 actor_uuid: "",
                 roll_data: roll.toJSON(),
             },
+            rolls: [roll],
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            content: "Error",
+            sound: CONFIG.sounds.dice,
         });
     }
 </script>
