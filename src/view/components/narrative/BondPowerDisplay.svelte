@@ -11,7 +11,7 @@
     function sendToChat(evt) {
         evt.stopPropagation();
         ChatMessage.create({
-            content: `${power.name}<br>${power.system.description}`,
+            content: `<p>${power.name}<br>${power.system.description}</p>`,
         });
     }
 

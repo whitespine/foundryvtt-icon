@@ -44,7 +44,7 @@
             },
             rolls: [roll],
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-            content: "Error",
+            content: "<div />",
             sound: CONFIG.sounds.dice,
         });
     }

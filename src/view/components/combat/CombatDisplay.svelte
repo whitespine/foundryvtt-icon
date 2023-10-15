@@ -29,6 +29,10 @@
                 choice_index: index,
                 roll: attack,
             },
+            rolls: attack ? [attack] : [],
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            sound: CONFIG.sounds.dice,
+            content: "<div />"
         });
     }
 
