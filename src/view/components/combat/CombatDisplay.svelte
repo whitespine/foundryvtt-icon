@@ -1,10 +1,10 @@
 <script>
     import AbilityDetail from "./AbilityDetail.svelte";
-    import { TJSDialog } from "#runtime/svelte/application";
     import { BoonBaneApplication } from "../../apps/BoonBaneApplication";
     import { dragAsMark } from "../../actions/drag";
     import RichTextDisplay from "../generic/RichTextDisplay.svelte";
     import { confirmDeleteDocument } from "../../../util/misc";
+    import { abilityChoiceToStatus } from "../../../config/statuses";
 
     // An ability (trait) or a relic. Can be null
     export let item = null;
@@ -32,7 +32,7 @@
             rolls: attack ? [attack] : [],
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             sound: CONFIG.sounds.dice,
-            content: "<div />"
+            content: "<div />",
         });
     }
 
@@ -53,33 +53,55 @@
     function deleteSelected() {
         confirmDeleteDocument(item);
     }
+
+    /** Apply as a status effect to self */
+    function applyToSelf(choice) {
+        let status_data = abilityChoiceToStatus(choice);
+        item?.actor?.createEmbeddedDocuments("ActiveEffect", [status_data]);
+    }
 </script>
 
 <div class="preview">
     {#if !item}
         <h3>Select an ability</h3>
-    {:else if item.type === "ability"}
-        {#each item.system.choices as choice, i}
-            <div class="choice" class:bottomed={i < item.system.choices.length - 1}>
-                <AbilityDetail {choice} style="flex: auto" />
-                <i class="fas fa-dice-d20 fa-xl" on:click={() => rollChoice(i)} data-tooltip="Activate" />
-            </div>
-        {/each}
-    {:else if item.type === "relic"}
-        {#each item.system.ranks.slice(0, item.system.rank.value) as rank, i}
-            <div class="rank" class:bottomed={i < item.system.rank}>
-                <div>
-                    <RichTextDisplay body={rank.text} />
+    {:else}
+        {#if item.type === "ability"}
+            {#each item.system.choices as choice, i}
+                <div class="choice" class:bottomed={i < item.system.choices.length - 1}>
+                    <AbilityDetail {choice} style="flex: auto" />
+                    <div class="controls">
+                        <div>
+                            <i
+                                class="clickable fas fa-dice-d20 fa-xl"
+                                on:click={() => rollChoice(i)}
+                                data-tooltip="Activate Ability"
+                            />
+                        </div>
+                        <div>
+                            <i
+                                class="clickable fas fa-flask fa-xl"
+                                draggable="true"
+                                use:dragAsMark={{ choice }}
+                                on:click={() => applyToSelf(choice)}
+                                data-tooltip="Drag To Mark, Click to Apply to self. Use for stances, marks, and power dice!"
+                            />
+                        </div>
+                    </div>
                 </div>
-                <i class="fas fa-xl fa-dice-d20" on:click={() => postRank(i)} data-tooltip="Activate" />
-            </div>
-        {/each}
-    {/if}
-    {#if item}
+            {/each}
+        {:else if item.type === "relic"}
+            {#each item.system.ranks.slice(0, item.system.rank.value) as rank, i}
+                <div class="rank" class:bottomed={i < item.system.rank}>
+                    <div>
+                        <RichTextDisplay body={rank.text} />
+                    </div>
+                    <i class="clickable fas fa-xl fa-dice-d20" on:click={() => postRank(i)} data-tooltip="Activate" />
+                </div>
+            {/each}
+        {/if}
         <div class="bottom-controls">
-            <i class="fas fa-bullseye" draggable="true" use:dragAsMark={{ doc: item }} data-tooltip="Drag To Mark" />
-            <i class="fas fa-edit" on:click={editSelected} data-tooltip="Edit" />
-            <i class="fas fa-trash" on:click={deleteSelected} data-tooltip="Delete" />
+            <i class="clickable fas fa-edit" on:click={editSelected} data-tooltip="Edit" />
+            <i class="clickable fas fa-trash" on:click={deleteSelected} data-tooltip="Delete" />
         </div>
     {/if}
 </div>
@@ -100,6 +122,15 @@
             &.bottomed {
                 border-bottom: var(--primary-border);
             }
+
+            .controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                i {
+                    margin-top: 20px;
+                }
+            }
         }
 
         .bottom-controls {
@@ -110,9 +141,5 @@
                 padding-right: 5px;
             }
         }
-    }
-
-    i {
-        cursor: pointer;
     }
 </style>

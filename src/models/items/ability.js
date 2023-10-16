@@ -105,6 +105,8 @@ export class AbilityChoiceField extends fields.SchemaField {
         data.mark = false;
         // Does it grant a stance
         data.stance = false;
+        // Does it use a power dice
+        data.power_die = false;
         // Does it apply a terrain effect
         data.terrain_effect = false;
         // Does it have a delay effect
@@ -139,6 +141,9 @@ export class AbilityChoiceField extends fields.SchemaField {
             }
             if (m = tag.match(/delay/i)) {
                 data.is_delay = true;
+            }
+            if (m = tag.match(/power dic?e/i)) {
+                data.power_die = true;
             }
         }
     }

@@ -44,7 +44,7 @@
             items.push({
                 label: `Change to ${type}`,
                 icon: ICON.css[type],
-                onPress: (...x) => [console.log(x), dispatch("changetype", type)],
+                onPress: (...x) => dispatch("changetype", type),
             });
         }
        items.push({

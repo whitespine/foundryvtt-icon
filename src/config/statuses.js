@@ -22,6 +22,26 @@ export function enhanceStatuses() {
     });
 }
 
+/**
+ * Converts an ability to a status, e.x. for marks, stances, and power dice
+ * @param ability_choice A choice item on an ability
+ * @returns An appropriate effect object
+ */
+export function abilityChoiceToStatus(ability_choice) {
+    return {
+        type: "Effect",
+        name: ability_choice.name,
+        statuses: [ability_choice.name],
+        icon: ability_choice.ability.img,
+        origin: ability_choice.ability.uuid,
+        flags: {
+            [game.system.id]: {
+                [ICON.flags.status_counter]: ability_choice.power_die
+            }
+        }
+    };
+}
+
 // Save against an active effect
 export async function saveAgainst(...effects) {
     let rolls = [];
