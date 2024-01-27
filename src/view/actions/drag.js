@@ -1,3 +1,4 @@
+import { abilityChoiceToStatus } from "../../config/statuses";
 import { easyActionBuilder } from "./util";
 
 export const dragAsDoc = easyActionBuilder({
@@ -15,15 +16,9 @@ export const dragAsDoc = easyActionBuilder({
 
 export const dragAsMark = easyActionBuilder({
     dragstart: (options, event) => {
-        if (options.doc) {
+        if (options.choice) {
             event.stopImmediatePropagation();
-            let mark_data = {
-                type: "Effect",
-                name: options.doc.name,
-                statuses: [options.doc.name],
-                icon: options.doc.img,
-                origin: options.doc.uuid
-            };
+            let mark_data = abilityChoiceToStatus(options.choice);
             event.dataTransfer.setData("text/plain", JSON.stringify(mark_data));
         }
     },

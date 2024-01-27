@@ -30,4 +30,12 @@ export function setupSettings() {
         type: Boolean,
         default: false,
     });
+
+    // Set sane DSN options
+    game.settings.register(game.system.id, ICON.settings.dsn_setup, {
+        scope: "world",
+        config: false,
+        type: Boolean,
+        default: false,
+    });
 }

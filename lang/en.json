@@ -272,7 +272,7 @@
       "Aura": "This ability is a continuous, ongoing (+) effect that affects all characters specified within range X of an origin point, usually a character. Characters are only affected by an aura while inside",
       "InvokeAttack": "When you make an attack, if the die used for the attack roll is a certain number or higher, you can invoke the relic’s power against your attack target. This only counts the d20, and not the total attack roll. For example, in an (Attack, 15+) invoke, you could invoke the relic’s power when you make any attack roll and the die is 15 or higher. If you wouldn’t make an attack roll, such as an auto hit attack, roll a d20 anyway to check.",
       "AutoHit": "This attack doesn’t make an attack roll but always scores a hit (not critical hit or miss).",
-      "Blessing": "Certain abilities give yourself or allies a Blessing token, and ways to spend those tokens for powerful effects. By default a character can use a blessing token to gain +1 boon when they make a save. All blessings are discarded at the end of combat.",
+      "Blessings": "Certain abilities give yourself or allies a Blessing token, and ways to spend those tokens for powerful effects. By default a character can use a blessing token to gain +1 boon when they make a save. All blessings are discarded at the end of combat.",
       "Blind": "Max range of all abilities is 2",
       "BonusDamage": "When an ability gains bonus damage, roll one more [D] for each instance of bonus damage and pick the highest result.",
       "ChainReaction": "Wright-only triggered effect.  Triggers when a character damages two or more foes with this ability",

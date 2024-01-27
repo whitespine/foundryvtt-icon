@@ -11,7 +11,9 @@ export const ICON = {
     },
     flags: {
         swb_needs_commit: "swb_needs_commit",
-        status_ongoing: "status_ongoing"
+        status_ongoing: "ongoing",
+        status_saveable: "saveable",
+        status_counter: "counter" // Forces showing counter even if it hasn't been given a counter value on
     },
     css: {
         // Resources

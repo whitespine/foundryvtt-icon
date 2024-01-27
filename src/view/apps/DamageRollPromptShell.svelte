@@ -43,7 +43,7 @@
      */
     function saveData(event) {
         // const fd = new FormDataExtended(event.target);
-        let formula = buildDamageFormula(die, dice_count, `${fray_count} * @class.fray_damage`, bonus_damage);
+        let formula = buildDamageFormula(die, dice_count, `${fray_count} * ${fray}`, bonus_damage);
         let roll = new Roll(formula);
         roll.roll({ async: false });
 

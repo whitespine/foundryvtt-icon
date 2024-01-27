@@ -216,6 +216,11 @@ export function computeHarm(actor, type, amount, flags) {
 export function planHarm(actor, harm_instances) {
     let result = [];
 
+    // If the actor does not have hp, then return no records
+    if(!actor.system.hp) {
+        return result;
+    }
+
     // Get initial values
     let final_hp = actor.system.hp.value;
     let final_vigor = actor.system.vigor.value;

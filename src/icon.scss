@@ -55,6 +55,11 @@ li.chat-message {
     background: var(--primary-background);
     color: var(--primary-color);
 
+    // Fix for whisper messages
+    &.whisper {
+        color: black;
+    }
+
     input,
     select,
     textarea,
@@ -146,4 +151,10 @@ a.editor-edit {
 
 .clickable {
     cursor: pointer;
+    transition: box-shadow 0.2s ease-in-out,
+                text-shadow 0.2s ease-in-out;
+    &:hover {
+        // box-shadow: 0 0 10px 10px #138d80;
+        text-shadow: 0 0 10px var(--tab-active-background)
+    }
 }

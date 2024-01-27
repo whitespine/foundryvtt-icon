@@ -25,8 +25,7 @@
     $: {
         total = roll.total;
         can_crit = roll.formula.includes("kh"); // kl forbids critting
-        crit = can_crit && roll.dice[0].values.filter((x) => x == 6).length >= 2; // >= 2 sixes => crit!
-        suffix;
+        crit = can_crit && roll.dice[0].results.filter((x) => x.result == 6).length >= 2; // >= 2 sixes => crit!
         if (crit) {
             suffix = "66";
         } else if (total == 6) {

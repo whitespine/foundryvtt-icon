@@ -105,7 +105,7 @@
         display: grid;
         grid-template:
             "targs targs" 1fr
-            "type  std " 64px / 170px 1fr;
+            "type  std " 64px / 200px 1fr;
     }
 
     .targs {
