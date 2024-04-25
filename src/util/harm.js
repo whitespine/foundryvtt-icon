@@ -129,9 +129,9 @@ export function computeHarm(actor, type, amount, flags) {
     let deltas = [];
 
     // Attacker effects apply first
-    if (flags.includes("weakened") && amount > 1) {
-        amount--;
-        deltas.push(["weakened", -1]);
+    if (flags.includes("weakened") && amount > 0) {
+        amount = Math.max(0, amount -2);
+        deltas.push(["weakened", -2]);
     }
     if (flags.includes("pacified")) {
         let prior = amount;
