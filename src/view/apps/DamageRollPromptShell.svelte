@@ -41,13 +41,13 @@
      *
      * @returns {Promise<void>}
      */
-    function saveData(event) {
+    async function saveData(event) {
         // const fd = new FormDataExtended(event.target);
         let formula = buildDamageFormula(die, dice_count, `${fray_count} * ${fray}`, bonus_damage);
         let roll = new Roll(formula);
         roll.roll({ async: false });
 
-        managedPromise.resolve(roll.total);
+        managedPromise.resolve({total: roll.total, result: roll.result});
         application.close();
     }
 </script>

@@ -53,7 +53,7 @@ export class DamageRollPromptApplication extends TJSDialog {
     * 
     * @param dialog_data
     *
-    * @returns {Promise<string | number | null>} The value, or null if the user cancelled the prompt
+    * @returns {Promise<object | number | string | null>} The value, or null if the user cancelled the prompt
     */
    static async show(dialog_data = {}) {
       return new DamageRollPromptApplication(dialog_data).wait();
