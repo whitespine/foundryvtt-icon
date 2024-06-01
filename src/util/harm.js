@@ -43,6 +43,8 @@ export async function showHarmApplication() {
  * 
  * @property {number} original_amount The original amount of damage, pre any reductions
  * 
+ * @property {string} dice_result The human readable result of the dice roll
+ * 
  * @property {Array<[string, value]>} deltas The changes to final damage by flags & armor, as key-value pairs. Ordered!
  * 
  * @property {number} amount The numeric change that is to be applied
@@ -85,12 +87,14 @@ export async function showHarmApplication() {
  * @param {"damage" | "piercing" | "divine" | "vigor"} type The harm/heal type
  *
  * @param {number | "25%" | "50%" | "75%" | "vit"} amount The amount to harm/heal
+ * 
+ * @param {string} dice_result The string representation of the dice roll
  *
  * @param {HarmInstance["flags"]} flags The flags to apply
  *
  * @returns {HarmInstance} A full harm instance
  */
-export function computeHarm(actor, type, amount, flags) {
+export function computeHarm(actor, type, amount, dice_result, flags) {
     if (!(actor instanceof IconActor)) {
         throw new TypeError("First argument must be an actor");
     }
@@ -130,7 +134,7 @@ export function computeHarm(actor, type, amount, flags) {
 
     // Attacker effects apply first
     if (flags.includes("weakened") && amount > 0) {
-        amount = Math.max(0, amount -2);
+        amount = Math.max(0, amount - 2);
         deltas.push(["weakened", -2]);
     }
     if (flags.includes("pacified")) {
@@ -194,6 +198,7 @@ export function computeHarm(actor, type, amount, flags) {
         type,
         original_amount,
         amount,
+        dice_result,
         deltas,
         flags
     });
@@ -217,7 +222,7 @@ export function planHarm(actor, harm_instances) {
     let result = [];
 
     // If the actor does not have hp, then return no records
-    if(!actor.system.hp) {
+    if (!actor.system.hp) {
         return result;
     }
 
@@ -314,7 +319,7 @@ export function replayManifest(manifest) {
             ui.notifications.warn(`Could not resolve actor ${uuid}`);
             continue;
         }
-        new_manifest[uuid] = planHarm(actor, records.map((r) => computeHarm(actor, r.harm.type, r.harm.original_amount, r.harm.flags)));
+        new_manifest[uuid] = planHarm(actor, records.map((r) => computeHarm(actor, r.harm.type, r.harm.original_amount, r.harm.dice_result, r.harm.flags)));
     }
     return new_manifest;
 }
@@ -410,16 +415,17 @@ export async function quickDamage(harms) {
 /**
  * 
  * @param {Actor} actor Actor to check effects on
+ *
  * @returns {HarmInstance["flags"]} Relevant flags on the attacker
  */
 export function flagsForAttacker(actor) {
     /** @type {HarmInstance["flags"]} */
-    let result = []
-    if(actor.effects.some(e => e.name === "Weakened")) {
-        result.push("weakened")
+    let result = [];
+    if (actor.effects.some((e) => e.name === "Weakened")) {
+        result.push("weakened");
     }
-    if(actor.effects.some(e => e.name === "Pacified")) {
-        result.push("pacified")
+    if (actor.effects.some((e) => e.name === "Pacified")) {
+        result.push("pacified");
     }
     return result;
 }
@@ -427,16 +433,17 @@ export function flagsForAttacker(actor) {
 /**
  * 
  * @param {Actor} actor Actor to check effects on
+ *
  * @returns {HarmInstance["flags"]} Relevant flags on the defender
  */
 export function flagsForDefender(actor) {
     /** @type {HarmInstance["flags"]} */
-    let result = []
-    if(actor.effects.some(e => e.name === "Vulnerable")) {
-        result.push("vulnerable")
+    let result = [];
+    if (actor.effects.some((e) => e.name === "Vulnerable")) {
+        result.push("vulnerable");
     }
-    if(actor.effects.some(e => e.name === "Shattered")) {
-        result.push("shattered")
+    if (actor.effects.some((e) => e.name === "Shattered")) {
+        result.push("shattered");
     }
     return result;
 }
@@ -444,12 +451,15 @@ export function flagsForDefender(actor) {
 /**
  * 
  * @param {number} die The damage die number
+ *
  * @param {number} die_count How many damage die
+ *
  * @param {number | string} flat_bonuses All the flat bonuses. Fray etc
+ *
  * @param {number} bonus_damage How many instances of bonus damage they have
  */
 export function buildDamageFormula(die, die_count, flat_bonuses, bonus_damage) {
-    if(die_count <= 0) {
+    if (die_count <= 0) {
         return flat_bonuses.toString();
     } else if (bonus_damage <= 0) {
         return `${die_count}d${die} + ${flat_bonuses}`;

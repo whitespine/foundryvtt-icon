@@ -10,11 +10,15 @@
     import { slide } from "svelte/transition";
 
     async function emitHarm(value) {
+        let dice_result = `${value}`;
         if(value === "cust.") {
             value = await RapidPromptApplication.show("number");
             if(!value) return;
         } else if (value === "roll") {
-            value = await DamageRollPromptApplication.show();
+            const damageRoll = await DamageRollPromptApplication.show();
+            const { total, result } = damageRoll;
+            value = total;
+            dice_result = result;
             if(!value) return;
         }
 
@@ -25,7 +29,8 @@
                 if ($ATTACKER?.actor) {
                     flags.push(...flagsForAttacker($ATTACKER?.actor));
                 }
-                items.push([target.actor, computeHarm(target.actor, selected_type, value, flags)]);
+                
+                items.push([target.actor, computeHarm(target.actor, selected_type, value, dice_result, flags)]);
             }
         }
         if (items.length) {

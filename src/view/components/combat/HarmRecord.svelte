@@ -13,7 +13,7 @@
     // Let the tooltip show how the damage was computed
     let tooltip;
     $: {
-        tooltip = `${record.harm.original_amount} ${record.harm.type}`;
+        tooltip = `${record.harm.original_amount} (${record.harm.dice_result}) ${record.harm.type}`;
         let amount = record.harm.original_amount;
         for (let [cause, delta] of record.harm.deltas) {
             amount += delta;
