@@ -46,13 +46,16 @@
         let formula = buildDamageFormula(die, dice_count, `${fray_count} * ${fray}`, bonus_damage);
         let roll = new Roll(formula);
         const result = await roll.roll()
+        if (game?.dice3d?.showForRoll) {
+            await game.dice3d.showForRoll(result, game.user, true, null, false, null, null, {ghost:false, secret:false});
+        }
         managedPromise.resolve({total: result.total, result: result.result});
         
         application.close();
     }
 </script>
 
-<form bind:this={form} on:submit|preventDefault={async (e) => await saveData(e)} autocomplete="off">
+<form bind:this={form} on:submit|preventDefault={saveData} autocomplete="off">
     <div class="flexrow">
         <div class="formula-grid">
             <!-- The main formula line -->
