@@ -45,14 +45,14 @@
         // const fd = new FormDataExtended(event.target);
         let formula = buildDamageFormula(die, dice_count, `${fray_count} * ${fray}`, bonus_damage);
         let roll = new Roll(formula);
-        roll.roll({ async: false });
-
-        managedPromise.resolve({total: roll.total, result: roll.result});
+        const result = await roll.roll()
+        managedPromise.resolve({total: result.total, result: result.result});
+        
         application.close();
     }
 </script>
 
-<form bind:this={form} on:submit|preventDefault={saveData} autocomplete="off">
+<form bind:this={form} on:submit|preventDefault={async (e) => await saveData(e)} autocomplete="off">
     <div class="flexrow">
         <div class="formula-grid">
             <!-- The main formula line -->

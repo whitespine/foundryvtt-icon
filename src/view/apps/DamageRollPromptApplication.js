@@ -27,7 +27,7 @@ export class DamageRollPromptApplication extends TJSDialog {
          title: dialogData.title ?? "Damage Roll",
          buttons: {
             confirm: {
-               autoClose: true,
+               autoClose: false,
                icon: 'fas fa-dice-d20',
                label: "Roll",
                onPress: 'requestSubmit'
