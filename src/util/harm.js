@@ -101,15 +101,16 @@ export function computeHarm(actor, type, amount, flags) {
 
     // First parse the amount
     if (typeof amount === "string") {
+        let quarter = actor.system.class?.vitality || Math.ceil(actor.system.hp.max / 4);
         switch (amount) {
             case "25%":
-                amount = Math.round(actor.system.hp.max / 4 * 1);
+                amount = quarter;
                 break;
             case "50%":
-                amount = Math.round(actor.system.hp.max / 4 * 2);
+                amount = quarter * 2;
                 break;
             case "75%":
-                amount = Math.round(actor.system.hp.max / 4 * 3);
+                amount = quarter * 3;
                 break;
             case "vit":
             case "vitality":
@@ -224,7 +225,7 @@ export function planHarm(actor, harm_instances) {
     // Get initial values
     let final_hp = actor.system.hp.value;
     let final_vigor = actor.system.vigor.value;
-    let bloodied_threshold = (actor.system.true_max_hp ?? actor.system.hp.max) / 2;
+    let bloodied_threshold = actor.system.hp.max / 2;
 
     for (let harm_instance of harm_instances) {
         let { amount, type } = harm_instance;

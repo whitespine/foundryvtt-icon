@@ -5,11 +5,12 @@
     import { getContext } from "svelte";
 
     let actor = getContext("tjs_actor");
+    let max_hp_override = $actor.system.eff_max_hp ? `${$actor.system.eff_max_hp} (${$actor.system.hp.max})` : null;
 </script>
 
 <div {...$$restProps}>
     <div class:bloodied={$actor.system.bloodied}>
-        <BoundedNumberDisplay name={localize("ICON.Harm.Health")} path="system.hp" />
+        <BoundedNumberDisplay name={localize("ICON.Harm.Health")} path="system.hp" max_override={max_hp_override} />
     </div>
     <BoundedNumberDisplay name={localize("ICON.Harm.Vigor")} path="system.vigor" />
     {#if $actor.system.wounds?.max}

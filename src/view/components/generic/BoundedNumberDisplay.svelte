@@ -12,6 +12,9 @@
     /** @type {boolean} Can we edit the max val? */
     export let edit_max = false;
 
+    /** @type {null | string} Override the max display value. Incompatible with edit max */
+    export let max_override = null;
+
     let percent;
     $: percent = Math.round(resolveDotpath($doc, `${path}.value`) / resolveDotpath($doc, `${path}.max`) * 100);
 
@@ -24,6 +27,8 @@
     <span> / </span>
     {#if edit_max}
         <input type="number" use:updateDoc={{ doc, path: `${path}.max` }} on:click|stopPropagation />
+    {:else if max_override}
+        <span>{max_override}</span>
     {:else}
         <span>{resolveDotpath($doc, `${path}.max`)}</span>
     {/if}

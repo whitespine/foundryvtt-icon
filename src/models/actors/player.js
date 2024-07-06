@@ -248,8 +248,8 @@ export class PlayerModel extends ActorModel {
         if (this.job) {
             this.class = this.job.system.class; // Alias for ease of access
             // Set max hp & fill hp if none set
-            this.hp.max = this.class.vitality * (4 - this.wounds.value);
-            if (this._source.hp === null) {
+            this.hp.max = this.class.vitality * 4;
+            if (this._source.hp == null) {
                 this.hp.value = this.hp.max;
             }
 
@@ -257,7 +257,7 @@ export class PlayerModel extends ActorModel {
             this.vigor.max = this.class.vitality;
 
             // Set true max hp
-            this.true_max_hp = this.class.vitality * 4;
+            this.eff_max_hp = this.hp.max - (this.wounds.value * this.class.vitality);
             this.bloodied = this.hp.value <= this.class.vitality * 2;
         } else {
             this.job = null;
