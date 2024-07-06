@@ -163,6 +163,7 @@
         button {
             background-color: var(--primary-background);
             color: var(--primary-color);
+            text-wrap: nowrap;
 
             transition: background-color 200ms;
 
