@@ -241,6 +241,18 @@
     "Aspect": "Aspect",
     "NarrativeInfo": "Narrative Info",
     "Description": "Description",
+    "Actions": {
+      "sneak": "Sneak",
+      "traverse": "Traverse",
+      "sense": "Sense",
+      "study": "Study",
+      "charm": "Charm",
+      "command": "Command",
+      "tinker": "Tinker",
+      "excel": "Excel",
+      "smash": "Smash",
+      "endure": "Endure"
+    },
     "Tutorial": {
       "AddBond": "Create a Bond item in the item sidebar, then drag it to this sheet!",
       "AddJob": "Create a Job item in the item sidebar, then drag it to this sheet!"

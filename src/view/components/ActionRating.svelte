@@ -3,6 +3,7 @@
     import { resolveDotpath, stepwiseResolveDotpath } from "../../util/paths";
     import SegBar from "./generic/SegBar.svelte";
     import ForgedRollApplication from "../apps/FitdRollDialog";
+    import { localize } from "../../util/misc";
 
     /** @type {string} Path to the action*/
     export let path;
@@ -10,9 +11,10 @@
     let actor = getContext("tjs_actor");
 
     // Resolve our value path
-    let srp, name, value;
+    let srp, name, nameLocalized, value;
     $: srp = stepwiseResolveDotpath($actor, path);
     $: name = srp[srp.length - 1].pathlet;
+    $: nameLocalized = localize(`ICON.Actions.${name}`)
     $: value = srp[srp.length - 1].val;
 
     // And our burden penalty path!
@@ -50,14 +52,14 @@
         ForgedRollApplication.show({
             x: rect.right,
             y: rect.top,
-            initial_purpose: `${name} roll`,
+            initial_purpose: `${nameLocalized} roll`,
             initial_dice: value - penalty_value,
         });
     }
 </script>
 
 <div>
-    <span on:click={promptRoll}>{name.toUpperCase()}</span>
+    <span on:click={promptRoll}>{nameLocalized.toUpperCase()}</span>
     <SegBar
         {value}
         alt_value={penalty_value}
