@@ -41,13 +41,16 @@
      *
      * @returns {Promise<void>}
      */
-    function saveData(event) {
+    async function saveData(event) {
         // const fd = new FormDataExtended(event.target);
         let formula = buildDamageFormula(die, dice_count, `${fray_count} * ${fray}`, bonus_damage);
         let roll = new Roll(formula);
-        roll.roll({ async: false });
-
-        managedPromise.resolve(roll.total);
+        const result = await roll.roll()
+        if (game?.dice3d?.showForRoll) {
+            await game.dice3d.showForRoll(result, game.user, true, null, false, null, null, {ghost:false, secret:false});
+        }
+        managedPromise.resolve({total: result.total, result: result.result});
+        
         application.close();
     }
 </script>
