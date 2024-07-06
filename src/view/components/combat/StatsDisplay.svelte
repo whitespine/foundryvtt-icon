@@ -5,7 +5,8 @@
     import { getContext } from "svelte";
 
     let actor = getContext("tjs_actor");
-    let max_hp_override = $actor.system.eff_max_hp ? `${$actor.system.eff_max_hp} (${$actor.system.hp.max})` : null;
+    let max_hp_override; 
+    $: max_hp_override = $actor.system.eff_max_hp !== undefined ? `${$actor.system.eff_max_hp} (${$actor.system.hp.max})` : null;
 </script>
 
 <div {...$$restProps}>
