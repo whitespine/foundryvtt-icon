@@ -3,7 +3,7 @@
     import { IconItem } from "../../../documents/item";
     import CombatDisplay from "./CombatDisplay.svelte";
     import StatusDisplay from "./StatusDisplay.svelte";
-    import { chapterIcon } from "../../../util/misc";
+    import { chapterIcon, localize } from "../../../util/misc";
     import { dragAsDoc } from "../../actions/drag";
     import { TJSDocument } from "#runtime/svelte/store/fvtt/document";
 
@@ -56,7 +56,7 @@
 
 <div class="combat-grid">
     <div class="abilities">
-        {#if [...$abilities].length}<h3>Abilities</h3>{/if}
+        {#if [...$abilities].length}<h3>{localize("ICON.Abilities")}</h3>{/if}
         {#each [...$abilities] as ability (ability.id ?? "err")}
             <div
                 data-uuid={ability.uuid}
@@ -73,7 +73,7 @@
                 </span>
             </div>
         {/each}
-        {#if [...$traits].length}<h3>Traits</h3>{/if}
+        {#if [...$traits].length}<h3>{localize("ICON.Traits")}</h3>{/if}
         {#each [...$traits] as trait (trait.id ?? "err")}
             <div
                 data-uuid={trait.uuid}
@@ -87,7 +87,7 @@
                 <span>{chapterIcon(trait.system.chapter)} {trait.name}</span>
             </div>
         {/each}
-        {#if [...$relics].length}<h3>Relics</h3>{/if}
+        {#if [...$relics].length}<h3>{localize("ICON.Relics.Category")}</h3>{/if}
         {#each [...$relics] as relic (relic.id ?? "err")}
             <div
                 data-uuid={relic.uuid}

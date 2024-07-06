@@ -40,7 +40,7 @@
     async function postRank(index) {
         let choice = item.system.ranks[index];
         await ChatMessage.create({
-            content: `<h3>${item.name} Rank ${index + 1}:</h3>${choice}`,
+            content: `<h3>${item.name} Rank ${index + 1}:</h3>${choice.text}`,
         });
     }
 
