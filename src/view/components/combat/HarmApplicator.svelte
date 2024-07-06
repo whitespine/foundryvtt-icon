@@ -57,6 +57,7 @@
         let token = evt.target.dataset.id ? game.canvas.scene.tokens.get(evt.target.dataset.id) : null;
         let remixed = $TARGETED_TOKENS.filter(t => t != token?._object);
         $TARGETED_TOKENS = remixed;
+        game.user.updateTokenTargets(remixed.map(t => t.id))
     }
     
     // Current selected damage type
