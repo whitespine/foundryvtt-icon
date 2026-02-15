@@ -20,8 +20,12 @@
      * Open the current bond for editing
      */
     function editBond() {
-        $actor.system.bond.sheet.render(true, { focus: true });
+        $actor.system.bond?.sheet?.render(true, { focus: true });
     }
+
+    // Resolve the bond - ensure it's an actual Item, not the raw string field
+    let bond;
+    $: bond = typeof $actor.system.bond === "object" ? $actor.system.bond : null;
 </script>
 
 <section>
@@ -44,31 +48,37 @@
     </div>
     <div class="rightcol">
         <div class="bond">
-            {#if $actor.system.bond}
+            {#if bond}
                 <h2
                     style="text-align: center;"
-                    data-tooltip={$actor.system.bond.system.description}
-                    use:dragAsDoc={{ doc: $actor.system.bond }}
+                    data-tooltip={bond.system?.description}
+                    use:dragAsDoc={{ doc: bond }}
                     draggable="true"
                 >
-                    {$actor.system.bond.name}
+                    {bond.name}
                     <i class="fas fa-edit fa-xs" on:click={editBond} />
                 </h2>
 
-                <span>
-                    <strong>{localize("ICON.Bonds.SecondWind")}</strong>
-                    {@html $actor.system.bond.system.second_wind}
-                </span>
-                <span>
-                    <strong>{localize("ICON.Bonds.SpecialAbility")}:</strong>
-                    {@html $actor.system.bond.system.special_ability}
-                </span>
-                <span><strong>{localize("ICON.Bonds.Ideals")}:</strong></span>
-                <ul>
-                    {#each $actor.system.bond.system.ideals as ideal}
-                        <li>{ideal}</li>
-                    {/each}
-                </ul>
+                {#if bond.system?.second_wind}
+                    <span>
+                        <strong>{localize("ICON.Bonds.SecondWind")}</strong>
+                        {@html bond.system.second_wind}
+                    </span>
+                {/if}
+                {#if bond.system?.special_ability}
+                    <span>
+                        <strong>{localize("ICON.Bonds.SpecialAbility")}:</strong>
+                        {@html bond.system.special_ability}
+                    </span>
+                {/if}
+                {#if bond.system?.ideals}
+                    <span><strong>{localize("ICON.Bonds.Ideals")}:</strong></span>
+                    <ul>
+                        {#each bond.system.ideals as ideal}
+                            <li>{ideal}</li>
+                        {/each}
+                    </ul>
+                {/if}
             {:else}
                 <h2>No Bond</h2>
                 <p>{localize("ICON.Tutorial.AddBond")}</p>

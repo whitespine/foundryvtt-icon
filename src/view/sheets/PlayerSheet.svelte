@@ -69,16 +69,16 @@
             <input type="text" use:updateDoc={{ doc, path: "system.kin" }} />
             <span><strong>{localize("ICON.Culture")}:</strong> </span>
             <input type="text" use:updateDoc={{ doc, path: "system.culture" }} />
-            <span data-tooltip={$actor.system.bond ? null : localize("ICON.Tutorial.AddBond")}>
+            <span data-tooltip={typeof $actor.system.bond === "object" && $actor.system.bond ? null : localize("ICON.Tutorial.AddBond")}>
                 <strong>{localize("ICON.Bonds.Bond")}:</strong>
             </span>
             <span>
-                {#if $actor.system.bond}
+                {#if typeof $actor.system.bond === "object" && $actor.system.bond}
                     {$actor.system.bond.name}
                     <i
                         class="fas fa-edit"
                         style="float: right; cursor: pointer"
-                        on:click={() => $actor.system.bond.sheet.render(true, { focus: true })}
+                        on:click={() => $actor.system.bond?.sheet?.render(true, { focus: true })}
                     />
                 {:else}
                     None
